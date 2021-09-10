@@ -14,11 +14,16 @@ enum Button
 
     Button_Key_Xn, Button_Key_Sin, Button_Key_Cos, Button_Key_Tan,
     Button_Key_10n, Button_Key_Log, Button_Key_Exp, Button_Key_Mod,
+
+    Button_Key_Cube, Button_Key_Yroot, Button_Key_Arcsin,Button_Key_Arccos,
+    Button_Key_Arctan,Button_Key_Index,Button_Key_Ln,
+
     Button_Key_Pi, Button_Key_Opposite, Button_Key_Factorials,
 
     Button_Key_And, Button_Key_Xor, Button_Key_Not, Button_Key_Or,
     Button_Key_Lsh, Button_Key_Rsh, Button_Key_RoR, Button_Key_RoL,
-    Button_Key_Shift,Button_Key_AngleUnit,Button_Key_FE,
+
+    Button_Key_Shift,Button_Key_AngleUnit,Button_Key_FE,Button_Key_HYP,
 
 };
 

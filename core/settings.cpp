@@ -165,6 +165,7 @@ void Settings::load()
     windowPositionSave = settings->value(key + QLatin1String("WindowPositionSave"), true).toBool();
     complexNumbers = settings->value(key + QLatin1String("ComplexNumbers"), false).toBool();
 
+
     digitGrouping = settings->value(key + QLatin1String("DigitGrouping"), 0).toInt();
     digitGrouping = std::min(3, std::max(0, digitGrouping));
 

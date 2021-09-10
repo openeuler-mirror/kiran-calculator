@@ -19,10 +19,6 @@ class ModeSwitcherPage : public QWidget
     Q_OBJECT
 
 public:
-    enum ModeLabel{
-        Mode_Label_Standard,Mode_Label_Science,Mode_Label_Programmer
-    };
-
     explicit ModeSwitcherPage(QWidget *parent = nullptr);
     ~ModeSwitcherPage();
 

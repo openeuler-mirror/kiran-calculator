@@ -1,4 +1,5 @@
 #include "programmer-keys-page.h"
+#include "general-enum.h"
 #include <QDebug>
 
 bool ProgrammerKeysPage::m_isShifted = false;
@@ -110,19 +111,19 @@ void ProgrammerKeysPage::switchProgrammerFormatKeys(int currentFormat)
 
 void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
 {
-    QPushButton* key_Lsh = m_keyEnumMap.value(Button_Key_Lsh);
-    QPushButton* key_Rsh = m_keyEnumMap.value(Button_Key_Rsh);
+    QPushButton* keyLsh = m_keyEnumMap.value(Button_Key_Lsh);
+    QPushButton* keyRsh = m_keyEnumMap.value(Button_Key_Rsh);
     if(!m_isShifted)
     {
-        key_Lsh->setVisible(false);
-        key_Rsh->setVisible(false);
+        keyLsh->setVisible(false);
+        keyRsh->setVisible(false);
         m_isShifted = true;
         qDebug() << "switchLogicalAndShift___m_isShifted = true";
     }
     else
     {
-        key_Lsh->setVisible(true);
-        key_Rsh->setVisible(true);
+        keyLsh->setVisible(true);
+        keyRsh->setVisible(true);
         m_isShifted = false;
         qDebug() << "switchLogicalAndShift___m_isShifted = false";
     }

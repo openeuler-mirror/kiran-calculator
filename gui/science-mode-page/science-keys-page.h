@@ -18,12 +18,14 @@ public:
     void initScienceButtons();
 
     static int m_angleUnit;
-    enum AngleUnit{
-        Angle_Unit_Degree,Angle_Unit_Radian,Angle_Unit_Gradian,
-    };
+    static bool m_isShift;
+    static bool m_isHYP;
+
 public slots:
     void handleScienceButtonClicked();
     void switchScienceAngleUnit();
+    void switchScienceHYP();
+    void shiftScienceFunction();
 
 protected slots:
     void emitScienceButtonPressed(int button) const;
@@ -39,9 +41,15 @@ private:
     QGridLayout* m_gridLayout = nullptr;
     QMap<Button, QPushButton*> m_keyEnumMap;
 
+    QPushButton* keySin;
+    QPushButton* keyCos;
+    QPushButton* keyTan;
+
 signals:
     void scienceButtonPressed(Button) const;
     void scienceSwitchAngleUnit(int );
+    void scienceIsShift();
+    void scienceIsHYP();
 };
 
 #endif // SCIENCEKEYSPAGE_H

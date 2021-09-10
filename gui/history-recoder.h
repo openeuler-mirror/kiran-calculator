@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidget>
+
 class QListWidget;
 class QListWidgetItem;
 class HistoryEntry;
@@ -17,19 +18,18 @@ public:
     explicit HistoryRecoder(QWidget *parent = nullptr);
     void setSession(Session*);
 
-    enum NumFormat{
-        Num_Format_Hex,Num_Format_Dec,Num_Format_Oct,Num_Format_Bin
-    };
-
     static int m_currentFormat;
-    static int m_historyRecordPoint;
+    static bool m_FE;
 
 public slots:
-    void updateHistory();
+    void updateStandardHistory();
+    void updateScienceHistory();
+    void updateProgrammerHistory();
 
-    void NumFormateHistory();
+    void historyFEChanged();
     void historyFormatChanged(int );
-    void clearHistory();
+    void clearStandardHistory();
+    void clearScienceHistory();
     void clearProgrammerHistory();
 
 protected slots:

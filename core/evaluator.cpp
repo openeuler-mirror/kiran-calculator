@@ -303,8 +303,10 @@ static Token::Operator matchOperator(const QString& text)
             result = Token::CircularLeftShift;
         if (text == "ror")
             result = Token::CircularRightShift;
-    }
-
+    } else if (text.length() == 5) {
+           if (text == "yroot")
+               result = Token::Yroot;
+       }
    return result;
 }
 
@@ -329,6 +331,7 @@ static int opPrecedence(Token::Operator op)
     case Token::Division:
         prec = 500;
         break;
+    case Token::Yroot:
     case Token::Percent:
         prec = 800;
         break;
@@ -1120,7 +1123,7 @@ Tokens Evaluator::scan(const QString& expr) const
         case InIdentifier:
             // Consume as long as alpha, dollar sign, underscore, or digit.
             if ((isIdentifier(ch) || ch.isDigit())
-                && tokenText != "mod"
+                && tokenText != "mod" && tokenText != "yroot"
                 && tokenText != "and" && tokenText != "or" && tokenText != "xor"
                 && tokenText != "shl" && tokenText != "shr" && tokenText != "rol" && tokenText != "ror"
                 )
@@ -1672,6 +1675,9 @@ void Evaluator::compile(const Tokens& tokens)
                    case Token::Modulo:
                        m_codes.append(Opcode::Modulo);
                        break;
+                   case Token::Yroot:
+                       m_codes.append(Opcode::Yroot);
+                       break;
                    case Token::IntegerDivision:
                        m_codes.append(Opcode::IntDiv);
                        break;
@@ -2040,7 +2046,16 @@ Quantity Evaluator::exec(const QVector<Opcode>& opcodes,
                 val2 = checkOperatorResult(DMath::raise(val2, val1));
                 stack.push(val2);
                 break;
-
+            case Opcode::Yroot:
+                if (stack.count() < 2) {
+                    m_error = tr("invalid expression");
+                    return CMath::nan();
+                }
+                val1 = stack.pop();
+                val2 = stack.pop();
+                val2 = checkOperatorResult(DMath::raise(val2, Quantity(1) / val1));
+                stack.push(val2);
+                break;
             case Opcode::Fact:
                 if (stack.count() < 1) {
                     m_error = tr("invalid expression");

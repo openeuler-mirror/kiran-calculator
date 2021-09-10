@@ -38,6 +38,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     gui/keys-page.h
     gui/utils.cpp
     gui/utils.h
+    gui/general-enum.h
+    gui/sselection.h
 
     gui/mode-switcher-page/mode-switcher-page.cpp
     gui/mode-switcher-page/mode-switcher-page.h

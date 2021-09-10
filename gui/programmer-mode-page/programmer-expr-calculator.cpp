@@ -7,6 +7,7 @@
 #include "core/session.h"
 #include "core/sessionhistory.h"
 #include "utils.h"
+#include "general-enum.h"
 #include <QDebug>
 #include <QRegularExpression>
 #define NUM_FORMAT_DEC 1
@@ -36,10 +37,13 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : QLineEdit(
     //textChanged和textEdited信号不同在于，当以编程方式更改文本时，例如，通过调用setText()会发出textChanged信号，不会发出textEdited信号。
 //    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(autoProgrammerExprCalc()));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(autoProgrammerExprCalc()));
-
 //    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
+    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
 
+    m_funclist = { "not", "xor", "and", "nor", "ror", "rol",
+                      "shl", "shr", "or",
+                 };
 }
 
 void ProgrammerExprCalculator::setSession(Session *session)
@@ -47,6 +51,11 @@ void ProgrammerExprCalculator::setSession(Session *session)
     m_programmerSession = session;
     m_evaluator = Evaluator::instance();
     m_evaluator->setSession(m_programmerSession);
+}
+
+void ProgrammerExprCalculator::disableSelectText()
+{
+    qobject_cast<QLineEdit*>(sender())->deselect();
 }
 
 void ProgrammerExprCalculator::exprFormatChanged(int format)
@@ -175,7 +184,7 @@ QString ProgrammerExprCalculator::scanAndExec(int previousFormat,int cureentForm
 }
 
 //检测表达式中字符的位数是否超出位数
-bool ProgrammerExprCalculator::isNumberOutOfRange(const QString& text)
+bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
 {
     m_numvec.clear();
     m_opvec.clear();
@@ -240,39 +249,28 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString& text)
             }
         }
     }
-
     for (int i = 0; i < m_numvec.size(); i++) {
-        switch (m_currentFormat) {
-        case Num_Format_Bin:
-            if(m_numvec.at(i).length() > 64)
-                m_numOutRange = true;
-            break;
-        case Num_Format_Oct:
-            if(m_numvec.at(i).length() > 22)
-                m_numOutRange = true;
-            break;
-        case Num_Format_Dec:
-            if(m_numvec.at(i).startsWith("-"))
-            {
-                if(m_numvec.at(i).size() > 20)
-                    m_numOutRange = true;
-            }else if(m_numvec.at(i).size() > 19)
-                m_numOutRange = true;
-            break;
-        case Num_Format_Hex:
-            if(m_numvec.at(i).length() > 16)
-                m_numOutRange = true;
-            break;
-        }
-        if(m_numOutRange)
-        {
-            m_numOutRange = false;    //复位
+        QString num = AddPrefixForExpr(m_currentFormat, m_numvec.at(i));
+        Quantity ans(HNumber(num.toLatin1().data(), true));
+        if (ans.isNan())
             return true;
+        num = DMath::format(ans, Quantity::Format::Complement() + Quantity::Format::Binary()).remove("0b");
+        qDebug() << "isNumberOutOfRange___num:";
+        qDebug() << num;
+        if (m_currentFormat == Num_Format_Dec) {
+            Quantity posans;
+            Quantity negans;
+            posans = ans - Quantity(HNumber("9223372036854775808"));
+            negans = ans + Quantity(HNumber("9223372036854775809"));
+            if (!posans.isNegative() || !negans.isPositive())
+                return true;
+        } else {
+            if (num.length() > 64)
+                return true;
         }
     }
     return false;
 }
-
 
 //添加10进制千位符，其他进制用空格分隔
 void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
@@ -314,6 +312,7 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
         pos = oldPosition + (newLength - oldLength);
     else
         pos = oldPosition - (oldLength - newLength);
+//        pos = oldPosition;
     if (pos > newLength)
         pos = newLength;
 
@@ -439,7 +438,11 @@ void ProgrammerExprCalculator::programmerExprCalc()
 
     }
     else
-        emit programmerExprCalcMessageDec(m_evaluator->error());
+    {
+//        emit programmerExprCalcMessageDec(m_evaluator->error());
+        emit programmerExprCalcError();
+    }
+
 }
 
 //自动计算，结果为10进制，不存入历史记录
@@ -655,17 +658,105 @@ bool ProgrammerExprCalculator::curposInNumber(int curpos)
     return false;
 }
 
+//删除逗号和选中后删除 ，导致光标位置移动，有待进一步修改
 void ProgrammerExprCalculator::handleProgrammerFunction_Backspace()
 {
-    int currentPos = cursorPosition();
-    QString expr = text();
-    if(currentPos !=0 && (expr.at(currentPos - 1) == " "))
-    {
-        setCursorPosition(currentPos - 1);
-        backspace();
-    }
-    else
-        backspace();
+//    int currentPos = cursorPosition();
+//    QString expr = text();
+//    if(currentPos !=0 && (expr.at(currentPos - 1) == " "))
+//    {
+//        setCursorPosition(currentPos - 1);
+//        backspace();
+//    }
+//    else if(currentPos !=0 && (expr.at(currentPos - 1) == ","))
+//    {
+//        setCursorPosition(currentPos - 1);
+//        backspace();
+//    }
+//    else
+//        backspace();
+
+    QString sRegNum = "[a-z]";
+    QRegExp rx;
+    rx.setPattern(sRegNum);
+//    SSelection selection = getSelection();
+//    if (selection.selected != "") {
+//        selectedPartDelete(rx);
+//    } else {
+        QString text = QLineEdit::text();
+        int cur = QLineEdit::cursorPosition();
+        int funpos = -1;
+        int i;
+        int Sepold = text.count(",") + text.count(" ");
+        if (text.size() > 0 && cur > 0 && (text[cur - 1] == "," || (text[cur - 1] == " " && !text[cur - 2].isLower()))) {
+            text.remove(cur - 2, 2);
+            QLineEdit::setText(text);
+            QLineEdit::setCursorPosition(cur - 2);
+        } else {
+            //退函数
+            //光标不在开头且光标左侧是字母
+            if (QLineEdit::cursorPosition() > 0 && rx.exactMatch(QLineEdit::text().at(QLineEdit::cursorPosition() - 1))) {
+                for (i = 0; i < m_funclist.size(); i++) {
+                    //记录光标左侧离光标最近的函数位
+                    funpos = QLineEdit::text().lastIndexOf(m_funclist[i], QLineEdit::cursorPosition() - 1);
+                    if (funpos != -1 && (funpos <= QLineEdit::cursorPosition())
+                            && (QLineEdit::cursorPosition() <= funpos + m_funclist[i].length()))
+                        break; //光标在函数开头和函数结尾之间
+                    else
+                        funpos = -1;
+                }
+                if (funpos != -1) {
+                    QLineEdit::setText(QLineEdit::text().remove(funpos, m_funclist[i].length()));
+                    int Sepnew = QLineEdit::text().count(",") + QLineEdit::text().count(" ");
+                    QLineEdit::setCursorPosition(funpos + Sepnew - Sepold + 1);
+                }
+            } else if (QLineEdit::cursorPosition() > 1 && (text[cur - 1] == " " && text[cur - 2].isLower())) {
+                for (i = 0; i < m_funclist.size(); i++) {
+                    //记录光标左侧离光标最近的函数位
+                    funpos = QLineEdit::text().lastIndexOf(m_funclist[i], QLineEdit::cursorPosition() - 2);
+                    if (funpos != -1 && (funpos <= QLineEdit::cursorPosition())
+                            && (QLineEdit::cursorPosition() <= funpos + m_funclist[i].length() + 1))
+                        break; //光标在函数开头和函数结尾之间
+                    else
+                        funpos = -1;
+                }
+                if (funpos != -1) {
+                    QLineEdit::setText(QLineEdit::text().remove(funpos, m_funclist[i].length()));
+                    int Sepnew = QLineEdit::text().count(",") + QLineEdit::text().count(" ");
+                    QLineEdit::setCursorPosition(funpos + Sepnew - Sepold + 1);
+                }
+            } else {
+                int proNumber = text.count(",") + text.count(" ");
+                QLineEdit::backspace();
+                int separator = proNumber - QLineEdit::text().count(",") - QLineEdit::text().count(" ");
+                int newPro = QLineEdit::text().count(",") + QLineEdit::text().count(" ");
+                if (cur > 0) {
+                    QString sRegNum1 = "[0-9A-F]+";
+                    QRegExp rx1;
+                    rx1.setPattern(sRegNum1);
+                    //退数字
+                    if (rx1.exactMatch(text.at(cur - 1)) && proNumber > newPro) {
+                        if (text.mid(cur, text.length() - cur) == QLineEdit::text().mid(QLineEdit::text().length() - (text.length() - cur), text.length() - cur)) {
+                            QLineEdit::setCursorPosition(cur - 2);
+                        } else
+                            QLineEdit::setCursorPosition(cur - 1);
+                    } else {
+                        if (separator < 0) {
+                            QLineEdit::setCursorPosition(cur - 1 - separator);
+                        } else {
+                            QLineEdit::setCursorPosition(cur - 1);
+                        }
+                    }
+                }
+            }
+        }
+//    }
+
+}
+
+void ProgrammerExprCalculator::mouseDoubleClickEvent(QMouseEvent *)
+{
+    return;
 }
 
 //限制键盘输入

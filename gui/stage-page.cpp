@@ -33,6 +33,11 @@ void StagePage::receiveCalculatedQuantity(const Quantity &quantity)
     m_saveQuantity = quantity;
 }
 
+//void StagePage::receiveCalculatedError(const QString & error)
+//{
+//    m_saveError = error;
+//}
+
 void StagePage::NumFormatStageResult()
 {
     m_programmerExpr = new ProgrammerExprCalculator();
@@ -82,6 +87,15 @@ void StagePage::setStageResult()
         stageList.append(stageExpr + "=" + Utils::reformatSeparatorsPro(NumberFormatter::format(m_saveQuantity), 10));
     }
     QListWidget::addItem(stageList);
+    item(0)->setTextAlignment(Qt::AlignRight);
+}
+
+void StagePage::setStageErrorMessage()
+{
+    clear();
+    clearSelection();
+    QString errorMessage = "表达式错误";
+    QListWidget::addItem(errorMessage);
     item(0)->setTextAlignment(Qt::AlignRight);
 }
 

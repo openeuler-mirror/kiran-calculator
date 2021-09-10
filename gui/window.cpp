@@ -25,6 +25,9 @@ Window::Window(QWidget *parent)
 
 //    m_settings = Settings::instance();
 
+    m_evaluator = Evaluator::instance();
+    m_evaluator->initializeBuiltInVariables();
+
     m_drawer = new ModeSwitcherPage(this);
 
    //侧边栏按钮布局，待确定

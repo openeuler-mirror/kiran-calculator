@@ -842,6 +842,14 @@ Quantity function_ieee754_quad_encode(Function* f, const Function::ArgumentList&
     return DMath::encodeIeee754(args.at(0), 15, 112);
 }
 
+
+Quantity function_yroot(Function *f, const Function::ArgumentList &args)
+{
+    /* TODO : complex mode switch for this function */
+    ENSURE_ARGUMENT_COUNT(2);
+    return DMath::raise(args.at(0), Quantity(1) / args.at(1));
+}
+
 Quantity function_datetime(Function* f, const Function::ArgumentList& args)
 {
     ENSURE_EITHER_ARGUMENT_COUNT(1, 2);
@@ -898,6 +906,7 @@ void FunctionRepo::createFunctions()
     FUNCTION_INSERT(sum);
     FUNCTION_INSERT(trunc);
     FUNCTION_INSERT(variance);
+    FUNCTION_INSERT(yroot);
 
     // Complex.
     FUNCTION_INSERT(real);
@@ -1120,6 +1129,7 @@ void FunctionRepo::setTranslatableFunctionUsages()
     FUNCTION_USAGE_TR(shl, "x; bits");
     FUNCTION_USAGE_TR(shr, "x; bits");
     FUNCTION_USAGE_TR(unmask, "x; bits");
+    FUNCTION_USAGE_TR(yroot,("x;y"));
 }
 
 void FunctionRepo::setFunctionNames()
@@ -1218,6 +1228,7 @@ void FunctionRepo::setFunctionNames()
     FUNCTION_NAME(unmask, tr("Sign-extend a value"));
     FUNCTION_NAME(variance, tr("Variance"));
     FUNCTION_NAME(xor, tr("Logical XOR"));
+    FUNCTION_NAME(yroot,tr("Y Root"));
 }
 
 void FunctionRepo::retranslateText()

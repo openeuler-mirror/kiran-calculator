@@ -17,15 +17,17 @@ StandardModePage::StandardModePage(QWidget *parent) :
     ui->standardHistory->setSession(m_standardSession);
 
     connect(ui->standardKeysPage, SIGNAL(buttonPressed(Button)),this, SLOT(handleStandardKeysButtonPress(Button)));
-    connect(ui->standardExprEdit,SIGNAL(standardHistoryChanged( )),ui->standardHistory,SLOT(updateHistory( )));
+    connect(ui->standardExprEdit,SIGNAL(standardHistoryChanged( )),ui->standardHistory,SLOT(updateStandardHistory( )));
 
     connect(ui->standardExprEdit,SIGNAL(standardToStageExprFormat(const QString&)),ui->standardStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->standardExprEdit,SIGNAL(standardToStageQuantity(const Quantity&)), ui->standardStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->standardExprEdit,SIGNAL(standardStageChanged()),ui->standardStagePage, SLOT(setStageResult( )));
+    connect(ui->standardExprEdit,SIGNAL(exprCalcError()),ui->standardStagePage, SLOT(setStageErrorMessage( )));
+
 
     connect(ui->standardHistory,SIGNAL(exprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
     connect(ui->standardStagePage,SIGNAL(stageExprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
-    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearHistory()));
+    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearStandardHistory()));
 
 }
 
@@ -55,29 +57,18 @@ void StandardModePage::handleStandardKeysButtonPress(Button button)
     case Button_Key_Percent:ui->standardExprEdit->insert("%"); break;
     case Button_Key_Sqrt:
         ui->standardExprEdit->handleFunction_Sqrt();
-        ui->standardExprEdit->cursorBackward(false);
         break;
     case Button_Key_Equal:
         ui->standardExprEdit->exprCalc();
         break;
     case Button_Key_Square:
-        if(ui->standardExprEdit->text().isEmpty())
-            ui->standardExprEdit->insert("0^2");
-        else
-            ui->standardExprEdit->insert("^2");
+        ui->standardExprEdit->handleFunction_Square();
         break;
     case Button_Key_Reciprocal:
-        if(ui->standardExprEdit->text().isEmpty() || ui->standardExprEdit->text() == '0')
-            break;
-        else
-        {
-            QString  expr = "1/("+ ui->standardExprEdit->text() + ")";
-            ui->standardExprEdit->clear();
-            ui->standardExprEdit->insert(expr);
-        }
+        ui->standardExprEdit->handleFunction_Reciprocal();
         break;
     case Button_Key_Backspace:
-        ui->standardExprEdit->backspace();
+        ui->standardExprEdit->handleFunction_Backspace();
         break;
     case Button_Key_Opposite:
         if(ui->standardExprEdit->text().isEmpty())

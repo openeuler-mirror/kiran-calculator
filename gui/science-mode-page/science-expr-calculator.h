@@ -5,7 +5,7 @@
 #include <QLineEdit>
 #include "core/sessionhistory.h"
 #include "core/session.h"
-
+#include "sselection.h"
 class Evaluator;
 class Session;
 class CNumber;
@@ -24,15 +24,26 @@ public:
     void setSession(Session*);
     void handleFunction_10n();
     void handleFunction_Sqrt();
+    void handleFunction_Square();
+    void handleFunction_Xn();
+    void handleFunction_Sin();
+    void handleFunction_Cos();
+    void handleFunction_Tan();
+    void handleFunction_Log();
     void handleFunction_Opposite();
+    bool expressionInFunc(QString &);
     void handleFunction_Pi();
     void handleFunction_Backspace();
+    void handleFunction_Exp();         //科学计数法，不是指数函数
+    void handleFunction_Reciprocal();
+    void handleFunction_Factorials();
+
+    SSelection getSelection() { return m_selected; }
 
     static bool m_FE;
+    static bool m_isShift;
+    static bool m_isHYP;
 
-    enum AngleUnit{
-        Angle_Unit_Degree,Angle_Unit_Radian,Angle_Unit_Gradian,
-    };
 
 public slots:
     void insert(const QString&);
@@ -41,10 +52,14 @@ public slots:
     void reformatShowExpr(const QString& text);
     void handleFunction_SwitchAngleUnit(int );
     void handleFunction_FE();
-
+    void handleFunction_Shift();
+    void handleFunction_HYP();
+    void disableSelectText();
 
 protected:
     void keyPressEvent(QKeyEvent *) override;
+    void mouseDoubleClickEvent(QMouseEvent *) override;
+
 protected slots:
     void triggerEnter();
 
@@ -53,16 +68,22 @@ private:
     QList<HistoryEntry> m_scienceHistory;
     int m_currentScienceHistoryIndex;
     Session* m_scienceSession;
+    QList<QString> m_funclist;
+
+    SSelection m_selected;
 
 signals:
     void scienceExprCalcMessage(const QString&);
     void scienceExprCalcQuantity(const Quantity&);
+    void scienceExprCalcError();
     void scienceHistoryChanged();
     void scienceEqualPressed();
 
     void scienceToStageExprFormat(const QString&);
     void scienceToStageQuantity(const Quantity&);
     void scienceStageChanged();
+
+    void scienceFEChanged();
 };
 
 #endif // SCIENCEEXPRCALCULATOR_H

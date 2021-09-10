@@ -1,5 +1,6 @@
 #include "mode-switcher-page.h"
 #include "./ui_mode-switcher-page.h"
+#include "general-enum.h"
 #include <QString>
 #include <QDebug>
 #include <QListWidget>
@@ -40,7 +41,8 @@ ModeSwitcherPage::~ModeSwitcherPage()
 //事件过滤器是结束事件的意思,结束掉鼠标点击事件，不让它往下传
 bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
 {
-    if(event->type() == QEvent::MouseButtonRelease)                  //判断事件类型
+//  QEvent::MouseButtonRelease
+    if(event->type() == QEvent::MouseButtonPress)                  //判断事件类型 鼠标点击事件
     {
         QMouseEvent* mouseEv = static_cast<QMouseEvent*>(event);    //强制转换事件类型
         QPoint globalPoint =  mouseEv->globalPos();
@@ -50,7 +52,7 @@ bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
             if(!m_flag)
             {
                 activateAnimation();
-                return true;                                     //返回true,事件不会往下传递
+                return true;                                    //返回true,事件不会往下传递
             }
         }
     }

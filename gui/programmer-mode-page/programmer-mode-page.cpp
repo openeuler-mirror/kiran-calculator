@@ -21,10 +21,13 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
 
     //计算成功，更新历史记录和暂存记录
-    connect(ui->programmerExprEdit, SIGNAL(programmerHistoryChanged( )), ui->programmerHistory, SLOT(NumFormateHistory( )));
+    connect(ui->programmerExprEdit, SIGNAL(programmerHistoryChanged( )), ui->programmerHistory, SLOT(updateProgrammerHistory( )));
     connect(ui->programmerExprEdit, SIGNAL(programmerToStageExprFormatDec(const QString&)), ui->programmerStagePage, SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->programmerExprEdit, SIGNAL(programmerToStageQuantity(const Quantity&)), ui->programmerStagePage, SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->programmerExprEdit, SIGNAL(programmerStageChanged( )), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
+    connect(ui->programmerExprEdit, SIGNAL(programmerExprCalcError( )), ui->programmerStagePage, SLOT(setStageErrorMessage( )));
+
+
 
     //清除历史记录
     connect(ui->programmerClearHistory, SIGNAL(clicked()), ui->programmerHistory, SLOT(clearProgrammerHistory()));
@@ -46,7 +49,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //进制切换时刷新程序员历史记录
     connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerHistory, SLOT(historyFormatChanged(int )));
-    connect(ui->numConversionTable,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(NumFormateHistory()));
+    connect(ui->numConversionTable,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateProgrammerHistory()));
     //进制切换时刷新程序员暂存记录
     connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
     connect(ui->numConversionTable,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));

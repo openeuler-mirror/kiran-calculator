@@ -4,21 +4,12 @@
 #include <QWidget>
 #include "core/session.h"
 #include "core/sessionhistory.h"
+#include "sselection.h"
 class Evaluator;
 class Session;
 class CNumber;
 class HistoryEntry;
 class Settings;
-
-struct SSelection {
-    QString oldText; //选中时的当前text
-    QString selected; //被选中部分
-    QString clearText;
-    bool isChanged;
-    int curpos = 0;
-    SSelection() { isChanged = false; }
-};
-
 
 class ProgrammerExprCalculator : public QLineEdit
 {
@@ -40,28 +31,25 @@ public:
     static int  m_currentFormat;
     static int  m_previousFormat;
     static bool m_numOutRange;
-    enum NumFormat{
-        Num_Format_Hex,Num_Format_Dec,Num_Format_Oct,Num_Format_Bin
-    };
 
     SSelection getSelection() { return m_selected; }
 
 public slots:
     void insert(const QString&);
+    bool isNumberOutOfRange(const QString&);
     void setText(const QString&);
     void programmerExprCalc();
     void autoProgrammerExprCalc();
     void exprFormatChanged(int );
     void radixChanged(int basedest);
+    void reformatShowExpr(const QString&);
+    void disableSelectText();
 
     QString scanAndExec(int,int,const QString&);
 
-    bool isNumberOutOfRange(const QString&);
-
-    void reformatShowExpr(const QString&);
-
 protected:
     virtual void keyPressEvent(QKeyEvent *) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent *) override;
 
 protected slots:
     void triggerEnter();
@@ -78,7 +66,7 @@ private:
     QString m_tmpPreviousExpr;
 
     SSelection m_selected;
-    QList<QString> m_funclist; //支持的函数
+    QList<QString> m_funclist;
 
 signals:
     void programmerExprCalcQuantityDec(const Quantity&);
@@ -88,6 +76,7 @@ signals:
     void programmerExprCalcMessageHex(const QString&);
     void programmerExprCalcMessageOct(const QString&);
     void programmerExprCalcMessageBin(const QString&);
+    void programmerExprCalcError();
 
 //    void programmerExprCalcFormatDec(const QString&);
 //    void programmerExprCalcFormatHex(const QString&);

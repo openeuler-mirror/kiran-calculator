@@ -53,6 +53,7 @@ public:
         BitwiseLogicalAND, BitwiseLogicalOR,
         UnitConversion,
         Function, // For managing shift/reduce conflicts.
+        Yroot,
         BitwiseLogicalXOR,
         LogicalLeftShift, LogicalRightShift,
         CircularLeftShift, CircularRightShift, RotateCarryLeftShift, RotateCarryRightShift

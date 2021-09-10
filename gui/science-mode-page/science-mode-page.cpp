@@ -5,6 +5,7 @@
 #include "stage-page.h"
 #include "science-mode-page/science-keys-page.h"
 #include "science-mode-page/science-expr-calculator.h"
+#include "core/settings.h"
 
 ScienceModePage::ScienceModePage(QWidget *parent) :
     QWidget(parent),
@@ -17,17 +18,25 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     ui->scienceHistory->setSession(m_scienceSession);
 
     connect(ui->scienceKeysPage, SIGNAL(scienceButtonPressed(Button)), this, SLOT(handleScienceKeysButtonPress(Button)));
-    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateHistory( )));
+    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateScienceHistory( )));
 
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageExprFormat(const QString&)),ui->scienceStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageQuantity(const Quantity&)), ui->scienceStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->scienceExprEdit,SIGNAL(scienceStageChanged()),ui->scienceStagePage, SLOT(setStageResult( )));
+    connect(ui->scienceExprEdit,SIGNAL(scienceExprCalcError()),ui->scienceStagePage, SLOT(setStageErrorMessage( )));
+
 
     connect(ui->scienceHistory,SIGNAL(exprSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
     connect(ui->scienceStagePage,SIGNAL(stageExprSelected(const QString&)), ui->scienceExprEdit,SLOT(setText(const QString& )));
-    connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearHistory()));
+    connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearScienceHistory()));
 
+    //科学模式下的计算功能切换
     connect(ui->scienceKeysPage,SIGNAL(scienceSwitchAngleUnit(int )), ui->scienceExprEdit,SLOT(handleFunction_SwitchAngleUnit(int )));
+    connect(ui->scienceKeysPage,SIGNAL(scienceIsShift()), ui->scienceExprEdit,SLOT(handleFunction_Shift()));
+    connect(ui->scienceKeysPage,SIGNAL(scienceIsHYP()), ui->scienceExprEdit,SLOT(handleFunction_HYP()));
+    connect(ui->scienceExprEdit,SIGNAL(scienceFEChanged()),ui->scienceHistory,SLOT(historyFEChanged()));
+
+
 }
 
 ScienceModePage::~ScienceModePage()
@@ -57,7 +66,10 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
 
     case Button_Key_Add: ui->scienceExprEdit->insert("+"); break;
     case Button_Key_Sub: ui->scienceExprEdit->insert("−"); break;
-    case Button_Key_Mult: ui->scienceExprEdit->insert("×"); break;
+    case Button_Key_Mult:
+//        ui->scienceExprEdit->insert("×");
+        ui->scienceExprEdit->insert(QString::fromUtf8("×"));
+        break;
     case Button_Key_Divide: ui->scienceExprEdit->insert("÷"); break;
     case Button_Key_Point: ui->scienceExprEdit->insert("."); break;
     case Button_Key_Brackets:
@@ -65,28 +77,19 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         ui->scienceExprEdit->cursorBackward(false);
         break;
     case Button_Key_Square:
-        if(ui->scienceExprEdit->text().isEmpty())
-            ui->scienceExprEdit->insert("0^2");
-        else
-            ui->scienceExprEdit->insert("^2");
+        ui->scienceExprEdit->handleFunction_Square();
         break;
     case Button_Key_Xn:
-        if(ui->scienceExprEdit->text().isEmpty())
-            ui->scienceExprEdit->insert("0^");
-        else
-            ui->scienceExprEdit->insert("^");
+        ui->scienceExprEdit->handleFunction_Xn();
         break;
     case Button_Key_Sin:
-        ui->scienceExprEdit->insert("sin()");
-        ui->scienceExprEdit->cursorBackward(false);
+        ui->scienceExprEdit->handleFunction_Sin();
         break;
     case Button_Key_Cos:
-        ui->scienceExprEdit->insert("cos()");
-        ui->scienceExprEdit->cursorBackward(false);
+        ui->scienceExprEdit->handleFunction_Cos();
         break;
     case Button_Key_Tan:
-        ui->scienceExprEdit->insert("tan()");
-        ui->scienceExprEdit->cursorBackward(false);
+        ui->scienceExprEdit->handleFunction_Tan();
         break;
     case Button_Key_Sqrt:
         ui->scienceExprEdit->handleFunction_Sqrt();
@@ -96,12 +99,10 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         ui->scienceExprEdit->handleFunction_10n();
         break;
     case Button_Key_Log:
-        ui->scienceExprEdit->insert("lg()");
-        ui->scienceExprEdit->cursorBackward(false);
+        ui->scienceExprEdit->handleFunction_Log();
         break;
     case Button_Key_Exp:
-        ui->scienceExprEdit->insert("exp()");
-        ui->scienceExprEdit->cursorBackward(false);
+        ui->scienceExprEdit->handleFunction_Exp();
         break;
     case Button_Key_Mod:
         if(ui->scienceExprEdit->text().isEmpty())
@@ -109,16 +110,14 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         else
             ui->scienceExprEdit->insert("mod");
         break;
-    case Button_Key_Backspace:ui->scienceExprEdit->backspace(); break;
+    case Button_Key_Backspace:ui->scienceExprEdit->handleFunction_Backspace(); break;
     case Button_Key_Pi:
-//        m_scienceExpr->insert( QString::fromUtf8("π"));
-        ui->scienceExprEdit->handleFunction_Pi();
+        ui->scienceExprEdit->insert(QLatin1String("pi"));
+//        ui->scienceExprEdit->insert(QString::fromUtf8("π"));
+//        ui->scienceExprEdit->handleFunction_Pi();
         break;
     case Button_Key_Factorials:
-        if(ui->scienceExprEdit->text().isEmpty())
-            ui->scienceExprEdit->insert("0!");
-        else
-            ui->scienceExprEdit->insert("!");
+        ui->scienceExprEdit->handleFunction_Factorials();
         break;
     case Button_Key_Opposite:
         ui->scienceExprEdit->handleFunction_Opposite();
@@ -133,8 +132,16 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         break;
     case Button_Key_AngleUnit:
         ui->scienceKeysPage->switchScienceAngleUnit();
+        break;
+    case Button_Key_HYP:
+        ui->scienceKeysPage->switchScienceHYP();
+        break;
     case Button_Key_FE:
         ui->scienceExprEdit->handleFunction_FE();
+        break;
+    case Button_Key_Shift:
+        ui->scienceKeysPage->shiftScienceFunction();
+        break;
     default: break;
     }
 }

@@ -8,10 +8,6 @@
 #include <QMap>
 enum Button;
 
-enum NumFormat{
-    Num_Format_Hex,Num_Format_Dec,Num_Format_Oct,Num_Format_Bin
-};
-
 class ProgrammerKeysPage : public QWidget
 {
     Q_OBJECT

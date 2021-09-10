@@ -8,6 +8,8 @@ class ScienceKeysPage;
 class HistoryRecoder;
 class StagePage;
 class ScienceExprCalculator;
+
+class Settings;
 enum Button;
 namespace Ui {
 class ScienceModePage;
@@ -26,6 +28,7 @@ protected:
 private:
     Ui::ScienceModePage *ui;
     Session *m_scienceSession = nullptr;
+
 
 public slots:
     void handleScienceKeysButtonPress(Button);

@@ -44,7 +44,7 @@ private:
 //    HistoryRecoder * m_historyRecoder = nullptr;
 //    Session *m_standardSession = nullptr;
 //    Session *m_scienceSession = nullptr;
-//    Evaluator* m_evaluator;
+    Evaluator* m_evaluator;
 //    Settings* m_settings;
 
 

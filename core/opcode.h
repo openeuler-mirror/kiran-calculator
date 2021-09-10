@@ -28,7 +28,7 @@ class Opcode
 {
 public:
     enum  Type { Nop, Load, Ref, Function, Add, Sub, Neg, Mul, Div, Pow,
-           Fact, Modulo, IntDiv, Shl, Shr, BAnd, BOr, Conv, Pct,
+           Fact, Modulo, IntDiv, Shl, Shr, BAnd, BOr, Conv, Pct,Yroot,
            BXor, Rol, Ror};
 
     Type type;
