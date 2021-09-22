@@ -38,31 +38,7 @@ Utils::~Utils()
 {
 }
 
-/**
- * @brief 返回程序文件路径
- */
-QString Utils::getConfigDir()
-{
-    QDir dir(QDir(QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first())
-             .filePath(qApp->organizationName()));
 
-    return dir.filePath(qApp->applicationName());
-}
-
-/**
- * @brief 获取文件内容（暂未使用）
- */
-QString Utils::getQssContent(const QString &filePath)
-{
-    QFile file(filePath);
-    QString qss = nullptr;
-
-    if (file.open(QIODevice::ReadOnly)) {
-        qss = file.readAll();
-    }
-
-    return qss;
-}
 
 /**
  * @brief 补充千位符(针对结果)
@@ -264,23 +240,59 @@ QString Utils::reformatSeparatorsPro(const QString &exp, const int Base)
     }
 
 //    for (int i = 0; i < formatStr.length();) {
-//        if (formatStr.at(i).isLower()) {
-//            if (formatStr.at(i) == 'o') {
+//        if (formatStr.at(i).isLower() && !(formatStr.at(i) == 'e')) {
+//            if(formatStr.at(i) == 's' && formatStr.at(i+1) == 'q'){
+//                i+=4;
+//            }else if (formatStr.at(i) == 'o' || formatStr.at(i) == 'l' || formatStr.at(i) == 'p') {
 //                i += 2;
-//            } else {
+//            }
+//            else {
 //                i += 3;
 //            }
 //            if (i <= formatStr.length() - 1) {
 //                formatStr.insert(i, " ");
 //                i++;
 //            }
-//        } else if (i < formatStr.length() - 1 && formatStr.at(i + 1).isLower()) {
+//        } else if (i < formatStr.length() - 1 && formatStr.at(i + 1).isLower() && !(formatStr.at(i+1) == 'e')) {
 //            formatStr.insert(i + 1, " ");
 //            i += 2;
-//        } else {
+//        } else if (formatStr.at(i) == '+' || formatStr.at(i) == "−" ||
+//                   formatStr.at(i) == "×" || formatStr.at(i) == "÷") {
+//            i+=1;
+//            if(i <= formatStr.length() - 1){
+//                formatStr.insert(i, " ");
+//                i++;
+//            }
+//        } else if( i < formatStr.length() - 1 &&
+//                   (formatStr.at(i+1) == '+' || formatStr.at(i+1) == "−" ||
+//                    formatStr.at(i+1) == "×" || formatStr.at(i+1) == "÷")) {
+//            formatStr.insert(i + 1," ");
+//            i += 2;
+//        }
+//        else {
 //            i++;
 //        }
 //    }
+
+    for (int i = 0; i < formatStr.length();) {
+            if (formatStr.at(i).isLower()) {
+                if (formatStr.at(i) == 'o') {
+                    i += 2;
+                } else {
+                    i += 3;
+                }
+                if (i <= formatStr.length() - 1) {
+                    formatStr.insert(i, " ");
+                    i++;
+                }
+            } else if (i < formatStr.length() - 1 && formatStr.at(i + 1).isLower()) {
+                formatStr.insert(i + 1, " ");
+                i += 2;
+            } else {
+                i++;
+            }
+        }
+
 
     return formatStr;
 }

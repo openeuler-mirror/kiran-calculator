@@ -148,7 +148,7 @@
     </rect>
    </property>
    <property name="contextMenuPolicy">
-    <enum>Qt::NoContextMenu</enum>
+    <enum>Qt::CustomContextMenu</enum>
    </property>
    <property name="layoutDirection">
     <enum>Qt::RightToLeft</enum>

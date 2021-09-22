@@ -30,6 +30,7 @@ Window::Window(QWidget *parent)
 
     m_drawer = new ModeSwitcherPage(this);
 
+
    //侧边栏按钮布局，待确定
     QPushButton *m_drawerButton = new QPushButton("模式",this);
     m_drawerButton->show();
@@ -45,7 +46,6 @@ Window::Window(QWidget *parent)
     connect(m_drawerButton,SIGNAL(clicked()),this,SLOT(on_drawerButton()));
 
     ui->stackedWidget->setCurrentIndex(0);
-
 
 }
 

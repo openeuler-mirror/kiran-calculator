@@ -6,9 +6,7 @@
 #include <QParallelAnimationGroup>
 #include <QSequentialAnimationGroup>
 #include <QGraphicsOpacityEffect>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QMouseEvent>
+#include <QAbstractItemView>
 
 namespace Ui {
 class ModeSwitcherPage;
@@ -31,10 +29,11 @@ public:
     void controlAnimation();
 
     static bool m_flag;
-
+protected:
+//    virtual void moveEvent(QMoveEvent *event) override;
 
 public slots:
-    int on_modeListWidget_itemSelectionChanged();
+    int  modeListitemSelection();
     void activateAnimation();
 
 private:

@@ -32,6 +32,9 @@ public slots:
     void clearScienceHistory();
     void clearProgrammerHistory();
 
+protected:
+    QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
+                                                         const QEvent *event) const override;
 protected slots:
     void handleItem(QListWidgetItem *);
 

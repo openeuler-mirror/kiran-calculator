@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">QWidget{border:1px solid red;}</string>
   </property>
-  <widget class="QListWidget" name="modeListWidget">
+  <widget class="ModeList" name="modeList">
    <property name="geometry">
     <rect>
      <x>9</x>
@@ -65,6 +65,13 @@
    </item>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ModeList</class>
+   <extends>QListWidget</extends>
+   <header location="global">mode-list.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

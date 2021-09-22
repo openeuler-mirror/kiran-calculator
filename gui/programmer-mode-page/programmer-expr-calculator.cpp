@@ -10,6 +10,11 @@
 #include "general-enum.h"
 #include <QDebug>
 #include <QRegularExpression>
+#include <QDateTime>
+#include <QRegExp>
+#include <QMenu>
+#include <QApplication>
+#include <QClipboard>
 #define NUM_FORMAT_DEC 1
 #define BASE_TAG(basetag) \
     if (m_currentFormat == 0) \
@@ -34,16 +39,21 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : QLineEdit(
     connect(this, SIGNAL(programmerExprCalcMessageOct(const QString& )), this, SLOT(setText(const QString& )));
     connect(this, SIGNAL(programmerExprCalcMessageBin(const QString& )), this, SLOT(setText(const QString& )));
 
+
     //textChanged和textEdited信号不同在于，当以编程方式更改文本时，例如，通过调用setText()会发出textChanged信号，不会发出textEdited信号。
 //    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(autoProgrammerExprCalc()));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(autoProgrammerExprCalc()));
 //    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
-    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
+
+//    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
 
     m_funclist = { "not", "xor", "and", "nor", "ror", "rol",
-                      "shl", "shr", "or",
+                      "shl", "shr", "or", "mod",
                  };
+
+    initMenuAndAction();
+    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));
 }
 
 void ProgrammerExprCalculator::setSession(Session *session)
@@ -58,6 +68,125 @@ void ProgrammerExprCalculator::disableSelectText()
     qobject_cast<QLineEdit*>(sender())->deselect();
 }
 
+void ProgrammerExprCalculator::showMenu(const QPoint &point)
+{
+    m_menu->addAction(m_copy);
+    m_menu->addAction(m_paste);
+    m_menu->addSeparator();
+    m_menu->addAction(m_selectAll);
+
+    if(QApplication::clipboard()->text().isEmpty())
+        m_paste->setEnabled(false);
+    else
+        m_paste->setEnabled(true);
+
+    if(selectedText().isEmpty())
+        m_copy->setEnabled(false);
+    else
+        m_copy->setEnabled(true);
+
+    if(text().isEmpty())
+        m_selectAll->setEnabled(false);
+    else
+        m_selectAll->setEnabled(true);
+
+    m_menu->exec(mapToGlobal(point));
+}
+
+void ProgrammerExprCalculator::copyResultToClipboard()
+{
+    if(text().isEmpty())
+        return;
+    QApplication::clipboard()->setText(selectedText());
+}
+
+void ProgrammerExprCalculator::paste()
+{
+    if(!judgeInsertPos())
+        return;
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))
+    {
+        deselect();     //选中时不可以粘贴,全选时可以
+        return;
+    }
+    QString oldText = text(); //未粘贴操作的text
+    int curpos = cursorPosition(); //未粘贴操作的光标位
+    QString text = Utils::toHalfWidth(QApplication::clipboard()->text());
+    text = text.left(text.indexOf("="));
+    text = text.replace(QString::fromUtf8("＋"),"+")
+               .replace(QString::fromUtf8("－"),QString::fromUtf8("−"))
+               .replace("_", QString::fromUtf8("−"))
+               .replace("-",QString::fromUtf8("−"))
+               .replace('*', "×")
+               .replace('X', "×")
+               .replace(QString::fromUtf8("＊"), "×")
+               .replace(QString::fromUtf8("（"), "(")
+               .replace(QString::fromUtf8("）"), ")")
+               .replace(QString::fromUtf8("——"), QString::fromUtf8("−"))
+               .replace(QString::fromUtf8("％"), "%")
+               .replace('/', "÷");
+
+    //匹配函数方法
+    QStringList list;
+    //根据不同进制，对应不同的筛选规则
+    // \\s ->通过 \和s 意义不明
+    switch (m_currentFormat) {
+    case Num_Format_Hex:
+        text.remove(QRegExp("[G-Z]"));
+        list = text.split(QRegExp("[A-F0-9+−×÷()%\\s]"));
+        break;
+    case Num_Format_Oct:
+        text.remove(QRegExp("[8-9]"));
+        list = text.split(QRegExp("[0-7+−×÷()%\\s]"));
+        break;
+    case Num_Format_Bin:
+        text.remove(QRegExp("[2-9]"));
+        list = text.split(QRegExp("[0-1+−×÷()%\\s]"));
+        break;
+    default:
+        list = text.split(QRegExp("[0-9+−×÷(),%\\s]"));
+        break;
+    }
+    for (int i = 0; i < list.size(); i++) {
+        QString item = list[i];
+        for (int j = 0; j < m_funclist.size(); j++) {
+            if (item.toLower().contains(m_funclist[j])) {
+                item.replace(item, m_funclist[j]); //包含函数名的取出;item中若存在两个函数名，只可以替代最前面的函数名
+                break;
+            }
+            if (j == m_funclist.size() - 1) {
+                item.replace(item, QString());
+            }
+        }
+        text.replace(list[i], item);
+    }
+    if (isNumberOutOfRange(text))
+        return;
+
+    QString exp = QLineEdit::text();
+
+    while (exp.count("(") + text.count("(") > 100) {
+        text.remove(text.lastIndexOf("("), 1);
+    }
+    while (exp.count(")") + text.count(")") > 100) {
+        text.remove(text.lastIndexOf(")"), 1);
+    }
+    handleProgrammerInsertText(text);
+
+    if (QLineEdit::text() == exp) {
+        setText(oldText);
+        setCursorPosition(curpos);
+        qDebug() << "Invalid content"; //提示是否复制了无效内容,复制的内容全是字母等
+    }
+}
+
+void ProgrammerExprCalculator::exprSelectAll()
+{
+    selectAll();
+}
+
+
+
 void ProgrammerExprCalculator::exprFormatChanged(int format)
 {
     m_previousFormat = m_currentFormat;      //记录转变之前的进制
@@ -67,7 +196,11 @@ void ProgrammerExprCalculator::exprFormatChanged(int format)
 //当进制表切换时，输入栏中对应的值需要同步切换
 void ProgrammerExprCalculator::radixChanged(int cureentFormat)
 {
-    this->setText(scanAndExec(m_previousFormat,cureentFormat,QLineEdit::text()));
+//    this->setText(scanAndExec(m_previousFormat,cureentFormat,QLineEdit::text().replace("−","-")));
+//    this->setText(scanAndExec(m_previousFormat,cureentFormat,QLineEdit::text()
+//                              .replace(QString::fromUtf8("−"),"-")));     //符号'-'待区分完善
+    this->setText(scanAndExec(m_previousFormat,cureentFormat,QLineEdit::text()));     //符号'-'待区分完善
+
 }
 
 //扫描表达式，提取数字串进行进制转换，再拼接
@@ -77,7 +210,7 @@ QString ProgrammerExprCalculator::scanAndExec(int previousFormat,int cureentForm
     m_opvec.clear();
     m_textorder = QString();
     QString oldtext = text;
-    oldtext.remove(",").remove(" ");
+    oldtext.remove(",").remove(" ").replace(QString::fromUtf8("−"),"-");
     for (int i = 0; i < oldtext.length();) {
         if (isNumber(oldtext.at(i))) {
             for (int j = 0; j < oldtext.length() - i; j++) {
@@ -102,11 +235,7 @@ QString ProgrammerExprCalculator::scanAndExec(int previousFormat,int cureentForm
             }
         } else {
             if (oldtext.at(i).isLower()) {
-                if (oldtext.at(i) == 'n' && oldtext.at(i + 1) == 'a') {
-                    m_opvec.append(oldtext.mid(i, 4));
-                    m_textorder += "1";
-                    i += 4;
-                } else if (oldtext.at(i) == 'o') {
+                if (oldtext.at(i) == 'o') {
                     m_opvec.append(oldtext.mid(i, 2));
                     m_textorder += "1";
                     i += 2;
@@ -180,7 +309,7 @@ QString ProgrammerExprCalculator::scanAndExec(int previousFormat,int cureentForm
             m_opvec.pop_front();
         }
     }
-    return newtext;
+    return newtext.replace("-",QString::fromUtf8("−"));
 }
 
 //检测表达式中字符的位数是否超出位数
@@ -276,6 +405,12 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
 void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
 {
     int oldPosition = this->cursorPosition();
+    QDateTime time = QDateTime::currentDateTime();
+    int timeT = time.toTime_t();
+    qDebug () << "QTime_reformatShowExpr:";
+    qDebug () << timeT;
+
+    qInfo() << "QTime_reformatShowExpr:" << time;
 
     QString reformatExpr;
     switch (m_currentFormat) {
@@ -287,6 +422,9 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
         break;
     case Num_Format_Dec:
         reformatExpr = Utils::reformatSeparatorsPro(QString(text).remove(" ").remove(","), 10);
+
+//        reformatExpr = reformatExpr.replace("-","+");
+
 //        reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
         break;
     case Num_Format_Hex:
@@ -370,7 +508,8 @@ bool ProgrammerExprCalculator::isNumber(QChar a)
 //手动计算，将10进制结果存入历史记录
 void ProgrammerExprCalculator::programmerExprCalc()
 {
-    QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(","));
+    QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(",")
+                                                  .replace(QString::fromUtf8("−"),"-").replace("÷","\\"));
     qDebug() << "programmerExpr:" + programmerExpr;
     if(isNumberOutOfRange(programmerExpr)){
         qDebug() << "programmerExprCalc_______isNumberOutOfRange:" ;
@@ -390,52 +529,59 @@ void ProgrammerExprCalculator::programmerExprCalc()
 
     if(m_evaluator->error().isEmpty())
     {
-        QString messageBin = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Binary() + Quantity::Format::Fixed());
-        QString messageOct = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Octal() + Quantity::Format::Fixed());
-        QString messageHex = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Hexadecimal() + Quantity::Format::Fixed());
-        QString messageDec = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed());
-//        auto messageDec = NumberFormatter::format(quantity);
-//        auto test = NumberFormatter::format()
+        if(!quantity.isNan())
+        {
+            QJsonObject jsonObject;
+            quantity.serialize(jsonObject);
+            qInfo() << jsonObject;
+            QString messageBin = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Binary() + Quantity::Format::Fixed());
+            QString messageOct = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Octal() + Quantity::Format::Fixed());
+            QString messageHex = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Hexadecimal() + Quantity::Format::Fixed());
+            QString messageDec = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed());
+    //        auto messageDec = NumberFormatter::format(quantity);
+    //        auto test = NumberFormatter::format()
 
-//        auto messageDec = DMath::format(quantity, Quantity::Format::Decimal());
-//        emit programmerExprCalcMessageDec(messageDec);
-//        emit programmerExprCalcQuantityDec(quantity);
+    //        auto messageDec = DMath::format(quantity, Quantity::Format::Decimal());
+    //        emit programmerExprCalcMessageDec(messageDec);
+    //        emit programmerExprCalcQuantityDec(quantity);
 
-        switch (m_currentFormat) {
-        case Num_Format_Hex:
-            emit programmerExprCalcMessageHex(messageHex.remove("0x"));     //去掉前缀
-            qDebug() << "formatHex:" + messageHex;
-            break;
-        case Num_Format_Dec:
-            emit programmerExprCalcMessageDec(messageDec);
-            emit programmerExprCalcQuantityDec(quantity);
-            qDebug() << "formatDec:" + messageDec;
-            break;
-        case Num_Format_Oct:
-            emit programmerExprCalcMessageOct(messageOct.remove("0o"));    //去掉前缀
-            qDebug() << "formatOct:" + messageOct;
-            break;
-        case Num_Format_Bin:
-            emit programmerExprCalcMessageBin(messageBin.remove("0b"));    //去掉前缀
-            qDebug() << "formatBin:" + messageBin;
-            break;
+            switch (m_currentFormat) {
+            case Num_Format_Hex:
+                emit programmerExprCalcMessageHex(messageHex.remove("0x"));     //去掉前缀
+                qDebug() << "formatHex:" + messageHex;
+                break;
+            case Num_Format_Dec:
+                emit programmerExprCalcMessageDec(messageDec);
+                emit programmerExprCalcQuantityDec(quantity);
+                qDebug() << "formatDec:" + messageDec;
+                break;
+            case Num_Format_Oct:
+                emit programmerExprCalcMessageOct(messageOct.remove("0o"));    //去掉前缀
+                qDebug() << "formatOct:" + messageOct;
+                break;
+            case Num_Format_Bin:
+                emit programmerExprCalcMessageBin(messageBin.remove("0b"));    //去掉前缀
+                qDebug() << "formatBin:" + messageBin;
+                break;
+            }
+            //将表达式转为10进制后再存入history
+            QString exprFormatConvertToDec = scanAndExec(m_currentFormat,NUM_FORMAT_DEC,programmerExpr).replace("\\","÷");
+            qDebug() << "exprFormatConvertToDec: " + exprFormatConvertToDec;
+
+            //表达式和结果均以10进制存入历史记录
+            m_programmerSession->addHistoryEntry(HistoryEntry(exprFormatConvertToDec,quantity));
+            m_programmerHistory = Evaluator::instance()->session()->historyToList();
+            m_currentProgrammerHistoryIndex = m_programmerHistory.count();
+
+            emit programmerHistoryChanged();
+
+            //将十进制表达式和结果进行暂存
+            emit programmerToStageExprFormatDec(exprFormatConvertToDec);
+            emit programmerToStageQuantity(quantity);
+            emit programmerStageChanged();
         }
-        //将表达式转为10进制后再存入history
-        QString exprFormatConvertToDec = scanAndExec(m_currentFormat,NUM_FORMAT_DEC,programmerExpr);
-        qDebug() << "exprFormatConvertToDec: " + exprFormatConvertToDec;
-
-        //表达式和结果均以10进制存入历史记录
-        m_programmerSession->addHistoryEntry(HistoryEntry(exprFormatConvertToDec,quantity));
-        m_programmerHistory = Evaluator::instance()->session()->historyToList();
-        m_currentProgrammerHistoryIndex = m_programmerHistory.count();
-
-        emit programmerHistoryChanged();
-
-        //将十进制表达式和结果进行暂存
-        emit programmerToStageExprFormatDec(exprFormatConvertToDec);
-        emit programmerToStageQuantity(quantity);
-        emit programmerStageChanged();
-
+        else
+            emit programmerExprCalcNan();
     }
     else
     {
@@ -448,8 +594,17 @@ void ProgrammerExprCalculator::programmerExprCalc()
 //自动计算，结果为10进制，不存入历史记录
 void ProgrammerExprCalculator::autoProgrammerExprCalc()
 {
-    QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(","));  //含有括号自动补全
+    QDateTime time = QDateTime::currentDateTime();
+    int timeT = time.toTime_t();
+    qDebug () << "QTime_autoProgrammerExprCalc:";
+    qDebug () << timeT;
+    qInfo() << "QTime_autoProgrammerExprCalc:" << time;
+
+    QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(",")
+                                                  .replace("−","-").replace("÷","\\"));  //含有括号自动补全
+
     qDebug() << "programmerExpr:   " +programmerExpr;
+
 
     //当超出位数时，限制输入框输入
     if (isNumberOutOfRange(programmerExpr))
@@ -477,7 +632,12 @@ void ProgrammerExprCalculator::autoProgrammerExprCalc()
 
     if(m_evaluator->error().isEmpty())
     {
-        auto formatDec = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed());
+        QString formatDec = DMath::format(quantity,  Quantity::Format::Decimal() + Quantity::Format::Fixed());
+        int intResult = formatDec.toInt();
+
+        qDebug() << "intResult:";
+        qDebug() << intResult;
+
         emit programmerToNumConversionFormatDec(formatDec);
         emit programmerToNumConversionQuantityDec(quantity);
     }
@@ -495,6 +655,20 @@ void ProgrammerExprCalculator::insert(const QString& text)
     QLineEdit::insert(text);
 }
 
+void ProgrammerExprCalculator::handleProgrammerInsertText(const QString &text)
+{
+    if(!judgeInsertPos())
+        return;
+    if(text.isEmpty())
+        return;
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))      //全选时可以删除
+    {
+        deselect();
+        return;
+    }
+    insert(text);
+}
+
 void ProgrammerExprCalculator::triggerEnter()
 {
     m_currentProgrammerHistoryIndex = m_programmerHistory.count();
@@ -508,7 +682,7 @@ void  ProgrammerExprCalculator::setText(const QString& result)
 {
     //显示结果中去除'='号
     QString resultModify =  result;
-    resultModify.remove('=');
+    resultModify.remove('=').replace("-",QString::fromUtf8("−"));
     QLineEdit::setText(resultModify);
 }
 
@@ -658,6 +832,38 @@ bool ProgrammerExprCalculator::curposInNumber(int curpos)
     return false;
 }
 
+bool ProgrammerExprCalculator::judgeInsertPos()
+{
+    QString sRegNum = "[a-z]";
+    QRegExp rx;
+    rx.setPattern(sRegNum);
+    if (cursorPosition() > 0 && rx.exactMatch(text().at(cursorPosition() - 1))) {
+        for (int i = 0; i < m_funclist.size(); i++) {
+            //记录光标左侧离光标最近的函数位
+            int funpos = text().lastIndexOf(m_funclist[i], cursorPosition() - 1);
+            if (funpos != -1 && (funpos < cursorPosition()) && (cursorPosition() < funpos + m_funclist[i].length()))
+                return false; //光标在函数中
+        }
+    }
+    return true;
+}
+
+void ProgrammerExprCalculator::initMenuAndAction()
+{
+    m_menu = new QMenu(this);
+    m_copy = new QAction(this);
+    m_paste = new QAction(this);
+    m_selectAll = new QAction(this);
+
+    m_copy->setText("复制");
+    m_paste->setText("粘贴");
+    m_selectAll->setText("全选");
+
+    connect(m_copy,SIGNAL(triggered()), this, SLOT(copyResultToClipboard()));
+    connect(m_paste, SIGNAL(triggered()), this, SLOT(paste()));
+    connect(m_selectAll, SIGNAL(triggered()), this, SLOT(exprSelectAll()));
+}
+
 //删除逗号和选中后删除 ，导致光标位置移动，有待进一步修改
 void ProgrammerExprCalculator::handleProgrammerFunction_Backspace()
 {
@@ -679,10 +885,11 @@ void ProgrammerExprCalculator::handleProgrammerFunction_Backspace()
     QString sRegNum = "[a-z]";
     QRegExp rx;
     rx.setPattern(sRegNum);
-//    SSelection selection = getSelection();
-//    if (selection.selected != "") {
-//        selectedPartDelete(rx);
-//    } else {
+
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text())) {
+        deselect(); //取消选中
+        return;
+    } else {
         QString text = QLineEdit::text();
         int cur = QLineEdit::cursorPosition();
         int funpos = -1;
@@ -750,14 +957,10 @@ void ProgrammerExprCalculator::handleProgrammerFunction_Backspace()
                 }
             }
         }
-//    }
+    }
 
 }
 
-void ProgrammerExprCalculator::mouseDoubleClickEvent(QMouseEvent *)
-{
-    return;
-}
 
 //限制键盘输入
 void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
@@ -767,77 +970,83 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
     qInfo() << "keyPressed:" << event;
 
     switch (key) {
-    case Qt::Key_0: insert("0"); break;
-    case Qt::Key_1: insert("1"); break;
+//    case Qt::Key_Backslash: handleProgrammerInsertText("\\");
+//        break;
+    case Qt::Key_0: handleProgrammerInsertText("0"); break;
+    case Qt::Key_1: handleProgrammerInsertText("1"); break;
     case Qt::Key_2:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("2");
+        handleProgrammerInsertText("2");
         break;
     case Qt::Key_3:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("3");
+        handleProgrammerInsertText("3");
         break;
     case Qt::Key_4:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("4");
+        handleProgrammerInsertText("4");
         break;
     case Qt::Key_5:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("5");
+        handleProgrammerInsertText("5");
         break;
     case Qt::Key_6:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("6");
+        handleProgrammerInsertText("6");
         break;
     case Qt::Key_7:
         if(m_currentFormat == Num_Format_Bin)
             break;
-        insert("7");
+        handleProgrammerInsertText("7");
         break;
     case Qt::Key_8:
         if(m_currentFormat == Num_Format_Bin || m_currentFormat == Num_Format_Oct)
             break;
-        insert("8");
+        handleProgrammerInsertText("8");
         break;
     case Qt::Key_9:
         if(m_currentFormat == Num_Format_Bin || m_currentFormat == Num_Format_Oct)
             break;
-        insert("9");
+        handleProgrammerInsertText("9");
         break;
     case Qt::Key_A:
         if(m_currentFormat == Num_Format_Hex)
-            insert("A");
+            handleProgrammerInsertText("A");
          break;
     case Qt::Key_B:
         if(m_currentFormat == Num_Format_Hex)
-            insert("B");
+            handleProgrammerInsertText("B");
         break;
     case Qt::Key_C:
         if(m_currentFormat == Num_Format_Hex)
-            insert("C");
+            handleProgrammerInsertText("C");
         break;
     case Qt::Key_D:
         if(m_currentFormat == Num_Format_Hex)
-            insert("D");
+            handleProgrammerInsertText("D");
         break;
     case Qt::Key_E:
         if(m_currentFormat == Num_Format_Hex)
-            insert("E");
+            handleProgrammerInsertText("E");
         break;
     case Qt::Key_F:
         if(m_currentFormat == Num_Format_Hex)
-            insert("F");
+            handleProgrammerInsertText("F");
         break;
 
-    case Qt::Key_Plus: insert("+"); break;
-    case Qt::Key_Minus: insert("−"); break;
-    case Qt::Key_Asterisk: insert("×"); break; //*
-    case Qt::Key_Slash: insert("÷"); break; // "/"
+    case Qt::Key_Plus: handleProgrammerInsertText("+"); break;
+    case Qt::Key_Minus:
+//        insert("-"); //deepin   显示比较短
+        handleProgrammerInsertText("−"); //speedcrush  显示比较长
+        break;
+
+    case Qt::Key_Asterisk: handleProgrammerInsertText("×"); break;
+    case Qt::Key_Slash: handleProgrammerInsertText("÷"); break;
 
     case Qt::Key_Enter:
         programmerExprCalc();
@@ -863,4 +1072,16 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
     case Qt::Key_Escape: clear(); break;
     }
 //    QLineEdit::keyPressEvent(event);
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
+    {
+        copyResultToClipboard();
+    }
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
+    {
+        paste();
+    }
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
+    {
+        exprSelectAll();
+    }
 }

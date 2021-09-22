@@ -24,6 +24,7 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageQuantity(const Quantity&)), ui->scienceStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->scienceExprEdit,SIGNAL(scienceStageChanged()),ui->scienceStagePage, SLOT(setStageResult( )));
     connect(ui->scienceExprEdit,SIGNAL(scienceExprCalcError()),ui->scienceStagePage, SLOT(setStageErrorMessage( )));
+    connect(ui->scienceExprEdit,SIGNAL(scienceExprCalcNan()),ui->scienceStagePage, SLOT(setStageNanMessage( )));
 
 
     connect(ui->scienceHistory,SIGNAL(exprSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
@@ -35,7 +36,6 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     connect(ui->scienceKeysPage,SIGNAL(scienceIsShift()), ui->scienceExprEdit,SLOT(handleFunction_Shift()));
     connect(ui->scienceKeysPage,SIGNAL(scienceIsHYP()), ui->scienceExprEdit,SLOT(handleFunction_HYP()));
     connect(ui->scienceExprEdit,SIGNAL(scienceFEChanged()),ui->scienceHistory,SLOT(historyFEChanged()));
-
 
 }
 
@@ -53,27 +53,27 @@ void ScienceModePage::showEvent(QShowEvent *event)
 void ScienceModePage::handleScienceKeysButtonPress(Button button)
 {
     switch (button) {
-    case Button_Key_0: ui->scienceExprEdit->insert("0"); break;
-    case Button_Key_1: ui->scienceExprEdit->insert("1"); break;
-    case Button_Key_2: ui->scienceExprEdit->insert("2"); break;
-    case Button_Key_3: ui->scienceExprEdit->insert("3"); break;
-    case Button_Key_4: ui->scienceExprEdit->insert("4"); break;
-    case Button_Key_5: ui->scienceExprEdit->insert("5"); break;
-    case Button_Key_6: ui->scienceExprEdit->insert("6"); break;
-    case Button_Key_7: ui->scienceExprEdit->insert("7"); break;
-    case Button_Key_8: ui->scienceExprEdit->insert("8"); break;
-    case Button_Key_9: ui->scienceExprEdit->insert("9"); break;
+    case Button_Key_0: ui->scienceExprEdit->handleInsertText("0"); break;
+    case Button_Key_1: ui->scienceExprEdit->handleInsertText("1"); break;
+    case Button_Key_2: ui->scienceExprEdit->handleInsertText("2"); break;
+    case Button_Key_3: ui->scienceExprEdit->handleInsertText("3"); break;
+    case Button_Key_4: ui->scienceExprEdit->handleInsertText("4"); break;
+    case Button_Key_5: ui->scienceExprEdit->handleInsertText("5"); break;
+    case Button_Key_6: ui->scienceExprEdit->handleInsertText("6"); break;
+    case Button_Key_7: ui->scienceExprEdit->handleInsertText("7"); break;
+    case Button_Key_8: ui->scienceExprEdit->handleInsertText("8"); break;
+    case Button_Key_9: ui->scienceExprEdit->handleInsertText("9"); break;
 
-    case Button_Key_Add: ui->scienceExprEdit->insert("+"); break;
-    case Button_Key_Sub: ui->scienceExprEdit->insert("−"); break;
+    case Button_Key_Add: ui->scienceExprEdit->handleInsertText("+"); break;
+    case Button_Key_Sub: ui->scienceExprEdit->handleInsertText("−"); break;
     case Button_Key_Mult:
 //        ui->scienceExprEdit->insert("×");
-        ui->scienceExprEdit->insert(QString::fromUtf8("×"));
+        ui->scienceExprEdit->handleInsertText(QString::fromUtf8("×"));
         break;
-    case Button_Key_Divide: ui->scienceExprEdit->insert("÷"); break;
-    case Button_Key_Point: ui->scienceExprEdit->insert("."); break;
+    case Button_Key_Divide: ui->scienceExprEdit->handleInsertText("÷"); break;
+    case Button_Key_Point: ui->scienceExprEdit->handleInsertText("."); break;
     case Button_Key_Brackets:
-        ui->scienceExprEdit->insert("()");
+        ui->scienceExprEdit->handleInsertText("()");
         ui->scienceExprEdit->cursorBackward(false);
         break;
     case Button_Key_Square:
@@ -106,22 +106,23 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         break;
     case Button_Key_Mod:
         if(ui->scienceExprEdit->text().isEmpty())
-            ui->scienceExprEdit->insert("0mod");
+            ui->scienceExprEdit->handleInsertText("0mod");
         else
-            ui->scienceExprEdit->insert("mod");
+            ui->scienceExprEdit->handleInsertText("mod");
         break;
     case Button_Key_Backspace:ui->scienceExprEdit->handleFunction_Backspace(); break;
     case Button_Key_Pi:
-        ui->scienceExprEdit->insert(QLatin1String("pi"));
+        ui->scienceExprEdit->handleInsertText(QLatin1String("pi"));
 //        ui->scienceExprEdit->insert(QString::fromUtf8("π"));
 //        ui->scienceExprEdit->handleFunction_Pi();
         break;
     case Button_Key_Factorials:
         ui->scienceExprEdit->handleFunction_Factorials();
         break;
-    case Button_Key_Opposite:
-        ui->scienceExprEdit->handleFunction_Opposite();
-        break;
+        //暂时禁用取反
+//    case Button_Key_Opposite:
+//        ui->scienceExprEdit->handleFunction_Opposite();
+//        break;
     case Button_Key_Equal:
         ui->scienceExprEdit->scienceExprCalc();
         break;

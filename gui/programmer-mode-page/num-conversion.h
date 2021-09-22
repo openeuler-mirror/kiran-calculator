@@ -19,6 +19,9 @@ public slots:
     void clearItems();
     void activateNumConversion(QTableWidgetItem*);
 
+protected:
+    QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
+                                                         const QEvent *event) const override;
 
 private:
     Evaluator* m_evaluator;

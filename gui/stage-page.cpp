@@ -33,10 +33,6 @@ void StagePage::receiveCalculatedQuantity(const Quantity &quantity)
     m_saveQuantity = quantity;
 }
 
-//void StagePage::receiveCalculatedError(const QString & error)
-//{
-//    m_saveError = error;
-//}
 
 void StagePage::NumFormatStageResult()
 {
@@ -69,7 +65,7 @@ void StagePage::NumFormatStageResult()
             break;
         }
         qDebug() << "reformatExpr:" + reformatExpr;
-        QListWidget::addItem(reformatExpr);
+        QListWidget::addItem(reformatExpr.replace("-",QString::fromUtf8("−")));
         item(0)->setTextAlignment(Qt::AlignRight);
     }
 }
@@ -97,6 +93,33 @@ void StagePage::setStageErrorMessage()
     QString errorMessage = "表达式错误";
     QListWidget::addItem(errorMessage);
     item(0)->setTextAlignment(Qt::AlignRight);
+}
+
+void StagePage::setStageNanMessage()
+{
+    clear();
+    clearSelection();
+    QString nanMessage = "结果无定义";
+    QListWidget::addItem(nanMessage);
+    item(0)->setTextAlignment(Qt::AlignRight);
+}
+
+QItemSelectionModel::SelectionFlags StagePage::selectionCommand(const QModelIndex &index, const QEvent *event) const
+{
+    if(event==nullptr){
+        return QItemSelectionModel::NoUpdate;
+    }
+    if(event->type() == QEvent::MouseMove)
+        return QItemSelectionModel::NoUpdate;
+    if((event != nullptr) && (event->type() == QEvent::MouseButtonPress))
+    {
+        const QMouseEvent* mouseEvent = (QMouseEvent*) event;
+        if((mouseEvent->modifiers() & Qt::ControlModifier) != 0)
+        {
+            return QItemSelectionModel::NoUpdate;
+        }
+    }
+    return QListWidget::selectionCommand(index,event);
 }
 
 

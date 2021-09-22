@@ -69,6 +69,7 @@ public:
     bool isPositive() const;
     bool isNegative() const;
     bool isInteger() const;
+    bool isEven() const;
 
     bool hasUnit() const;
     CNumber unit() const;

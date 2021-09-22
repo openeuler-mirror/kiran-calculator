@@ -1,7 +1,8 @@
 #include "mode-switcher-page.h"
 #include "./ui_mode-switcher-page.h"
 #include "general-enum.h"
-#include <QString>
+#include "mode-list.h"
+
 #include <QDebug>
 #include <QListWidget>
 
@@ -14,18 +15,23 @@ ModeSwitcherPage::ModeSwitcherPage(QWidget *parent) :
     //this指针指向CustomDrawer
     //利用ui指向内部组件
     ui->setupUi(this);
+    ui->modeList->setCurrentRow(Mode_Label_Standard);
+    ui->modeList->setMovement(QListView::Static);
 
-    ui->modeListWidget->setCurrentRow(Mode_Label_Standard);
-
-    qDebug() << ui->modeListWidget->currentItem();
+    qDebug() << ui->modeList->currentItem();
 
     this->setVisible(false);
 
     connect(this,SIGNAL(clickList(int )),this,SLOT(activateAnimation()));
+    connect(ui->modeList,&ModeList::itemSelectionChanged, this, &ModeSwitcherPage::modeListitemSelection);
 
     controlAnimation();
+
+
     //事件过滤器
+//    ui->modeList->installEventFilter(this);
     qApp->installEventFilter(this);   //this 添加对象
+
 }
 
 
@@ -41,13 +47,12 @@ ModeSwitcherPage::~ModeSwitcherPage()
 //事件过滤器是结束事件的意思,结束掉鼠标点击事件，不让它往下传
 bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
 {
-//  QEvent::MouseButtonRelease
     if(event->type() == QEvent::MouseButtonPress)                  //判断事件类型 鼠标点击事件
     {
         QMouseEvent* mouseEv = static_cast<QMouseEvent*>(event);    //强制转换事件类型
         QPoint globalPoint =  mouseEv->globalPos();
-        QPoint point = ui->modeListWidget->mapFromGlobal(globalPoint);
-        if(!ui->modeListWidget->rect().contains(point))
+        QPoint point = ui->modeList->mapFromGlobal(globalPoint);
+        if(!ui->modeList->rect().contains(point))
         {
             if(!m_flag)
             {
@@ -58,6 +63,7 @@ bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
     }
     return false;     //false-监听,true-公有                       //返回false,事件会往下传递
 }
+
 
 //控制动画
 void ModeSwitcherPage::controlAnimation()
@@ -89,6 +95,9 @@ void ModeSwitcherPage::controlAnimation()
     modeOpacityAnimation->setEndValue(1);
 }
 
+
+
+
 void ModeSwitcherPage::activateAnimation()
 {
     //m_flag = 1;
@@ -118,10 +127,10 @@ void ModeSwitcherPage::activateAnimation()
 }
 
 //当前选中模式,并发送信号
-int ModeSwitcherPage::on_modeListWidget_itemSelectionChanged()
+int ModeSwitcherPage::modeListitemSelection()
 {
-    //qDebug() << ui->modeListWidget->currentItem();
-    int currentMode = ui->modeListWidget->currentRow();
+
+    int currentMode = ui->modeList->currentRow();
     qDebug() << currentMode;
 
     //不能将非枚举量赋值给枚举变量，但能将枚举量赋值给非枚举变量

@@ -44,6 +44,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     gui/mode-switcher-page/mode-switcher-page.cpp
     gui/mode-switcher-page/mode-switcher-page.h
     gui/mode-switcher-page/mode-switcher-page.ui
+    gui/mode-switcher-page/mode-list.cpp
+    gui/mode-switcher-page/mode-list.h
 
     gui/standard-mode-page/expr-calculator.cpp
     gui/standard-mode-page/expr-calculator.h

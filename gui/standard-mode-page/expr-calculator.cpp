@@ -10,18 +10,24 @@
 
 //#include <QHeaderView>
 #include <QRegularExpression>
+#include <QApplication>
+#include <QClipboard>
+#include <QMenu>
 #include <QDebug>
 
 ExprCalculator::ExprCalculator(QWidget* parent) : QLineEdit(parent)
 {
+    initMenuAndAction();
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
+
     connect(this,SIGNAL(returnPressed()), this, SLOT(triggerEnter()));
     connect(this,SIGNAL(exprCalcMessageDec(const QString &)), this, SLOT(setText(const QString &)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
 
-    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
-//    m_funclist = {"lg", "ln", "log","sqrt","%"};
-    m_funclist = {"lg", "ln", "log","sqrt"};
 
+//    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
+//    m_funclist = {"lg", "ln", "log","sqrt","%"};
+    m_funclist = {"lg", "ln", "log","sqrt","+","-",};
 
 }
 
@@ -37,13 +43,111 @@ void ExprCalculator::disableSelectText()
     qobject_cast<QLineEdit*>(sender())->deselect();
 }
 
+void ExprCalculator::showMenu(const QPoint &point)
+{
+    m_menu->addAction(m_copy);
+    m_menu->addAction(m_paste);
+    m_menu->addSeparator();
+    m_menu->addAction(m_selectAll);
+
+    if(QApplication::clipboard()->text().isEmpty())
+        m_paste->setEnabled(false);
+    else
+        m_paste->setEnabled(true);
+
+    if(selectedText().isEmpty())
+        m_copy->setEnabled(false);
+    else
+        m_copy->setEnabled(true);
+
+    if(text().isEmpty())
+        m_selectAll->setEnabled(false);
+    else
+        m_selectAll->setEnabled(true);
+
+    m_menu->exec(mapToGlobal(point));
+}
+
+void ExprCalculator::copyResultToClipboard()
+{
+    if(text().isEmpty())
+        return;
+    QApplication::clipboard()->setText(selectedText());
+    qDebug() << QApplication::clipboard()->text();
+}
+
+void ExprCalculator::paste()
+{
+    if(!judgeInsertPos())
+        return;
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))
+    {
+        deselect();     //选中时不可以粘贴,全选时可以
+        return;
+    }
+
+    QString oldText = text(); //未粘贴操作的text
+    int curpos = cursorPosition(); //未粘贴操作的光标位
+
+    QString exp = text();
+    QString text = Utils::toHalfWidth(QApplication::clipboard()->text());
+    text = text.left(text.indexOf("="));
+    text = text.replace(QString::fromUtf8("＋"),"+")
+               .replace(QString::fromUtf8("－"),QString::fromUtf8("−"))
+               .replace("_", QString::fromUtf8("−"))
+               .replace("-",QString::fromUtf8("−"))
+               .replace('*', "×")
+               .replace('X', "×")
+               .replace(QString::fromUtf8("＊"), "×")
+               .replace(QString::fromUtf8("（"), "(")
+               .replace(QString::fromUtf8("）"), ")")
+               .replace(QString::fromUtf8("——"), QString::fromUtf8("−"))
+               .replace(QString::fromUtf8("％"), "%")
+               .replace('/', "÷")
+               .replace(QString::fromUtf8("。"), ".");
+
+    //匹配函数方法
+    QStringList list = text.split(QRegExp("[0-9+−×÷/()%^.,。]"));
+    for (int i = 0; i < list.size(); i++) {
+        QString item = list[i];
+        for (int j = 0; j < m_funclist.size(); j++) {
+            if (item.toLower().contains(m_funclist[j])) {
+                item.replace(item, m_funclist[j]); //包含函数名的取出;item中若存在两个函数名，只可以替代最前面的函数名
+                break;
+            }
+            if (j == m_funclist.size() - 1)
+                item.replace(item, QString());
+        }
+        text.replace(list[i], item);
+    }
+
+    while (exp.count("(") + text.count("(") > 100) {
+        text.remove(text.lastIndexOf("("), 1);
+    }
+    while (exp.count(")") + text.count(")") > 100) {
+        text.remove(text.lastIndexOf(")"), 1);
+    }
+
+    handleInsertText(text);
+    if (QLineEdit::text() == exp) {
+        setText(oldText);
+        setCursorPosition(curpos);
+        qDebug() << "Invalid content"; //提示是否复制了无效内容,复制的内容全是字母等
+    }
+}
+
+void ExprCalculator::exprSelectAll()
+{
+    QLineEdit::selectAll();
+}
+
 //添加10进制千位符
 void ExprCalculator::reformatShowExpr(const QString& text)
 {
     int oldPosition = this->cursorPosition();
 
     QString reformatExpr;
-    reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
+    reformatExpr = reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
     setText(reformatExpr);
 
     // reformat text.
@@ -80,23 +184,28 @@ void ExprCalculator::exprCalc()
     Quantity quantity = m_evaluator->evalUpdateAns();
 
     if (m_evaluator->error().isEmpty()) {
-        //输出结果的进制转换
-        //十进制
-        auto formatDec = NumberFormatter::format(quantity);
-//        auto messageDec = tr("%1").arg(formatDec);
+        if(!quantity.isNan())
+        {
+            //输出结果的进制转换
+            //十进制
+            auto formatDec = NumberFormatter::format(quantity);     //NumberFormatter和DMath结果的负号不一致
+    //        auto formatDec = DMath::format(quantity, Quantity::Format::Decimal());
+    //        auto messageDec = tr("%1").arg(formatDec);
 
-        emit exprCalcMessageDec(formatDec);
-        emit exprCalcQuantityDec(quantity);
-        qDebug() << formatDec;
-        qDebug() << "formatDec:"+formatDec;
-        //存入标准历史记录
-        m_standardSession->addHistoryEntry(HistoryEntry(expr,quantity));
-        emit standardHistoryChanged();
-        //存入暂存记录
-        emit standardToStageExprFormat(expr);
-        emit standardToStageQuantity(quantity);
-        emit standardStageChanged();
-
+            emit exprCalcMessageDec(formatDec);
+            emit exprCalcQuantityDec(quantity);
+            qDebug() << formatDec;
+            qDebug() << "formatDec:"+formatDec;
+            //存入标准历史记录
+            m_standardSession->addHistoryEntry(HistoryEntry(expr,quantity));
+            emit standardHistoryChanged();
+            //存入暂存记录
+            emit standardToStageExprFormat(expr);
+            emit standardToStageQuantity(quantity);
+            emit standardStageChanged();
+        }
+        else
+            emit exprCalcNan();
     } else
     {
 //        emit exprCalcMessageDec(m_evaluator->error());
@@ -136,29 +245,35 @@ void ExprCalculator::keyPressEvent(QKeyEvent * event)
     int key = event->key();
     qInfo() << "keyPressed:" << event;
 
-    switch (key) {
-    case Qt::Key_0: insert("0"); break;
-    case Qt::Key_1: insert("1"); break;
-    case Qt::Key_2: insert("2"); break;
-    case Qt::Key_3: insert("3"); break;
-    case Qt::Key_4: insert("4"); break;
-    case Qt::Key_5: insert("5"); break;
-    case Qt::Key_6: insert("6"); break;
-    case Qt::Key_7: insert("7"); break;
-    case Qt::Key_8: insert("8"); break;
-    case Qt::Key_9: insert("9"); break;
 
-    case Qt::Key_Plus: insert("+"); break;
-    case Qt::Key_Minus: insert("−"); break;
-    case Qt::Key_Asterisk: insert("×"); break; //*
-    case Qt::Key_Slash: insert("÷"); break; // "/"
-    case Qt::Key_Period: insert("."); break;
-    case Qt::Key_Percent: insert("%"); break;
+
+    switch (key) {
+    case Qt::Key_0: handleInsertText("0"); break;
+    case Qt::Key_1: handleInsertText("1"); break;
+    case Qt::Key_2: handleInsertText("2"); break;
+    case Qt::Key_3: handleInsertText("3"); break;
+    case Qt::Key_4: handleInsertText("4"); break;
+    case Qt::Key_5: handleInsertText("5"); break;
+    case Qt::Key_6: handleInsertText("6"); break;
+    case Qt::Key_7: handleInsertText("7"); break;
+    case Qt::Key_8: handleInsertText("8"); break;
+    case Qt::Key_9: handleInsertText("9"); break;
+
+    case Qt::Key_Plus: handleInsertText("+"); break;
+    case Qt::Key_Minus:
+        handleInsertText("−");   //speedcrunch
+//        insert(QString::fromUtf8("−"));
+        break;
+
+    case Qt::Key_Asterisk:handleInsertText("×"); break;
+    case Qt::Key_Slash: handleInsertText("÷"); break;
+    case Qt::Key_Period: handleInsertText("."); break;
+    case Qt::Key_Percent: handleInsertText("%"); break;
     case Qt::Key_AsciiCircum:
         if(text().isEmpty())
-            insert("0^");
+            handleInsertText("0^");
         else
-            insert("^");
+            handleInsertText("^");
         break;
     case Qt::Key_At:handleFunction_Sqrt();break;
     case Qt::Key_Q:handleFunction_Square(); break;
@@ -174,35 +289,73 @@ void ExprCalculator::keyPressEvent(QKeyEvent * event)
     case Qt::Key_Right:
         setCursorPosition(cursorPosition() + 1);
         break;
-    case Qt::Key_Escape: clear(); break;
+    case Qt::Key_Escape: clear(); break;    
     }
+
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
+    {
+        copyResultToClipboard();
+    }
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
+    {
+        paste();
+    }
+    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
+    {
+        exprSelectAll();
+    }
+
 }
 
-//重写双击事件，防止双击时触发光标选中
-void ExprCalculator::mouseDoubleClickEvent(QMouseEvent *event)
+
+bool ExprCalculator::judgeInsertPos()
 {
-    return;
+    QString sRegNum = "[A-Za-z]";
+    QRegExp rx;
+    rx.setPattern(sRegNum);
+    if (cursorPosition() > 0 && rx.exactMatch(text().at(cursorPosition() - 1))) {
+        for (int i = 0; i < m_funclist.size(); i++) {
+            //记录光标左侧离光标最近的函数位
+            int funpos = text().lastIndexOf(m_funclist[i], cursorPosition() - 1);  //没找到函数名return -1
+            if (funpos != -1 && (funpos < cursorPosition()) && (cursorPosition() < funpos + m_funclist[i].length()))
+                return false; //光标在函数中
+        }
+    }
+    return true;
+}
+
+
+void ExprCalculator::initMenuAndAction()
+{
+    m_menu = new QMenu(this);
+//    m_copy = new QAction(tr("copy"),this);
+    m_copy = new QAction(this);
+    m_paste = new QAction(this);
+    m_selectAll = new QAction(this);
+
+    m_copy->setText("复制");
+    m_paste->setText("粘贴");
+    m_selectAll->setText("全选");
+
+    connect(m_copy,SIGNAL(triggered()), this, SLOT(copyResultToClipboard()));
+    connect(m_paste, SIGNAL(triggered()), this, SLOT(paste()));
+    connect(m_selectAll, SIGNAL(triggered()), this, SLOT(exprSelectAll()));
 }
 
 void ExprCalculator::handleFunction_Sqrt()
 {
-    int pos = cursorPosition();
-    QString expr = text();
-    QString tmp = expr.left(pos);
-
-    if(tmp.right(1) >= '0' && tmp.right(1)<= '9')
-        insert("×sqrt()");
-    else
-        insert("sqrt()");
+    handleInsertText("sqrt()");
     cursorBackward(false);
 }
 
 void ExprCalculator::handleFunction_Square()
 {
+    if(!judgeInsertPos())
+        return;
     if(text().isEmpty())
-        insert("0^2");
+        handleInsertText("0^2");
     else
-        insert("^2");
+        handleInsertText("^2");
 }
 
 //取反功能有问题，考虑暂时不修改了，或者延后再做   例如：555 + sqrt(55)+44   5%
@@ -263,7 +416,7 @@ bool ExprCalculator::expressionInFunc(QString &text)
         QString newtext = QLineEdit::text();
         int percentpos = cursorPosition();
         int operatorpos =
-            newtext.lastIndexOf(QRegularExpression(QStringLiteral("[^0-9,.eπE]")), percentpos - 1);
+            newtext.lastIndexOf(QRegularExpression(QStringLiteral("[^0-9,.eπE]")), percentpos - 1);    //"[^0-9,.epi]"
 \
         bool nooperator = false;
         if (operatorpos > 0 && newtext.at(operatorpos - 1) == "E")
@@ -333,69 +486,11 @@ void ExprCalculator::handleFunction_Backspace()
     QString sRegNum = "[a-z]";
     QRegExp rx;
     rx.setPattern(sRegNum);
-    SSelection selection = getSelection();
-    if (!selection.selected.isEmpty()) {
-        QString text = QLineEdit::text();
-        QString seloldtext = text;
-        int removepos = 0; //被删除位置
-        //光标不在开头且光标左侧是字母或者光标右侧是字母
-        if ((selection.curpos > 0 &&
-                rx.exactMatch(QLineEdit::text().at(selection.curpos - 1)))
-                || (selection.curpos + selection.selected.size() < QLineEdit::text().size() && rx.exactMatch(QLineEdit::text().at(selection.curpos + selection.selected.size())))) {
-            int selleftfunlen = 0; //选中左侧一部分函数长度
-            int funpos = -1;
-            int rightfunpos = -1;
-            int j;
-            for (int i = 0; i < m_funclist.size(); i++) {
-                //记录光标左侧离光标最近的函数位
-                funpos = QLineEdit::text().lastIndexOf(m_funclist[i], selection.curpos - 1);
-                if (funpos != -1 && (funpos <= selection.curpos) && (selection.curpos < funpos + m_funclist[i].length())) {
-                    selleftfunlen = selection.curpos - funpos;
-                    break; //光标在函数开头和函数结尾之间
-                } else
-                    funpos = -1;
-            }
-            for (j = 0; j < m_funclist.size(); j++) {
-                //记录离光标最近的右侧函数位
-                rightfunpos = QLineEdit::text().lastIndexOf(m_funclist[j], selection.curpos + selection.selected.size() - 1);
-                if (rightfunpos != -1 && (rightfunpos + m_funclist[j].length() > selection.curpos + selection.selected.size()))
-                    break;
-                else
-                    rightfunpos = -1;
-            }
-            if (funpos != -1 || rightfunpos != -1) {
-                if (funpos != -1 && rightfunpos == -1) {
-                    removepos = funpos;
-                    text.remove(funpos, selection.selected.size() + selleftfunlen); //仅左侧有函数
-                } else if (rightfunpos != -1 && funpos == -1) {
-                    removepos = selection.curpos;
-                    text.remove(selection.curpos, rightfunpos + m_funclist[j].length() - selection.curpos); //仅右侧有函数
-                } else {
-                    removepos = funpos;
-                    text.remove(funpos, rightfunpos + m_funclist[j].length() - funpos); //函数中或左右均有
-                }
-            } else {
-                removepos = selection.curpos;
-                text.remove(selection.curpos, selection.selected.size());
-            }
-        } else {
-            removepos = selection.curpos;
-            text.remove(selection.curpos, selection.selected.size());
-        }
-
-        QLineEdit::setText(text); //输入栏删除被选中
-        // 20200401 symbolFaultTolerance
-//            QLineEdit::setText(QLineEdit::symbolFaultTolerance(QLineEdit::text()));
-
-        // 20200316选中部分光标置位问题修复
-        if ((seloldtext.mid(0, removepos).remove(QRegExp("[＋－×÷/,.%()E]")).length()) ==
-                QLineEdit::text().mid(0, removepos).remove(QRegExp("[＋－×÷/,.%()E]")).length())
-            QLineEdit::setCursorPosition(removepos);
-        else if ((seloldtext.mid(0, removepos).remove(QRegExp("[＋－×÷/,.%()E]")).length()) >
-                 QLineEdit::text().mid(0, removepos).remove(QRegExp("[＋－×÷/,.%()E]")).length())
-            QLineEdit::setCursorPosition(removepos + 1);
-        else
-            QLineEdit::setCursorPosition(removepos - 1);
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))
+    {
+        qDebug() << "选中时不可删除（暂定）";
+        deselect(); //取消选中
+        return;
     } else {
         QString text = QLineEdit::text();
         int cur = QLineEdit::cursorPosition();
@@ -404,8 +499,6 @@ void ExprCalculator::handleFunction_Backspace()
         if (text.size() > 0 && cur > 0 && text[cur - 1] == ",") {
             text.remove(cur - 2, 2);
             QLineEdit::setText(text);
-            // 20200401 symbolFaultTolerance
-//                QLineEdit::setText(QLineEdit::symbolFaultTolerance(QLineEdit::text()));
 
             QLineEdit::setCursorPosition(cur - 2);
         } else {
@@ -460,6 +553,7 @@ void ExprCalculator::handleFunction_Backspace()
                 }
             }
         }
+            qDebug() << "no  selected____";
     }
 }
 
@@ -473,4 +567,18 @@ void ExprCalculator::handleFunction_Reciprocal()
         clear();
         insert(expr);
     }
+}
+
+void ExprCalculator::handleInsertText(const QString &text)
+{
+    if(!judgeInsertPos())
+        return;
+    if(text.isEmpty())
+        return;
+    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))      //全选时可以删除
+    {
+        deselect();
+        return;
+    }
+    insert(text);
 }

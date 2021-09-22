@@ -23,6 +23,7 @@ StandardModePage::StandardModePage(QWidget *parent) :
     connect(ui->standardExprEdit,SIGNAL(standardToStageQuantity(const Quantity&)), ui->standardStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->standardExprEdit,SIGNAL(standardStageChanged()),ui->standardStagePage, SLOT(setStageResult( )));
     connect(ui->standardExprEdit,SIGNAL(exprCalcError()),ui->standardStagePage, SLOT(setStageErrorMessage( )));
+    connect(ui->standardExprEdit,SIGNAL(exprCalcNan()),ui->standardStagePage, SLOT(setStageNanMessage( )));
 
 
     connect(ui->standardHistory,SIGNAL(exprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
@@ -34,27 +35,27 @@ StandardModePage::StandardModePage(QWidget *parent) :
 void StandardModePage::handleStandardKeysButtonPress(Button button)
 {
     switch (button) {
-    case Button_Key_0: ui->standardExprEdit->insert("0"); break;
-    case Button_Key_1: ui->standardExprEdit->insert("1"); break;
-    case Button_Key_2: ui->standardExprEdit->insert("2"); break;
-    case Button_Key_3: ui->standardExprEdit->insert("3"); break;
-    case Button_Key_4: ui->standardExprEdit->insert("4"); break;
-    case Button_Key_5: ui->standardExprEdit->insert("5"); break;
-    case Button_Key_6: ui->standardExprEdit->insert("6"); break;
-    case Button_Key_7: ui->standardExprEdit->insert("7"); break;
-    case Button_Key_8: ui->standardExprEdit->insert("8"); break;
-    case Button_Key_9: ui->standardExprEdit->insert("9"); break;
+    case Button_Key_0: ui->standardExprEdit->handleInsertText("0"); break;
+    case Button_Key_1: ui->standardExprEdit->handleInsertText("1"); break;
+    case Button_Key_2: ui->standardExprEdit->handleInsertText("2"); break;
+    case Button_Key_3: ui->standardExprEdit->handleInsertText("3"); break;
+    case Button_Key_4: ui->standardExprEdit->handleInsertText("4"); break;
+    case Button_Key_5: ui->standardExprEdit->handleInsertText("5"); break;
+    case Button_Key_6: ui->standardExprEdit->handleInsertText("6"); break;
+    case Button_Key_7: ui->standardExprEdit->handleInsertText("7"); break;
+    case Button_Key_8: ui->standardExprEdit->handleInsertText("8"); break;
+    case Button_Key_9: ui->standardExprEdit->handleInsertText("9"); break;
 
-    case Button_Key_Add: ui->standardExprEdit->insert("+"); break;
-    case Button_Key_Sub: ui->standardExprEdit->insert("−"); break;
-    case Button_Key_Mult: ui->standardExprEdit->insert("×"); break;
-    case Button_Key_Divide: ui->standardExprEdit->insert("÷"); break;
-    case Button_Key_Point: ui->standardExprEdit->insert("."); break;
+    case Button_Key_Add: ui->standardExprEdit->handleInsertText("+"); break;
+    case Button_Key_Sub: ui->standardExprEdit->handleInsertText("−"); break;
+    case Button_Key_Mult: ui->standardExprEdit->handleInsertText("×"); break;
+    case Button_Key_Divide: ui->standardExprEdit->handleInsertText("÷"); break;
+    case Button_Key_Point: ui->standardExprEdit->handleInsertText("."); break;
     case Button_Key_Brackets:
-        ui->standardExprEdit->insert("()");
+        ui->standardExprEdit->handleInsertText("()");
         ui->standardExprEdit->cursorBackward(false);
         break;
-    case Button_Key_Percent:ui->standardExprEdit->insert("%"); break;
+    case Button_Key_Percent:ui->standardExprEdit->handleInsertText("%"); break;
     case Button_Key_Sqrt:
         ui->standardExprEdit->handleFunction_Sqrt();
         break;
@@ -70,12 +71,13 @@ void StandardModePage::handleStandardKeysButtonPress(Button button)
     case Button_Key_Backspace:
         ui->standardExprEdit->handleFunction_Backspace();
         break;
-    case Button_Key_Opposite:
-        if(ui->standardExprEdit->text().isEmpty())
-            return;
-        else
-            ui->standardExprEdit->handleFunction_Opposite();
-        break;
+        //暂时禁用取反
+//    case Button_Key_Opposite:
+//        if(ui->standardExprEdit->text().isEmpty())
+//            return;
+//        else
+//            ui->standardExprEdit->handleFunction_Opposite();
+//        break;
     case Button_Key_ClearEntry: ui->standardExprEdit->clear(); break;
     case Button_Key_Clear:
         ui->standardExprEdit->clear();

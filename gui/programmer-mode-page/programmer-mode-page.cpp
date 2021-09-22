@@ -26,8 +26,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     connect(ui->programmerExprEdit, SIGNAL(programmerToStageQuantity(const Quantity&)), ui->programmerStagePage, SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->programmerExprEdit, SIGNAL(programmerStageChanged( )), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
     connect(ui->programmerExprEdit, SIGNAL(programmerExprCalcError( )), ui->programmerStagePage, SLOT(setStageErrorMessage( )));
-
-
+    connect(ui->programmerExprEdit, SIGNAL(programmerExprCalcNan( )), ui->programmerStagePage, SLOT(setStageNanMessage( )));
 
     //清除历史记录
     connect(ui->programmerClearHistory, SIGNAL(clicked()), ui->programmerHistory, SLOT(clearProgrammerHistory()));
@@ -64,7 +63,6 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //默认选中十进制
     ui->numConversionTable->selectRow(1);
-
 }
 
 ProgrammerModePage::~ProgrammerModePage()
@@ -76,95 +74,94 @@ void ProgrammerModePage::handleProgrammerKeysButtonPress(Button button)
 {
 //    ui->programmerExprEdit->setFocus();
     switch (button) {
-    case Button_Key_0:
+    case Button_Key_0: ui->programmerExprEdit->handleProgrammerInsertText("0");break;
+    case Button_Key_1: ui->programmerExprEdit->handleProgrammerInsertText("1");break;
+    case Button_Key_2: ui->programmerExprEdit->handleProgrammerInsertText("2");break;
+    case Button_Key_3: ui->programmerExprEdit->handleProgrammerInsertText("3");break;
+    case Button_Key_4: ui->programmerExprEdit->handleProgrammerInsertText("4");break;
+    case Button_Key_5: ui->programmerExprEdit->handleProgrammerInsertText("5");break;
+    case Button_Key_6: ui->programmerExprEdit->handleProgrammerInsertText("6");break;
+    case Button_Key_7: ui->programmerExprEdit->handleProgrammerInsertText("7");break;
+    case Button_Key_8: ui->programmerExprEdit->handleProgrammerInsertText("8");break;
+    case Button_Key_9: ui->programmerExprEdit->handleProgrammerInsertText("9");break;
+    case Button_Key_A: ui->programmerExprEdit->handleProgrammerInsertText("A");break;
+    case Button_Key_B: ui->programmerExprEdit->handleProgrammerInsertText("B");break;
+    case Button_Key_C: ui->programmerExprEdit->handleProgrammerInsertText("C");break;
+    case Button_Key_D: ui->programmerExprEdit->handleProgrammerInsertText("D");break;
+    case Button_Key_E: ui->programmerExprEdit->handleProgrammerInsertText("E");break;
+    case Button_Key_F: ui->programmerExprEdit->handleProgrammerInsertText("F");break;
 
-        ui->programmerExprEdit->insert("0");break;
-    case Button_Key_1: ui->programmerExprEdit->insert("1");break;
-    case Button_Key_2: ui->programmerExprEdit->insert("2");break;
-    case Button_Key_3: ui->programmerExprEdit->insert("3");break;
-    case Button_Key_4: ui->programmerExprEdit->insert("4");break;
-    case Button_Key_5: ui->programmerExprEdit->insert("5");break;
-    case Button_Key_6: ui->programmerExprEdit->insert("6");break;
-    case Button_Key_7: ui->programmerExprEdit->insert("7");break;
-    case Button_Key_8: ui->programmerExprEdit->insert("8");break;
-    case Button_Key_9: ui->programmerExprEdit->insert("9");break;
-    case Button_Key_A: ui->programmerExprEdit->insert("A");break;
-    case Button_Key_B: ui->programmerExprEdit->insert("B");break;
-    case Button_Key_C: ui->programmerExprEdit->insert("C");break;
-    case Button_Key_D: ui->programmerExprEdit->insert("D");break;
-    case Button_Key_E: ui->programmerExprEdit->insert("E");break;
-    case Button_Key_F: ui->programmerExprEdit->insert("F");break;
-
-    case Button_Key_Add: ui->programmerExprEdit->insert("+"); break;
-    case Button_Key_Sub: ui->programmerExprEdit->insert("−"); break;
-    case Button_Key_Mult: ui->programmerExprEdit->insert("×"); break;
-    case Button_Key_Divide: ui->programmerExprEdit->insert("÷"); break;
+    case Button_Key_Add: ui->programmerExprEdit->handleProgrammerInsertText("+"); break;
+    case Button_Key_Sub: ui->programmerExprEdit->handleProgrammerInsertText("−"); break;
+    case Button_Key_Mult: ui->programmerExprEdit->handleProgrammerInsertText("×"); break;
+    case Button_Key_Divide: ui->programmerExprEdit->handleProgrammerInsertText("÷"); break;
 
     case Button_Key_And:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 and");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 and");
         else
-            ui->programmerExprEdit->insert("and");
+            ui->programmerExprEdit->handleProgrammerInsertText("and");
         break;
     case Button_Key_Mod:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 mod");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 mod");
         else
-            ui->programmerExprEdit->insert("mod");
+            ui->programmerExprEdit->handleProgrammerInsertText("mod");
         break;
     case Button_Key_Lsh:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 shl");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 shl");
         else
-            ui->programmerExprEdit->insert("shl");
+            ui->programmerExprEdit->handleProgrammerInsertText("shl");
         break;
     case Button_Key_Rsh:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 shr");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 shr");
         else
-            ui->programmerExprEdit->insert("shr");
+            ui->programmerExprEdit->handleProgrammerInsertText("shr");
         break;
     case Button_Key_RoL:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 rol");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 rol");
         else
-            ui->programmerExprEdit->insert("rol");
+            ui->programmerExprEdit->handleProgrammerInsertText("rol");
         break;
         break;
     case Button_Key_RoR:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 ror");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 ror");
         else
-            ui->programmerExprEdit->insert("ror");
+            ui->programmerExprEdit->handleProgrammerInsertText("ror");
         break;
     case Button_Key_Shift:
         ui->programmerKeysPage->switchProgrammerLogicalAndShift();
         break;
     case Button_Key_Or:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 or");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 or");
         else
-            ui->programmerExprEdit->insert("or");
+            ui->programmerExprEdit->handleProgrammerInsertText("or");
         break;
     case Button_Key_Xor:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("0 xor");
+            ui->programmerExprEdit->handleProgrammerInsertText("0 xor");
         else
-            ui->programmerExprEdit->insert("xor");
+            ui->programmerExprEdit->handleProgrammerInsertText("xor");
         break;
     case Button_Key_Not:
         if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->insert("not(0)");
+            ui->programmerExprEdit->handleProgrammerInsertText("not(0)");
         else
-            ui->programmerExprEdit->insert("not()");
+            ui->programmerExprEdit->handleProgrammerInsertText("not()");
         break;
 
     case Button_Key_Brackets:
-        ui->programmerExprEdit->insert("()");
+        ui->programmerExprEdit->handleProgrammerInsertText("()");
         ui->programmerExprEdit->cursorBackward(false);
         break;
     case Button_Key_Backspace: ui->programmerExprEdit->handleProgrammerFunction_Backspace(); break;
-    case Button_Key_Opposite: ui->programmerExprEdit->handleProgrammerFunction_Opposite(); break;
+        //暂时禁用取反
+//    case Button_Key_Opposite: ui->programmerExprEdit->handleProgrammerFunction_Opposite(); break;
     case Button_Key_Equal: ui->programmerExprEdit->programmerExprCalc(); break;
     case Button_Key_ClearEntry: ui->programmerExprEdit->clear(); break;
     case Button_Key_Clear:

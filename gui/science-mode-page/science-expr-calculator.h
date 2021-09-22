@@ -22,6 +22,7 @@ class ScienceExprCalculator : public QLineEdit
 public:
     ScienceExprCalculator(QWidget* parent = nullptr);
     void setSession(Session*);
+
     void handleFunction_10n();
     void handleFunction_Sqrt();
     void handleFunction_Square();
@@ -37,8 +38,11 @@ public:
     void handleFunction_Exp();         //科学计数法，不是指数函数
     void handleFunction_Reciprocal();
     void handleFunction_Factorials();
+    bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
 
-    SSelection getSelection() { return m_selected; }
+    SSelection getSelection() { return m_selected; }    //选中
+
+    void initMenuAndAction();
 
     static bool m_FE;
     static bool m_isShift;
@@ -47,6 +51,7 @@ public:
 
 public slots:
     void insert(const QString&);
+    void handleInsertText(const QString&);
     void setText(const QString&);
     void scienceExprCalc();
     void reformatShowExpr(const QString& text);
@@ -56,9 +61,13 @@ public slots:
     void handleFunction_HYP();
     void disableSelectText();
 
+    void showMenu(const QPoint &point);
+    void copyResultToClipboard();
+    void paste();
+    void exprSelectAll();     //selectAll重名了
+
 protected:
     void keyPressEvent(QKeyEvent *) override;
-    void mouseDoubleClickEvent(QMouseEvent *) override;
 
 protected slots:
     void triggerEnter();
@@ -72,10 +81,17 @@ private:
 
     SSelection m_selected;
 
+    //输入栏右键菜单
+    QMenu *m_menu;
+    QAction *m_copy;
+    QAction *m_paste;
+    QAction *m_selectAll;
 signals:
     void scienceExprCalcMessage(const QString&);
     void scienceExprCalcQuantity(const Quantity&);
     void scienceExprCalcError();
+    void scienceExprCalcNan();
+
     void scienceHistoryChanged();
     void scienceEqualPressed();
 

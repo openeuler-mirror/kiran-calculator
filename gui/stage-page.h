@@ -17,6 +17,7 @@ public:
 public slots:
     void setStageResult();
     void setStageErrorMessage();
+    void setStageNanMessage();
     void NumFormatStageResult();
     void handleStagePageItem(QListWidgetItem *);
     void stageFormatChanged(int );
@@ -24,8 +25,9 @@ public slots:
 
     void receiveCalculatedExpr(const QString&);
     void receiveCalculatedQuantity(const Quantity&);
-//    void receiveCalculatedError(const QString&);
-
+protected:
+    QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
+                                                         const QEvent *event) const override;
 private:
     Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;

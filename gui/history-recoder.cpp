@@ -135,19 +135,19 @@ void HistoryRecoder::updateProgrammerHistory()
             switch (m_currentFormat) {
             case Num_Format_Hex:
                 reformatValue = Utils::reformatSeparatorsPro(DMath::format(value, Quantity::Format::Complement() + Quantity::Format::Hexadecimal() + Quantity::Format::Fixed()).remove("0x"), 16);
-                historyList.append(reformatValue);
+                historyList.append(reformatValue.replace("-",QString::fromUtf8("−")));
                 break;
             case Num_Format_Dec:
                 reformatValue = Utils::reformatSeparatorsPro(DMath::format(value, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed()), 10);
-                historyList.append(reformatValue);
+                historyList.append(reformatValue.replace("-",QString::fromUtf8("−")));
                 break;
             case Num_Format_Oct:
                 reformatValue = Utils::reformatSeparatorsPro(DMath::format(value, Quantity::Format::Complement() + Quantity::Format::Octal() + Quantity::Format::Fixed()).remove("0o"), 8);
-                historyList.append(reformatValue);
+                historyList.append(reformatValue.replace("-",QString::fromUtf8("−")));
                 break;
             case Num_Format_Bin:
                 reformatValue = Utils::reformatSeparatorsPro(DMath::format(value, Quantity::Format::Complement() + Quantity::Format::Binary() + Quantity::Format::Fixed()).remove("0b"), 2);
-                historyList.append(reformatValue);
+                historyList.append(reformatValue.replace("-",QString::fromUtf8("−")));
                 break;
             }
         }
@@ -185,6 +185,29 @@ void HistoryRecoder::clearProgrammerHistory()
 {
     m_session->clearHistory();
     updateProgrammerHistory();
+}
+
+QItemSelectionModel::SelectionFlags HistoryRecoder::selectionCommand(const QModelIndex &index, const QEvent *event) const
+{
+    if(event==nullptr)
+        return QItemSelectionModel::NoUpdate;
+    if(event->type() == QEvent::MouseMove)
+    {
+        return QItemSelectionModel::NoUpdate;
+    }
+    if(event->type() == QEvent::MouseButtonRelease)
+    {
+
+    }
+    if((event != nullptr) && (event->type() == QEvent::MouseButtonPress))
+    {
+        const QMouseEvent* mouseEvent = (QMouseEvent*) event;
+        if((mouseEvent->modifiers() & Qt::ControlModifier) != 0)
+        {
+            return QItemSelectionModel::NoUpdate;
+        }
+    }
+    return QListWidget::selectionCommand(index,event);
 }
 
 void HistoryRecoder::handleItem(QListWidgetItem *item)

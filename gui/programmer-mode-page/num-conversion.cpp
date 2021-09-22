@@ -47,6 +47,9 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
     item(2,0)->setText(formatOct);
     item(3,0)->setText(formatBin);
     qDebug() << "showNumFormatConverted";
+
+    qDebug() << "formatHex:" + formatHex;
+    qDebug() << "formatDec:" + formatDec;
 }
 
 void NumConversion::activateNumConversion(QTableWidgetItem* item)
@@ -59,6 +62,26 @@ void NumConversion::activateNumConversion(QTableWidgetItem* item)
     emit refreshNumFormatStage();
 }
 
+//重新定义选择行为，禁止拖动和反选
+QItemSelectionModel::SelectionFlags NumConversion::selectionCommand(const QModelIndex &index, const QEvent *event) const
+{
+    //NOTE:为了避免一些环境下会出现ItemFocus直接设置选中的情况
+    // 默认选中10进制
+    if(event==nullptr){
+        return QItemSelectionModel::NoUpdate;
+    }
+    if(event->type() == QEvent::MouseMove)
+        return QItemSelectionModel::NoUpdate;
+    if((event != nullptr) && (event->type() == QEvent::MouseButtonPress))
+    {
+        const QMouseEvent* mouseEvent = (QMouseEvent*) event;
+        if((mouseEvent->modifiers() & Qt::ControlModifier) != 0)
+        {
+            return QItemSelectionModel::NoUpdate;
+        }
+    }
+    return QTableWidget::selectionCommand(index,event);
+}
 
 void NumConversion::clearItems()
 {

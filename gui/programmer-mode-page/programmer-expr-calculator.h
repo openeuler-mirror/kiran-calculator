@@ -27,6 +27,9 @@ public:
 
     bool curposInNumber(int );
 
+    bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
+    void initMenuAndAction();
+
     static bool isNumber(QChar a);//判断是否为数字(分隔符)
     static int  m_currentFormat;
     static int  m_previousFormat;
@@ -36,6 +39,7 @@ public:
 
 public slots:
     void insert(const QString&);
+    void handleProgrammerInsertText(const QString&);
     bool isNumberOutOfRange(const QString&);
     void setText(const QString&);
     void programmerExprCalc();
@@ -43,13 +47,17 @@ public slots:
     void exprFormatChanged(int );
     void radixChanged(int basedest);
     void reformatShowExpr(const QString&);
+
     void disableSelectText();
+    void showMenu(const QPoint &point);
+    void copyResultToClipboard();
+    void paste();
+    void exprSelectAll();
 
     QString scanAndExec(int,int,const QString&);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *) override;
-    virtual void mouseDoubleClickEvent(QMouseEvent *) override;
 
 protected slots:
     void triggerEnter();
@@ -68,6 +76,11 @@ private:
     SSelection m_selected;
     QList<QString> m_funclist;
 
+    QMenu *m_menu;
+    QAction *m_copy;
+    QAction *m_paste;
+    QAction *m_selectAll;
+
 signals:
     void programmerExprCalcQuantityDec(const Quantity&);
     void programmerExprCalcMessageDec(const QString&);
@@ -77,6 +90,7 @@ signals:
     void programmerExprCalcMessageOct(const QString&);
     void programmerExprCalcMessageBin(const QString&);
     void programmerExprCalcError();
+    void programmerExprCalcNan();
 
 //    void programmerExprCalcFormatDec(const QString&);
 //    void programmerExprCalcFormatHex(const QString&);
@@ -85,6 +99,7 @@ signals:
 
     void programmerToNumConversionFormatDec(const QString&);
     void programmerToNumConversionQuantityDec(const Quantity&);
+
     void programmerToNumConversionMessageError( );
     void programmerHistoryChanged();
     void programmerEqualPressed();
