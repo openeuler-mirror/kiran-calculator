@@ -31,6 +31,11 @@ public slots:
     void clearStandardHistory();
     void clearScienceHistory();
     void clearProgrammerHistory();
+    bool isHistoryEmpty();
+
+    QString historyWordWrap(const QString&, int );
+
+
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
@@ -46,10 +51,14 @@ private:
     QVector<QString> m_numvec;
     QVector<QString> m_opvec;
     QString m_textorder;
+    QFont m_exprFont;
+    QFont m_resultFont;
+
 
 
 signals:
     void exprSelected(const QString &);
+    void historyClearSuccess();
 
 };
 

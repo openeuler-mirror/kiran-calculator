@@ -16,8 +16,13 @@ StandardModePage::StandardModePage(QWidget *parent) :
     ui->standardExprEdit->setSession(m_standardSession);
     ui->standardHistory->setSession(m_standardSession);
 
+    ui->standardClearHistory->setEnabled(false);
+
+
     connect(ui->standardKeysPage, SIGNAL(buttonPressed(Button)),this, SLOT(handleStandardKeysButtonPress(Button)));
     connect(ui->standardExprEdit,SIGNAL(standardHistoryChanged( )),ui->standardHistory,SLOT(updateStandardHistory( )));
+
+
 
     connect(ui->standardExprEdit,SIGNAL(standardToStageExprFormat(const QString&)),ui->standardStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->standardExprEdit,SIGNAL(standardToStageQuantity(const Quantity&)), ui->standardStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
@@ -28,8 +33,10 @@ StandardModePage::StandardModePage(QWidget *parent) :
 
     connect(ui->standardHistory,SIGNAL(exprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
     connect(ui->standardStagePage,SIGNAL(stageExprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
-    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearStandardHistory()));
 
+    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearStandardHistory()));
+    connect(ui->standardHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->standardClearHistory->setEnabled(false);});
+    connect(ui->standardExprEdit,&ExprCalculator::standardHistoryChanged,this,[=](){ui->standardClearHistory->setEnabled(true);});
 }
 
 void StandardModePage::handleStandardKeysButtonPress(Button button)
@@ -86,6 +93,7 @@ void StandardModePage::handleStandardKeysButtonPress(Button button)
     default: break;
     }
 }
+
 
 void StandardModePage::showEvent(QShowEvent *event)
 {

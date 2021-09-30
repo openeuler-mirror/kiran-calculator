@@ -229,9 +229,9 @@ void ExprCalculator::triggerEnter()
 
 void  ExprCalculator::setText(const QString& result)
 {
-    //显示结果中去除'='号
+    //显示结果中去除'='号和空格符号
     QString resultModify =  result;
-    resultModify.remove('=');
+    resultModify.remove('=').remove(' ');
     QLineEdit::setText(resultModify);
 }
 

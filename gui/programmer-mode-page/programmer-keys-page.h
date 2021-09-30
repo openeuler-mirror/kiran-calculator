@@ -31,6 +31,7 @@ private:
         Button button;
         int row;
         int column;
+        QString objectName;
     }keyDescriptions[];
 
     QGridLayout* m_gridLayout;

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>kiran-calculator-themes/black_theme.qss</file>
+    </qresource>
+</RCC>

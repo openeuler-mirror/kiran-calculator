@@ -25,6 +25,8 @@ public:
 
 public slots:
     void handleStandardKeysButtonPress(Button);
+
+
 protected:
     virtual void showEvent(QShowEvent *event) override;
 private:

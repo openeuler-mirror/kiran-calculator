@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/Calculator.dir/main.cpp.o CMakeFiles/Calculator.dir/widget.cpp.o CMakeFiles/Calculator.dir/mode-switcher-page.cpp.o CMakeFiles/Calculator.dir/standardkeypad.cpp.o CMakeFiles/Calculator.dir/Calculator_autogen/mocs_compilation.cpp.o  -o Calculator /usr/lib64/libQt5Widgets.so.5.11.1 /usr/lib64/libQt5Gui.so.5.11.1 /usr/lib64/libQt5Core.so.5.11.1 

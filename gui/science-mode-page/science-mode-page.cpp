@@ -17,6 +17,8 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     ui->scienceExprEdit->setSession(m_scienceSession);
     ui->scienceHistory->setSession(m_scienceSession);
 
+    ui->scienceClearHistory->setEnabled(false);
+
     connect(ui->scienceKeysPage, SIGNAL(scienceButtonPressed(Button)), this, SLOT(handleScienceKeysButtonPress(Button)));
     connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateScienceHistory( )));
 
@@ -29,13 +31,18 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
 
     connect(ui->scienceHistory,SIGNAL(exprSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
     connect(ui->scienceStagePage,SIGNAL(stageExprSelected(const QString&)), ui->scienceExprEdit,SLOT(setText(const QString& )));
+
     connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearScienceHistory()));
+    connect(ui->scienceHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->scienceClearHistory->setEnabled(false);});
+    connect(ui->scienceExprEdit,&ScienceExprCalculator::scienceHistoryChanged,this,[=](){ui->scienceClearHistory->setEnabled(true);});
 
     //科学模式下的计算功能切换
     connect(ui->scienceKeysPage,SIGNAL(scienceSwitchAngleUnit(int )), ui->scienceExprEdit,SLOT(handleFunction_SwitchAngleUnit(int )));
     connect(ui->scienceKeysPage,SIGNAL(scienceIsShift()), ui->scienceExprEdit,SLOT(handleFunction_Shift()));
     connect(ui->scienceKeysPage,SIGNAL(scienceIsHYP()), ui->scienceExprEdit,SLOT(handleFunction_HYP()));
     connect(ui->scienceExprEdit,SIGNAL(scienceFEChanged()),ui->scienceHistory,SLOT(historyFEChanged()));
+
+
 
 }
 
@@ -72,10 +79,8 @@ void ScienceModePage::handleScienceKeysButtonPress(Button button)
         break;
     case Button_Key_Divide: ui->scienceExprEdit->handleInsertText("÷"); break;
     case Button_Key_Point: ui->scienceExprEdit->handleInsertText("."); break;
-    case Button_Key_Brackets:
-        ui->scienceExprEdit->handleInsertText("()");
-        ui->scienceExprEdit->cursorBackward(false);
-        break;
+    case Button_Key_LeftBracket: ui->scienceExprEdit->handleInsertText("("); break;
+    case Button_Key_RightBracket: ui->scienceExprEdit->handleInsertText(")"); break;
     case Button_Key_Square:
         ui->scienceExprEdit->handleFunction_Square();
         break;

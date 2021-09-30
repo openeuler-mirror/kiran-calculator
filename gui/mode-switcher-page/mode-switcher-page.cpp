@@ -84,7 +84,7 @@ void ModeSwitcherPage::controlAnimation()
     // 起始位置
     modeScaleAnimation->setStartValue(QRect(0,0,0,416));
     // 终点位置
-    modeScaleAnimation->setEndValue(QRect(0,0,400,416));
+    modeScaleAnimation->setEndValue(QRect(0,0,100,416));
 
     modeScaleAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 

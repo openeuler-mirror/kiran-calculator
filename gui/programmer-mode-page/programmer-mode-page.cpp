@@ -18,6 +18,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     m_programmerSession = new Session();
     ui->programmerExprEdit->setSession(m_programmerSession);
     ui->programmerHistory->setSession(m_programmerSession);
+    ui->programmerClearHistory->setEnabled(false);
 
 
     //计算成功，更新历史记录和暂存记录
@@ -30,6 +31,9 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //清除历史记录
     connect(ui->programmerClearHistory, SIGNAL(clicked()), ui->programmerHistory, SLOT(clearProgrammerHistory()));
+
+    connect(ui->programmerHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->programmerClearHistory->setEnabled(false);});
+    connect(ui->programmerExprEdit,&ProgrammerExprCalculator::programmerHistoryChanged,this,[=](){ui->programmerClearHistory->setEnabled(true);});
 
     //选中记录
     connect(ui->programmerHistory, SIGNAL(exprSelected(const QString&)), ui->programmerExprEdit, SLOT(setText(const QString& )));
@@ -63,6 +67,8 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //默认选中十进制
     ui->numConversionTable->selectRow(1);
+
+
 }
 
 ProgrammerModePage::~ProgrammerModePage()
@@ -154,11 +160,8 @@ void ProgrammerModePage::handleProgrammerKeysButtonPress(Button button)
         else
             ui->programmerExprEdit->handleProgrammerInsertText("not()");
         break;
-
-    case Button_Key_Brackets:
-        ui->programmerExprEdit->handleProgrammerInsertText("()");
-        ui->programmerExprEdit->cursorBackward(false);
-        break;
+    case Button_Key_LeftBracket: ui->programmerExprEdit->handleProgrammerInsertText("("); break;
+    case Button_Key_RightBracket: ui->programmerExprEdit->handleProgrammerInsertText(")"); break;
     case Button_Key_Backspace: ui->programmerExprEdit->handleProgrammerFunction_Backspace(); break;
         //暂时禁用取反
 //    case Button_Key_Opposite: ui->programmerExprEdit->handleProgrammerFunction_Opposite(); break;

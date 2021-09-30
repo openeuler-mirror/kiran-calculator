@@ -851,6 +851,8 @@ void ScienceExprCalculator::keyPressEvent(QKeyEvent * event)
     case Qt::Key_Slash: handleInsertText("÷"); break;
     case Qt::Key_Period: handleInsertText("."); break;
     case Qt::Key_Percent: handleInsertText("%"); break;
+    case Qt::Key_ParenLeft:handleInsertText("("); break;
+    case Qt::Key_ParenRight:handleInsertText(")"); break;
     case Qt::Key_E:
 //        insert(QLatin1String("e"));
         handleFunction_Exp();
@@ -917,5 +919,4 @@ void ScienceExprCalculator::keyPressEvent(QKeyEvent * event)
     {
         exprSelectAll();
     }
-
 }

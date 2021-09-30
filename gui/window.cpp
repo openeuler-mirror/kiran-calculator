@@ -10,6 +10,7 @@
 #include "core/session.h"
 #include "core/evaluator.h"
 #include "core/settings.h"
+#include "general-enum.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -32,14 +33,11 @@ Window::Window(QWidget *parent)
 
 
    //侧边栏按钮布局，待确定
+    //侧边栏按钮在最上层
     QPushButton *m_drawerButton = new QPushButton("模式",this);
     m_drawerButton->show();
-    m_drawerButton->move(200,10);
+    m_drawerButton->move(5,5);
     m_drawerButton->resize(25,25);
-
-// Ui::CustomDrawer *ui 为私有，调用不到，同时不建议越层调用，可以用其他方法访问属性
-//    connect(m_drawer->modeListWidget,SIGNAL(itemSelectionChanged()),this,
-//            SLOT(on_modeLabelChanged()));
 
     connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_modeLabelChanged(int )));
     connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_switchKeyborad(int )));
@@ -56,14 +54,13 @@ Window::~Window()
 
 void Window::on_modeLabelChanged(int mode )
 {
-    qDebug() << mode;
-    if(mode == 0) {ui->modeLabel->setText("标准");}
+    if(mode == Mode_Label_Standard) {ui->modeLabel->setText("标准");}
 
-    if(mode == 1) {ui->modeLabel->setText("科学计算器");}
+    if(mode == Mode_Label_Science) {ui->modeLabel->setText("科学计算器");}
 
-    if(mode == 2) {ui->modeLabel->setText("程序员计算器");}
+    if(mode == Mode_Label_Programmer) {ui->modeLabel->setText("程序员计算器");}
 
-    if(mode == 3) {ui->modeLabel->setText("关于");}
+    if(mode == Mode_Label_About) {ui->modeLabel->setText("关于");}
 }
 
 //不同模式下的键盘切换

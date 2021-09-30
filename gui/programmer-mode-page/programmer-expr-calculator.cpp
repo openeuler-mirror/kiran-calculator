@@ -63,6 +63,7 @@ void ProgrammerExprCalculator::setSession(Session *session)
     m_evaluator->setSession(m_programmerSession);
 }
 
+//禁止输入框选中，暂未开启
 void ProgrammerExprCalculator::disableSelectText()
 {
     qobject_cast<QLineEdit*>(sender())->deselect();
@@ -970,8 +971,6 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
     qInfo() << "keyPressed:" << event;
 
     switch (key) {
-//    case Qt::Key_Backslash: handleProgrammerInsertText("\\");
-//        break;
     case Qt::Key_0: handleProgrammerInsertText("0"); break;
     case Qt::Key_1: handleProgrammerInsertText("1"); break;
     case Qt::Key_2:
@@ -1047,7 +1046,8 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
 
     case Qt::Key_Asterisk: handleProgrammerInsertText("×"); break;
     case Qt::Key_Slash: handleProgrammerInsertText("÷"); break;
-
+    case Qt::Key_ParenLeft:handleProgrammerInsertText("("); break;
+    case Qt::Key_ParenRight:handleProgrammerInsertText(")"); break;
     case Qt::Key_Enter:
         programmerExprCalc();
         break;

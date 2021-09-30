@@ -150,12 +150,15 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     math/rational.h
     math/units.cpp
     math/units.h
+
+    resources/kiran-calculator-resources.qrc
   )
 
 target_include_directories(kiran-calculator PRIVATE
     gui
     core
     math
+    resources
     ${CMAKE_BINARY_DIR}
     gui/mode-switcher-page
     gui/programmer-mode-page

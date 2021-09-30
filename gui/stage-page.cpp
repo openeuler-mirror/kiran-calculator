@@ -16,6 +16,7 @@ StagePage::StagePage(QWidget *parent) : QListWidget(parent)
 {
     connect(this,SIGNAL(itemClicked(QListWidgetItem *)),this,
             SLOT(handleStagePageItem(QListWidgetItem *)));
+
 }
 
 void StagePage::stageFormatChanged(int format)
@@ -84,6 +85,7 @@ void StagePage::setStageResult()
     }
     QListWidget::addItem(stageList);
     item(0)->setTextAlignment(Qt::AlignRight);
+
 }
 
 void StagePage::setStageErrorMessage()

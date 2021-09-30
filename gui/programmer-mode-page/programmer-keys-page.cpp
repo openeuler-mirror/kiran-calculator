@@ -5,22 +5,24 @@
 bool ProgrammerKeysPage::m_isShifted = false;
 
 const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] = {
-    {"Rol", Button_Key_RoL,1,0},{"Ror", Button_Key_RoR,1,1},
-    {"Or", Button_Key_Or, 1, 2},{"Xor", Button_Key_Xor, 1, 3},{"Not", Button_Key_Not, 1, 4},
-    {"And", Button_Key_And, 2, 0},{"Shift", Button_Key_Shift, 2, 1},{"Mod", Button_Key_Mod, 2, 2},
-    {"CE", Button_Key_ClearEntry, 2, 3}, {"C", Button_Key_Clear, 2, 4},
-    {"÷", Button_Key_Divide, 3, 0},{"×", Button_Key_Mult, 3, 1},{"-", Button_Key_Sub, 3, 2},
-    {"+", Button_Key_Add, 3, 3},{"←", Button_Key_Backspace, 3, 4},
-    {"A", Button_Key_A, 4, 0},{"B", Button_Key_B, 4, 1},{"7", Button_Key_7, 4,2},
-    {"8", Button_Key_8, 4, 3},{"9", Button_Key_9, 4, 4},
-    {"C", Button_Key_C, 5, 0},{"D", Button_Key_D, 5, 1},{"4", Button_Key_4, 5, 2},
-    {"5", Button_Key_5, 5, 3},{"6", Button_Key_6, 5, 4},
-    {"E", Button_Key_E, 6, 0},{"F", Button_Key_F, 6, 1},{"1", Button_Key_1, 6, 2},
-    {"2", Button_Key_2, 6, 3},{"3", Button_Key_3, 6, 4},
-    {"()", Button_Key_Brackets, 7, 0},{"±", Button_Key_Opposite, 7, 1},{"0", Button_Key_0, 7, 2},
-    {".", Button_Key_Point, 7,3},{"=", Button_Key_Equal, 7, 4},
+    {"Rol", Button_Key_RoL,1,0,"btn_rol"},{"Ror", Button_Key_RoR,1,1,"btn_ror"},
+    {"Or", Button_Key_Or, 1, 2,"btn_or"},{"Xor", Button_Key_Xor, 1, 3,"btn_xor"},{"Not", Button_Key_Not, 1, 4,"btn_not"},
+    {"And", Button_Key_And, 2, 0,"btn_and"},{"Shift", Button_Key_Shift, 2, 1,"btn_shift"},{"Mod", Button_Key_Mod, 2, 2,"btn_mod"},
+    {"CE", Button_Key_ClearEntry, 2, 3,"btn_clearEntry"}, {"C", Button_Key_Clear, 2, 4,"btn_clear"},
+    {"÷", Button_Key_Divide, 3, 0,"btn_divide"},{"×", Button_Key_Mult, 3, 1,"btn_mult"},{"-", Button_Key_Sub, 3, 2,"btn_sub"},
+    {"+", Button_Key_Add, 3, 3,"btn_add"},{"←", Button_Key_Backspace, 3, 4,"btn_backspace"},
+    {"A", Button_Key_A, 4, 0,"btn_a"},{"B", Button_Key_B, 4, 1,"btn_b"},{"7", Button_Key_7, 4,2,"btn_7"},
+    {"8", Button_Key_8, 4, 3,"btn_8"},{"9", Button_Key_9, 4, 4,"btn_9"},
+    {"C", Button_Key_C, 5, 0,"btn_c"},{"D", Button_Key_D, 5, 1,"btn_d"},{"4", Button_Key_4, 5, 2,"btn_4"},
+    {"5", Button_Key_5, 5, 3,"btn_5"},{"6", Button_Key_6, 5, 4,"btn_6"},
+    {"E", Button_Key_E, 6, 0,"btn_e"},{"F", Button_Key_F, 6, 1,"btn_f"},{"1", Button_Key_1, 6, 2,"btn_1"},
+    {"2", Button_Key_2, 6, 3,"btn_2"},{"3", Button_Key_3, 6, 4,"btn_3"},
+    {"(", Button_Key_LeftBracket, 7, 0,"btn_leftBracket"}, {")", Button_Key_RightBracket, 7, 1,"btn_rightBracket"},
+//    {"±", Button_Key_Opposite, 7, 1},   //暂时禁用取反函数
+    {"0", Button_Key_0, 7, 2,"btn_0"},
+    {".", Button_Key_Point, 7,3,"btn_point"},{"=", Button_Key_Equal, 7, 4,"btn_equal"},
 
-    {"Lsh", Button_Key_Lsh, 1, 0},{"Rsh", Button_Key_Rsh, 1, 1},
+    {"Lsh", Button_Key_Lsh, 1, 0,"btn_lsh"},{"Rsh", Button_Key_Rsh, 1, 1,"btn_rsh"},
 };
 
 ProgrammerKeysPage::ProgrammerKeysPage(QWidget *parent) : QWidget(parent)
@@ -42,18 +44,19 @@ void ProgrammerKeysPage::initProgrammerButtons()
     {
         const  KeyDescription* description = keyDescriptions + i;
         QPushButton* key = new QPushButton(description->token);
-        qDebug() << "description->token__:" + description->token;
+
+        key->setObjectName(description->objectName);
+
+        //程序员模式下，禁用小数点
+        if(description->button == Button_Key_Point)
+            key->setEnabled(false);
+        if(description->button == Button_Key_Shift)
+            key->setCheckable(true);
 
         //利用map做映射,将枚举值和按钮指针进行映射
         m_keyEnumMap[description->button] = key;
 
         QVariant var = static_cast<QVariant>(description->button);
-
-        qDebug() << "description->button";
-        qDebug() << description->button;
-
-        qDebug() << "QVariant var";
-        qDebug() << var;
 
         key->setProperty(PROPERTY_KEY_ENUM,var);
         key->setFocusPolicy(Qt::NoFocus);
@@ -106,6 +109,13 @@ void ProgrammerKeysPage::switchProgrammerFormatKeys(int currentFormat)
             key->setEnabled(false);
         }
         break;
+    default:
+        for(i = m_keyEnumMap.find(Button_Key_A); i != m_keyEnumMap.find((Button) 16);i++)                   // Button_Key_F -> 15
+        {
+            QPushButton *key =  i.value();
+            key->setEnabled(false);
+        }
+        break;
     }
 }
 
@@ -119,6 +129,7 @@ void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
         keyRsh->setVisible(false);
         m_isShifted = true;
         qDebug() << "switchLogicalAndShift___m_isShifted = true";
+
     }
     else
     {
@@ -126,6 +137,7 @@ void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
         keyRsh->setVisible(true);
         m_isShifted = false;
         qDebug() << "switchLogicalAndShift___m_isShifted = false";
+
     }
 }
 

@@ -17,6 +17,19 @@ HistoryRecoder::HistoryRecoder(QWidget *parent) : QListWidget(parent)
 {
     connect(this, SIGNAL(itemClicked(QListWidgetItem *)),this,
             SLOT(handleItem(QListWidgetItem *)));
+
+
+    setAlternatingRowColors(true); // 行与行之间交替颜色不同,暂不启用
+    setTextElideMode(Qt::ElideNone);
+
+    m_exprFont.setPixelSize(14);
+    m_resultFont.setPixelSize(24);
+    m_exprFont.setFamily("Noto Sans CJK SC Light");
+    m_resultFont.setFamily("Noto Sans CJK SC Light");
+
+    setWordWrap(true);
+//    setResizeMode(QListView::Adjust);
+    adjustSize();
 }
 
 void HistoryRecoder::setSession(Session *session)
@@ -26,6 +39,7 @@ void HistoryRecoder::setSession(Session *session)
 
 void HistoryRecoder::updateStandardHistory()
 {
+
     m_evaluator = Evaluator::instance();
     m_evaluator->setSession(m_session);
     QList<HistoryEntry> history = Evaluator::instance()->session()->historyToList();
@@ -39,10 +53,16 @@ void HistoryRecoder::updateStandardHistory()
     {
         expression = history[i].expr();
         value = history[i].result();
-        historyList.append(Utils::reformatSeparatorsPro(expression, 10) + "=");
+//        historyList.append(Utils::reformatSeparatorsPro(expression, 10) + "=");
+
+        historyList.append(
+                    historyWordWrap((Utils::reformatSeparatorsPro(expression, 10) + "="), 26)
+                    );
         if(!value.isNan())
         {
-            historyList.append(Utils::reformatSeparatorsPro(NumberFormatter::format(value), 10));
+            historyList.append(
+                        historyWordWrap(Utils::reformatSeparatorsPro(NumberFormatter::format(value), 10), 17)
+                        );
         }
     }
     QListWidget::addItems(historyList);
@@ -50,9 +70,20 @@ void HistoryRecoder::updateStandardHistory()
     for(int i=0; i<historyList.count();i++)
     {
         item(i)->setTextAlignment(Qt::AlignRight);
-    }
-    QListWidget::scrollToBottom();
+        if(i%2)
+        {
 
+            item(i)->setFont(m_resultFont);
+            item(i)->setTextColor(QColor("#FFFFFF"));
+        }
+        else
+        {
+            item(i)->setFont(m_exprFont);
+            item(i)->setTextColor(QColor("#919191"));
+        }
+    }
+
+    QListWidget::scrollToBottom();
 }
 
 void HistoryRecoder::updateScienceHistory()
@@ -172,19 +203,53 @@ void HistoryRecoder::historyFEChanged()
 void HistoryRecoder::clearScienceHistory()
 {
     m_session->clearHistory();
+    emit historyClearSuccess();
     updateScienceHistory();
 }
 
 void HistoryRecoder::clearStandardHistory()
 {
     m_session->clearHistory();
+    emit historyClearSuccess();
     updateStandardHistory();
 }
 
 void HistoryRecoder::clearProgrammerHistory()
 {
     m_session->clearHistory();
+    emit historyClearSuccess();
     updateProgrammerHistory();
+}
+
+bool HistoryRecoder::isHistoryEmpty()
+{
+    qDebug() << "current count:";
+    qDebug() << count();
+    if(count())
+        return true;
+    else
+        return false;
+}
+
+QString HistoryRecoder::historyWordWrap(const QString &text,int limitLength)
+{
+    QString expr = text;
+    int length = text.count();
+    int rowCount = 1;
+
+    if(length <= limitLength)
+        return expr;
+
+    if(length % limitLength)
+        rowCount = (length/limitLength) + 1;
+    else
+        rowCount = length/limitLength;
+
+    for(int i = 1; i<rowCount; i++)
+    {
+        expr.insert(limitLength*i,"\n");
+    }
+    return expr;
 }
 
 QItemSelectionModel::SelectionFlags HistoryRecoder::selectionCommand(const QModelIndex &index, const QEvent *event) const

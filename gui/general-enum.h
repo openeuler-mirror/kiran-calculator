@@ -14,7 +14,7 @@ enum AngleUnit{
 };
 
 enum ModeLabel{
-    Mode_Label_Standard,Mode_Label_Science,Mode_Label_Programmer
+    Mode_Label_Standard,Mode_Label_Science,Mode_Label_Programmer,Mode_Label_About
 };
 
 #endif // GENERALENUM_H

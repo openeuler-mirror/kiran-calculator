@@ -1,4 +1,0 @@
-/home/test/Calculator/build/CMakeFiles/rebuild_cache.dir
-/home/test/Calculator/build/CMakeFiles/Calculator.dir
-/home/test/Calculator/build/CMakeFiles/edit_cache.dir
-/home/test/Calculator/build/CMakeFiles/Calculator_autogen.dir

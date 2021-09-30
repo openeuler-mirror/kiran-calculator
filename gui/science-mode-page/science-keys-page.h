@@ -36,6 +36,9 @@ private:
         Button button;
         int row;
         int column;
+        QString objectName;
+        int rowcount;  //所占行数
+        int columncount;  //所占列数
     }keyDescriptions[];
 
     QGridLayout* m_gridLayout = nullptr;
