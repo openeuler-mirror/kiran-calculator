@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "num-conversion.h"
 #include "core/sessionhistory.h"
 #include "core/session.h"
@@ -5,6 +23,7 @@
 #include "core/evaluator.h"
 #include "utils.h"
 #include <QDebug>
+#include <QString>
 
 NumConversion::NumConversion(QWidget* parent) : QTableWidget(parent)
 {
@@ -12,8 +31,11 @@ NumConversion::NumConversion(QWidget* parent) : QTableWidget(parent)
             SLOT(activateNumConversion(QTableWidgetItem*)));
 
     m_evaluator = Evaluator::instance();
+    setTextElideMode(Qt::ElideNone);
+//    adjustSize();
 
 //    setCurrentItem(item(1,0));
+
 }
 
 void NumConversion::showNumFormatConverted(const Quantity & quantity)
@@ -41,15 +63,29 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
     formatBin = Utils::reformatSeparatorsPro(formatBin, 2);
     formatDec = Utils::reformatSeparatorsPro(formatDec, 10);
 
+    QFont font;
+    font.setPixelSize(10);
+    setFont(font);
 
+
+    if(formatBin.length() > 50 )
+    {
+        formatBin.insert(50,"\n");
+    }
+
+    qDebug() << "formatBin:";
+    qDebug() << formatBin;
     item(0,0)->setText(formatHex);
     item(1,0)->setText(formatDec);
     item(2,0)->setText(formatOct);
     item(3,0)->setText(formatBin);
-    qDebug() << "showNumFormatConverted";
 
-    qDebug() << "formatHex:" + formatHex;
-    qDebug() << "formatDec:" + formatDec;
+    qDebug() << item(3,0)->sizeHint();
+
+    resizeRowToContents(3);
+//    adjustSize();
+
+
 }
 
 void NumConversion::activateNumConversion(QTableWidgetItem* item)

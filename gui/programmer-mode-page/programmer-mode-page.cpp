@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "programmer-mode-page.h"
 #include "ui_programmer-mode-page.h"
 
@@ -20,9 +38,23 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     ui->programmerHistory->setSession(m_programmerSession);
     ui->programmerClearHistory->setEnabled(false);
 
+    ui->numConversionTable->verticalHeaderItem(0)->setSizeHint(QSize(64,28));
+
+    QFont font;
+    font.setPixelSize(14);
+    ui->numConversionTable->verticalHeader()->setFont(font);
+    ui->numConversionTable->resizeRowToContents(3);
+    ui->numConversionTable->adjustSize();
+
+    ui->numConversionTable->setStyleSheet("background-color:#222222;color:#FFFFFF;");
+
+
+
+
 
     //计算成功，更新历史记录和暂存记录
-    connect(ui->programmerExprEdit, SIGNAL(programmerHistoryChanged( )), ui->programmerHistory, SLOT(updateProgrammerHistory( )));
+    connect(ui->programmerExprEdit, SIGNAL(programmerCalculateMode(int)), ui->programmerHistory, SLOT(setCalculateMode(int)));
+    connect(ui->programmerExprEdit, SIGNAL(programmerHistoryChanged( )), ui->programmerHistory, SLOT(updateHistory( )));
     connect(ui->programmerExprEdit, SIGNAL(programmerToStageExprFormatDec(const QString&)), ui->programmerStagePage, SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->programmerExprEdit, SIGNAL(programmerToStageQuantity(const Quantity&)), ui->programmerStagePage, SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->programmerExprEdit, SIGNAL(programmerStageChanged( )), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
@@ -30,13 +62,13 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     connect(ui->programmerExprEdit, SIGNAL(programmerExprCalcNan( )), ui->programmerStagePage, SLOT(setStageNanMessage( )));
 
     //清除历史记录
-    connect(ui->programmerClearHistory, SIGNAL(clicked()), ui->programmerHistory, SLOT(clearProgrammerHistory()));
+    connect(ui->programmerClearHistory, SIGNAL(clicked()), ui->programmerHistory, SLOT(clearHistory()));
 
     connect(ui->programmerHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->programmerClearHistory->setEnabled(false);});
     connect(ui->programmerExprEdit,&ProgrammerExprCalculator::programmerHistoryChanged,this,[=](){ui->programmerClearHistory->setEnabled(true);});
 
     //选中记录
-    connect(ui->programmerHistory, SIGNAL(exprSelected(const QString&)), ui->programmerExprEdit, SLOT(setText(const QString& )));
+    connect(ui->programmerHistory, SIGNAL(valueSelected(const QString&)), ui->programmerExprEdit, SLOT(setText(const QString& )));
     connect(ui->programmerStagePage,SIGNAL(stageExprSelected(const QString& )), ui->programmerExprEdit, SLOT(setText(const QString& )));
 
     //将10进制结果传给进制列表进行转换并显示
@@ -52,7 +84,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //进制切换时刷新程序员历史记录
     connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerHistory, SLOT(historyFormatChanged(int )));
-    connect(ui->numConversionTable,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateProgrammerHistory()));
+    connect(ui->numConversionTable,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateHistory()));
     //进制切换时刷新程序员暂存记录
     connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
     connect(ui->numConversionTable,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));

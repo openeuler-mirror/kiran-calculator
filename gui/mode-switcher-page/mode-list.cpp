@@ -1,3 +1,22 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
+
 #include "mode-list.h"
 #include <QEvent>
 #include <QMouseEvent>
@@ -9,7 +28,6 @@ ModeList::ModeList(QWidget *parent)
 
 QItemSelectionModel::SelectionFlags ModeList::selectionCommand(const QModelIndex &index, const QEvent *event) const
 {
-    //NOTE:为了避免一些环境下会出现ItemFocus直接设置选中的情况
     if(event==nullptr){
         return QItemSelectionModel::NoUpdate;
     }
@@ -22,6 +40,8 @@ QItemSelectionModel::SelectionFlags ModeList::selectionCommand(const QModelIndex
         {
             return QItemSelectionModel::NoUpdate;
         }
+        if(mouseEvent->button() == Qt::RightButton)
+            return QItemSelectionModel::NoUpdate;
     }
     return QListWidget::selectionCommand(index,event);
 }

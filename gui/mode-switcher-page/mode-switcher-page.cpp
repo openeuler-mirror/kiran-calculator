@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "mode-switcher-page.h"
 #include "./ui_mode-switcher-page.h"
 #include "general-enum.h"
@@ -5,6 +23,10 @@
 
 #include <QDebug>
 #include <QListWidget>
+#include <QEvent>
+#include <QMouseEvent>
+#include <QPropertyAnimation>
+#include <QAbstractItemView>
 
 bool ModeSwitcherPage::m_flag=1;
 
@@ -12,8 +34,6 @@ ModeSwitcherPage::ModeSwitcherPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ModeSwitcherPage)
 {
-    //this指针指向CustomDrawer
-    //利用ui指向内部组件
     ui->setupUi(this);
     ui->modeList->setCurrentRow(Mode_Label_Standard);
     ui->modeList->setMovement(QListView::Static);
@@ -24,14 +44,12 @@ ModeSwitcherPage::ModeSwitcherPage(QWidget *parent) :
 
     connect(this,SIGNAL(clickList(int )),this,SLOT(activateAnimation()));
     connect(ui->modeList,&ModeList::itemSelectionChanged, this, &ModeSwitcherPage::modeListitemSelection);
-
     controlAnimation();
-
-
     //事件过滤器
 //    ui->modeList->installEventFilter(this);
     qApp->installEventFilter(this);   //this 添加对象
 
+    ui->modeList->setGridSize(QSize(108,40));
 }
 
 
@@ -39,9 +57,6 @@ ModeSwitcherPage::~ModeSwitcherPage()
 {
     delete ui;
 }
-
-#include <QEvent>
-#include <QMouseEvent>
 
 //先获取全局坐标，然后将全局转化为局部坐标，判断点击位置是否包含在控件内
 //事件过滤器是结束事件的意思,结束掉鼠标点击事件，不让它往下传
@@ -52,7 +67,8 @@ bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
         QMouseEvent* mouseEv = static_cast<QMouseEvent*>(event);    //强制转换事件类型
         QPoint globalPoint =  mouseEv->globalPos();
         QPoint point = ui->modeList->mapFromGlobal(globalPoint);
-        if(!ui->modeList->rect().contains(point))
+        QPoint point_2 = ui->modeListBlank->mapFromGlobal(globalPoint);
+        if((!ui->modeList->rect().contains(point)) && (!ui->modeListBlank->rect().contains(point_2)))
         {
             if(!m_flag)
             {
@@ -64,39 +80,17 @@ bool ModeSwitcherPage::eventFilter(QObject *watched, QEvent *event)
     return false;     //false-监听,true-公有                       //返回false,事件会往下传递
 }
 
-
 //控制动画
 void ModeSwitcherPage::controlAnimation()
 {
-    modeListOpacity = new QGraphicsOpacityEffect(this);
-    modeListOpacity->setOpacity(1);   //设置不透明度
-    //ui->modeListWidget->setGraphicsEffect(modeListOpacity);
-    this->setGraphicsEffect(modeListOpacity);
-
-    //大小变化动画
-    modeScaleAnimation = new QPropertyAnimation(this, "geometry");
-    modeScaleAnimation->setDuration(1000);
-
-//    pScaleAnimation1->setStartValue(QPoint(this->x(),100));
-//    pScaleAnimation1->setEndValue(QPoint((this->x()),(this->y())));
-//    pScaleAnimation1->setEndValue(QPoint(-width(), 0));
-
+    modeAnimation = new QPropertyAnimation(this, "geometry");
+    modeAnimation->setDuration(300);
     // 起始位置
-    modeScaleAnimation->setStartValue(QRect(0,0,0,416));
+    modeAnimation->setStartValue(QRect(-108,0,108,553));
     // 终点位置
-    modeScaleAnimation->setEndValue(QRect(0,0,100,416));
-
-    modeScaleAnimation->setEasingCurve(QEasingCurve::InOutQuad);
-
-    //透明度变化动画
-    modeOpacityAnimation = new QPropertyAnimation(modeListOpacity,"opacity");
-    modeOpacityAnimation->setDuration(1000);
-    modeOpacityAnimation->setStartValue(0);
-    modeOpacityAnimation->setEndValue(1);
+    modeAnimation->setEndValue(QRect(0,0,108,553));
+    modeAnimation->setEasingCurve(QEasingCurve::OutQuad);
 }
-
-
-
 
 void ModeSwitcherPage::activateAnimation()
 {
@@ -105,24 +99,20 @@ void ModeSwitcherPage::activateAnimation()
     if(m_flag)
     {
         //设置动画方向
-        modeScaleAnimation->setDirection(QAbstractAnimation::Forward);
-        modeOpacityAnimation->setDirection(QAbstractAnimation::Forward);
-
-        //动画同时开始
-        modeScaleAnimation->start();
-        modeOpacityAnimation->start();
+        modeAnimation->setDirection(QAbstractAnimation::Forward);
+        qDebug() << modeAnimation->direction();
+        modeAnimation->start();
+        qDebug() << modeAnimation->state();
         m_flag = 0;
-        qDebug() << "activateAnimation m_flag = false";
 
     }
     else if(!m_flag)
     {
-        modeScaleAnimation->setDirection(QAbstractAnimation::Backward);
-        modeOpacityAnimation->setDirection(QAbstractAnimation::Backward);
-        modeScaleAnimation->start();
-        modeOpacityAnimation->start();
+        modeAnimation->setDirection(QAbstractAnimation::Backward);
+        qDebug() << modeAnimation->direction();
+        modeAnimation->start();
+        qDebug() << modeAnimation->state();
         m_flag = 1;
-        qDebug() << "activateAnimation m_flag = true";
     }
 }
 
@@ -135,17 +125,17 @@ int ModeSwitcherPage::modeListitemSelection()
 
     //不能将非枚举量赋值给枚举变量，但能将枚举量赋值给非枚举变量
     //因为枚举量时符号常量，赋值编译器会自动把枚举量转为int类型
-    if(Mode_Label_Standard == currentMode)
+    if(Calculation_Mode_Standard == currentMode)
     {
-        emit clickList(Mode_Label_Standard);
+        emit clickList(Calculation_Mode_Standard);
     }
-    else if (Mode_Label_Science == currentMode)
+    else if (Calculation_Mode_Science == currentMode)
     {
-        emit clickList(Mode_Label_Science);
+        emit clickList(Calculation_Mode_Science);
     }
-    else if (Mode_Label_Programmer == currentMode)
+    else if (Calculation_Mode_Programmer == currentMode)
     {
-        emit clickList(Mode_Label_Programmer);
+        emit clickList(Calculation_Mode_Programmer);
     }
     return currentMode;
 }

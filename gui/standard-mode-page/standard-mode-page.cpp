@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "standard-mode-page/standard-mode-page.h"
 #include "ui_standard-mode-page.h"
 #include "core/session.h"
@@ -12,17 +30,18 @@ StandardModePage::StandardModePage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->standardExprEdit->autoZoomFontSize();       //设置好字体大小以及光标的大小，防止初始化时光标大小不一致
+
     m_standardSession = new Session();
     ui->standardExprEdit->setSession(m_standardSession);
     ui->standardHistory->setSession(m_standardSession);
 
     ui->standardClearHistory->setEnabled(false);
 
-
     connect(ui->standardKeysPage, SIGNAL(buttonPressed(Button)),this, SLOT(handleStandardKeysButtonPress(Button)));
-    connect(ui->standardExprEdit,SIGNAL(standardHistoryChanged( )),ui->standardHistory,SLOT(updateStandardHistory( )));
 
-
+    connect(ui->standardExprEdit,SIGNAL(standardCalculateMode(int )),ui->standardHistory,SLOT(setCalculateMode(int )));
+    connect(ui->standardExprEdit,SIGNAL(standardHistoryChanged( )),ui->standardHistory,SLOT(updateHistory( )));
 
     connect(ui->standardExprEdit,SIGNAL(standardToStageExprFormat(const QString&)),ui->standardStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->standardExprEdit,SIGNAL(standardToStageQuantity(const Quantity&)), ui->standardStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
@@ -31,12 +50,17 @@ StandardModePage::StandardModePage(QWidget *parent) :
     connect(ui->standardExprEdit,SIGNAL(exprCalcNan()),ui->standardStagePage, SLOT(setStageNanMessage( )));
 
 
-    connect(ui->standardHistory,SIGNAL(exprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
+    connect(ui->standardHistory,SIGNAL(valueSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
+    connect(ui->standardHistory,SIGNAL(resultSelected(const QString&)), ui->standardStagePage,SLOT(setHistoryResult(const QString&)));
     connect(ui->standardStagePage,SIGNAL(stageExprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
 
-    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearStandardHistory()));
+    connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearHistory()));
+
     connect(ui->standardHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->standardClearHistory->setEnabled(false);});
     connect(ui->standardExprEdit,&ExprCalculator::standardHistoryChanged,this,[=](){ui->standardClearHistory->setEnabled(true);});
+
+
+
 }
 
 void StandardModePage::handleStandardKeysButtonPress(Button button)

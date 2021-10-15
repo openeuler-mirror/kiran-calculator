@@ -1,3 +1,22 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
+
 #include "window.h"
 #include "./ui_window.h"
 //#include "ui_window.h"
@@ -34,10 +53,10 @@ Window::Window(QWidget *parent)
 
    //侧边栏按钮布局，待确定
     //侧边栏按钮在最上层
-    QPushButton *m_drawerButton = new QPushButton("模式",this);
+    QPushButton *m_drawerButton = new QPushButton(this);
     m_drawerButton->show();
-    m_drawerButton->move(5,5);
-    m_drawerButton->resize(25,25);
+    m_drawerButton->move(7,7);
+    m_drawerButton->resize(16,16);
 
     connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_modeLabelChanged(int )));
     connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_switchKeyborad(int )));
@@ -54,11 +73,11 @@ Window::~Window()
 
 void Window::on_modeLabelChanged(int mode )
 {
-    if(mode == Mode_Label_Standard) {ui->modeLabel->setText("标准");}
+    if(mode == Calculation_Mode_Standard) {ui->modeLabel->setText("标准");}
 
-    if(mode == Mode_Label_Science) {ui->modeLabel->setText("科学计算器");}
+    if(mode == Calculation_Mode_Science) {ui->modeLabel->setText("科学计算器");}
 
-    if(mode == Mode_Label_Programmer) {ui->modeLabel->setText("程序员计算器");}
+    if(mode == Calculation_Mode_Programmer) {ui->modeLabel->setText("程序员计算器");}
 
     if(mode == Mode_Label_About) {ui->modeLabel->setText("关于");}
 }

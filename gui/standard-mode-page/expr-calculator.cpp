@@ -1,14 +1,34 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "expr-calculator.h"
 #include "core/constants.h"
 #include "core/evaluator.h"
 #include "core/functions.h"
 #include "core/numberformatter.h"
 #include "core/settings.h"
-#include "core/session.h"
+
 #include "core/sessionhistory.h"
 #include "utils.h"
+#include "sselection.h"
+#include "general-enum.h"
 
-//#include <QHeaderView>
+
 #include <QRegularExpression>
 #include <QApplication>
 #include <QClipboard>
@@ -18,6 +38,7 @@
 ExprCalculator::ExprCalculator(QWidget* parent) : QLineEdit(parent)
 {
     initMenuAndAction();
+
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
 
     connect(this,SIGNAL(returnPressed()), this, SLOT(triggerEnter()));
@@ -141,7 +162,7 @@ void ExprCalculator::exprSelectAll()
     QLineEdit::selectAll();
 }
 
-//添加10进制千位符
+//添加10进制千位符,缩放字体大小
 void ExprCalculator::reformatShowExpr(const QString& text)
 {
     int oldPosition = this->cursorPosition();
@@ -149,6 +170,7 @@ void ExprCalculator::reformatShowExpr(const QString& text)
     QString reformatExpr;
     reformatExpr = reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
     setText(reformatExpr);
+    autoZoomFontSize();  //缩放字体大小
 
     // reformat text.
     int oldLength = QString(text).length();
@@ -194,6 +216,7 @@ void ExprCalculator::exprCalc()
 
             emit exprCalcMessageDec(formatDec);
             emit exprCalcQuantityDec(quantity);
+            emit standardCalculateMode(Calculation_Mode_Standard);
             qDebug() << formatDec;
             qDebug() << "formatDec:"+formatDec;
             //存入标准历史记录
@@ -231,7 +254,7 @@ void  ExprCalculator::setText(const QString& result)
 {
     //显示结果中去除'='号和空格符号
     QString resultModify =  result;
-    resultModify.remove('=').remove(' ');
+    resultModify.remove("=").remove(" ").remove("\n");
     QLineEdit::setText(resultModify);
 }
 
@@ -340,6 +363,26 @@ void ExprCalculator::initMenuAndAction()
     connect(m_copy,SIGNAL(triggered()), this, SLOT(copyResultToClipboard()));
     connect(m_paste, SIGNAL(triggered()), this, SLOT(paste()));
     connect(m_selectAll, SIGNAL(triggered()), this, SLOT(exprSelectAll()));
+}
+
+void ExprCalculator::autoZoomFontSize()
+{
+    QFont font("Noto Sans CJK SC Regular");
+    for (int i = 48; i > 15 ; --i)
+    {
+        font.setPixelSize(i);
+        QFontMetrics fm(font);
+        qDebug() << "fm.lineSpacing()";
+        qDebug() << fm.lineSpacing();
+
+        int fontWidth = fm.width(text());
+        int editWidth = width() - 45;
+
+        if (fontWidth < editWidth)
+            break;
+    }
+
+    setFont(font);
 }
 
 void ExprCalculator::handleFunction_Sqrt()

@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "programmer-keys-page.h"
 #include "general-enum.h"
 #include <QDebug>
@@ -28,11 +46,10 @@ const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] =
 ProgrammerKeysPage::ProgrammerKeysPage(QWidget *parent) : QWidget(parent)
 {
     m_gridLayout = new QGridLayout(this);
-    m_gridLayout->setMargin(3);
     m_gridLayout->setSpacing(3);
+    m_gridLayout->setMargin(0);
     initProgrammerButtons();
     switchProgrammerFormatKeys(NumFormat::Num_Format_Dec);   //默认十进制键盘
-
 }
 
 #define PROPERTY_KEY_ENUM "Programmer_Button_Enum"

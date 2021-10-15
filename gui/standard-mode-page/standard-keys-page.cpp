@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "standard-keys-page.h"
 #include <QDebug>
 #include <QGridLayout>
@@ -19,7 +37,7 @@ const StandardKeysPage::KeyDescription StandardKeysPage::keyDescriptions[] = {
     {"1", Button_Key_1, 5, 0,"btn_1"},         {"2", Button_Key_2, 5, 3,"btn_2"},
     {"3", Button_Key_3, 5, 6,"btn_3"},         {"+", Button_Key_Add, 5, 9,"btn_add"},
 
-    {"()", Button_Key_Brackets, 6, 0,"btn_brackets"},  {"0", Button_Key_0, 6, 3,"btn_0"},
+    {"( )", Button_Key_Brackets, 6, 0,"btn_brackets"},  {"0", Button_Key_0, 6, 3,"btn_0"},
     {".", Button_Key_Point, 6, 6,"btn_point"}, {"=", Button_Key_Equal, 6, 9,"btn_equal"}
 };
 

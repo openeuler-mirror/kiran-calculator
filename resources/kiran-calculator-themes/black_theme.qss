@@ -1,52 +1,78 @@
-HistoryRecoder::Item:hover{
-    background-color:red;
-}
-HistoryRecoder::Item:!hover{
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
+
+
+QWidget#Window{
+    background-color:#222222;
 }
 
-HistoryRecoder::Item:alternate:hover{ background-color:red;}
-HistoryRecoder::Item:alternate:!hover{
-    background-color: #222222;
-}
 
-HistoryRecoder::Item:selected{background-color:gray; }
-
+HistoryRecoder::Item:hover{background:rgba(255,255,255,0.3); }
+HistoryRecoder::Item:selected{background:rgba(255,255,255,0.1); }
 HistoryRecoder{
-    background-color: #222222;
+    background:#222222;
     border-radius:0px;
 }
 
-StagePage::Item:hover{background:red; }
-StagePage::Item:selected{background:gray; }
+StagePage::Item:hover{background:rgba(255,255,255,0.3);  }
+StagePage::Item:selected{background:rgba(255,255,255,0.1); color:#919191;}
 StagePage{
     background-color: #222222;
     border-radius:0px;
     color:#919191;
-    font:14px;
-    font-family: "Noto Sans CJK SC Light";
-
+    font-size:14px;
+    font-family: "Noto Sans CJK SC Regular";
+    padding-top:20px;
+    padding-bottom:0px;
 }
 
-ModeList::Item:hover{background:#393939; }
+ModeList::Item:hover{ background:#393939;}
 ModeList::Item:selected{background:#2eb3ff; }
-ModeList::Item:selected:!active{background:#2d2d2d; }
+ModeList::Item{
+    height:30px;
+}
+
 ModeList{
+    color:#FFFFFF;
     background-color: #222222;
     border-radius:0px;
+    font:14px;
+    font-family: "Noto Sans CJK SC Regular";
+    border-top-width: 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #393939;
 }
-
-
 
 
 QLineEdit{
     background-color: #222222;
     color:#FFFFFF;
     border-radius:0px;
+    /*
     font:48px;
-    font-family: "Noto Sans CJK SC Light";
+    font-family: "Noto Sans CJK SC Regular";
+    */
+    padding-bottom:14px;
 }
-
-
 
 QPushButton#btn_0:!hover:!disabled,
 QPushButton#btn_1:!hover:!disabled,
@@ -68,21 +94,33 @@ QPushButton#btn_f:!hover:!disabled
     background-color:#393939;
 }
 
+
 QPushButton#btn_shift:!hover:!checked,
 QPushButton#btn_HYP:!hover:!checked,
 QPushButton#btn_FE:!hover:!checked{
     background-color:#2d2d2d;
 }
 
-
-QPushButton#btn_equal:!hover{
-    background-color:#2eb3ff;
+QPushButton#btn_DEG,
+QPushButton#btn_HYP,
+QPushButton#btn_FE
+{
+    width:64px;
+    height:24px;
 }
 
-QPushButton:hover { background-color: red;  }
-QPushButton:pressed{background-color: green;}
+QPushButton#btn_equal{
+    border:0px;
+    background-color:#2eb3ff;
+}
+QPushButton#btn_equal:hover{background-color:#77ceff;}
+QPushButton#btn_equal:pressed{background-color:#2eb3ff;}
 
+
+QPushButton:hover { background-color: rgba(255,255,255,0.3);}
+QPushButton:pressed{background-color: rgba(255,255,255,0.1);}
 QPushButton:checked {background-color: #2eb3ff;}
+
 
 StandardKeysPage >  QPushButton
 {
@@ -91,8 +129,9 @@ StandardKeysPage >  QPushButton
     background-color:#2d2d2d;
     height:60px;
     width:80px;
+    font:14px;
+    font-family: "Noto Sans CJK SC Regular";
 }
-
 
 ProgrammerKeysPage > QPushButton:disabled
 {
@@ -105,12 +144,19 @@ ScienceKeysPage > QPushButton
     border-radius:0px;
     color:#FFFFFF;
     background-color:#2d2d2d;
+    height:64px;
+    width:48px;
+    font-size:14px;
+    font-family: "Noto Sans CJK SC Regular";
 }
+
 
 QLabel#modeLabel{
     background-color:#393939;
     color:#FFFFFF;
-    border-radius:0px
+    font:14px;
+    font-family: "Noto Sans CJK SC Regular";
+    border-radius:0px;
 }
 QLabel#historyLabel{
     background-color:#222222;
@@ -118,7 +164,45 @@ QLabel#historyLabel{
     border-radius:0px
 }
 
-
-ModeSwitcherPage{
-    background-color:red;
+QLabel#modeListBlank{
+    background-color: #222222;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 0px;
+    border-style: solid;
+    border-color: #393939;
 }
+
+QPushButton#standardClearHistory,
+QPushButton#scienceClearHistory,
+QPushButton#programmerClearHisoty
+{
+    border-radius:2px;
+    background-color:#393939;
+    color:#FFFFFF;
+    font:14px;
+    font-family: "Noto Sans CJK SC Regular";
+}
+
+QPushButton#standardClearHistory:disabled,
+QPushButton#scienceClearHistory:disabled,
+QPushButton#programmerClearHisoty:disabled
+{
+    color:#919191;
+}
+
+QPushButton#standardClearHistory:hover:!disabled,
+QPushButton#scienceClearHistory:hover:!disabled,
+QPushButton#programmerClearHisoty:hover:!disabled
+{
+    background-color:rgba(255,255,255,0.3);
+}
+
+QPushButton#standardClearHistory:pressed:!disabled,
+QPushButton#scienceClearHistory:pressed:!disabled,
+QPushButton#programmerClearHisoty:pressed:!disabled
+{
+    background-color:rgba(255,255,255,0.1);
+}
+

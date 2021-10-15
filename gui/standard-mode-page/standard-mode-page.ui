@@ -87,16 +87,17 @@
          <height>48</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Noto Sans CJK SC</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">padding-top:20px;
-padding-bottom:0px;
-
-
-
-</string>
+        <string notr="true"/>
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -132,14 +133,14 @@ padding-bottom:0px;
        <property name="font">
         <font>
          <family>Noto Sans CJK SC</family>
+         <pointsize>48</pointsize>
         </font>
        </property>
        <property name="contextMenuPolicy">
         <enum>Qt::CustomContextMenu</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">padding-bottom:14px;
-</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -162,13 +163,13 @@ padding-bottom:0px;
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>332</width>
          <height>379</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>332</width>
          <height>379</height>
         </size>
        </property>
@@ -182,10 +183,10 @@ padding-bottom:0px;
       <number>0</number>
      </property>
      <property name="leftMargin">
-      <number>10</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
-      <number>16</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
       <number>0</number>
@@ -200,18 +201,29 @@ padding-bottom:0px;
        </property>
        <property name="minimumSize">
         <size>
-         <width>204</width>
+         <width>230</width>
          <height>479</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>204</width>
+         <width>230</width>
          <height>479</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Noto Sans CJK SC</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::NoContextMenu</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true"/>
@@ -223,7 +235,7 @@ padding-bottom:0px;
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
        <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOn</enum>
+        <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
        <property name="sizeAdjustPolicy">
         <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -240,6 +252,9 @@ padding-bottom:0px;
        </property>
        <property name="leftMargin">
         <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>16</number>
        </property>
        <property name="bottomMargin">
         <number>14</number>
@@ -285,6 +300,9 @@ padding-bottom:0px;
          </property>
          <property name="text">
           <string>清空</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
          </property>
         </widget>
        </item>

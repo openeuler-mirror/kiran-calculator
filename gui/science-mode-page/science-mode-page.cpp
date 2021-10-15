@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "science-mode-page.h"
 #include "ui_science-mode-page.h"
 #include "core/session.h"
@@ -15,12 +33,17 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     m_scienceSession = new Session();
 
     ui->scienceExprEdit->setSession(m_scienceSession);
+    ui->scienceExprEdit->autoZoomFontSize();
     ui->scienceHistory->setSession(m_scienceSession);
+
+
 
     ui->scienceClearHistory->setEnabled(false);
 
     connect(ui->scienceKeysPage, SIGNAL(scienceButtonPressed(Button)), this, SLOT(handleScienceKeysButtonPress(Button)));
-    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateScienceHistory( )));
+    connect(ui->scienceExprEdit, SIGNAL(scienceCalculateMode(int)), ui->scienceHistory, SLOT(setCalculateMode(int)));
+
+    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateHistory( )));
 
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageExprFormat(const QString&)),ui->scienceStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageQuantity(const Quantity&)), ui->scienceStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
@@ -29,10 +52,10 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     connect(ui->scienceExprEdit,SIGNAL(scienceExprCalcNan()),ui->scienceStagePage, SLOT(setStageNanMessage( )));
 
 
-    connect(ui->scienceHistory,SIGNAL(exprSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
+    connect(ui->scienceHistory,SIGNAL(valueSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
     connect(ui->scienceStagePage,SIGNAL(stageExprSelected(const QString&)), ui->scienceExprEdit,SLOT(setText(const QString& )));
 
-    connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearScienceHistory()));
+    connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearHistory()));
     connect(ui->scienceHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->scienceClearHistory->setEnabled(false);});
     connect(ui->scienceExprEdit,&ScienceExprCalculator::scienceHistoryChanged,this,[=](){ui->scienceClearHistory->setEnabled(true);});
 

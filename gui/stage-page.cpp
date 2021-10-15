@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "stage-page.h"
 
 #include "core/evaluator.h"
@@ -32,6 +50,15 @@ void StagePage::receiveCalculatedExpr(const QString &expr)
 void StagePage::receiveCalculatedQuantity(const Quantity &quantity)
 {
     m_saveQuantity = quantity;
+}
+
+void StagePage::setHistoryResult(const QString & result)
+{
+    clear();
+    clearSelection();
+    QString stageResult = Utils::reformatSeparators(result);
+    QListWidget::addItem(stageResult);
+    item(0)->setTextAlignment(Qt::AlignRight);
 }
 
 
@@ -77,15 +104,18 @@ void StagePage::setStageResult()
     clearSelection();
     QString stageList;
     QString stageExpr;
-    stageExpr = Utils::reformatSeparatorsPro(m_saveExpr, 10);
+    stageExpr = Utils::reformatSeparators(m_saveExpr);
 
     if(!m_saveQuantity.isNan())
     {
-        stageList.append(stageExpr + "=" + Utils::reformatSeparatorsPro(NumberFormatter::format(m_saveQuantity), 10));
+        stageList.append(stageExpr + "=" + Utils::reformatSeparators(NumberFormatter::format(m_saveQuantity)));
     }
     QListWidget::addItem(stageList);
     item(0)->setTextAlignment(Qt::AlignRight);
 
+//    qDebug() << "stagePage-font:";
+//    qDebug() << item(0)->data(Qt::FontRole).value<QFont>();
+//    qDebug() << item(0)->font();
 }
 
 void StagePage::setStageErrorMessage()

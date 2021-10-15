@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "science-expr-calculator.h"
 #include "core/constants.h"
 #include "core/evaluator.h"
@@ -167,6 +185,22 @@ void ScienceExprCalculator::exprSelectAll()
     selectAll();
 }
 
+void ScienceExprCalculator::autoZoomFontSize()
+{
+    QFont font("Noto Sans CJK SC Regular");
+    for (int i = 48; i > 15 ; --i)
+    {
+        font.setPixelSize(i);
+        QFontMetrics fm(font);
+        int fontWidth = fm.width(text());
+        int editWidth = width() - 45;
+
+        if (fontWidth < editWidth)
+            break;
+    }
+    setFont(font);
+}
+
 void ScienceExprCalculator::scienceExprCalc()
 {
     QString scienceExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(","));
@@ -188,6 +222,7 @@ void ScienceExprCalculator::scienceExprCalc()
 
             emit scienceExprCalcMessage(message);
             emit scienceExprCalcQuantity(quantity);
+            emit scienceCalculateMode(Calculation_Mode_Science);
 
             qDebug() << "science message";
             qDebug() << message;
@@ -234,6 +269,7 @@ void ScienceExprCalculator::reformatShowExpr(const QString& text)
 
 
     setText(reformatExpr);
+    autoZoomFontSize();
 
     // reformat text.
     int oldLength = QString(text).length();

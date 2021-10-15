@@ -1,3 +1,21 @@
+/**
+* @Copyright (C) 2021 KylinSec Co., Ltd.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; If not, see <http: //www.gnu.org/licenses/>.
+*
+* Author:     luoqing <luoqing@kylinos.com.cn>
+*/
 #include "programmer-expr-calculator.h"
 #include "core/constants.h"
 #include "core/evaluator.h"
@@ -575,6 +593,7 @@ void ProgrammerExprCalculator::programmerExprCalc()
             m_currentProgrammerHistoryIndex = m_programmerHistory.count();
 
             emit programmerHistoryChanged();
+            emit programmerCalculateMode(Calculation_Mode_Programmer);
 
             //将十进制表达式和结果进行暂存
             emit programmerToStageExprFormatDec(exprFormatConvertToDec);
