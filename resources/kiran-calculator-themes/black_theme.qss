@@ -18,7 +18,7 @@
 */
 
 
-QWidget#Window{
+QWidget#Calculator{
     background-color:#222222;
 }
 
@@ -42,6 +42,11 @@ StagePage{
     padding-bottom:0px;
 }
 
+StagePage#programmerStagePage{
+    padding-top:6px;
+
+}
+
 ModeList::Item:hover{ background:#393939;}
 ModeList::Item:selected{background:#2eb3ff; }
 ModeList::Item{
@@ -62,6 +67,13 @@ ModeList{
     border-color: #393939;
 }
 
+NumConversion{
+    background-color:#222222;
+    color:#FFFFFF;
+    border:0px;
+}
+
+NumConversion::Item:hover{ background-color:rgba(255,255,255,0.3);}
 
 QLineEdit{
     background-color: #222222;
@@ -73,6 +85,13 @@ QLineEdit{
     */
     padding-bottom:14px;
 }
+
+
+ProgrammerExprCalculator{
+    /*background-color:red;*/
+    padding: 0px;
+}
+
 
 QPushButton#btn_0:!hover:!disabled,
 QPushButton#btn_1:!hover:!disabled,
@@ -176,7 +195,7 @@ QLabel#modeListBlank{
 
 QPushButton#standardClearHistory,
 QPushButton#scienceClearHistory,
-QPushButton#programmerClearHisoty
+QPushButton#programmerClearHistory
 {
     border-radius:2px;
     background-color:#393939;
@@ -187,21 +206,21 @@ QPushButton#programmerClearHisoty
 
 QPushButton#standardClearHistory:disabled,
 QPushButton#scienceClearHistory:disabled,
-QPushButton#programmerClearHisoty:disabled
+QPushButton#programmerClearHistory:disabled
 {
     color:#919191;
 }
 
 QPushButton#standardClearHistory:hover:!disabled,
 QPushButton#scienceClearHistory:hover:!disabled,
-QPushButton#programmerClearHisoty:hover:!disabled
+QPushButton#programmerClearHistory:hover:!disabled
 {
     background-color:rgba(255,255,255,0.3);
 }
 
 QPushButton#standardClearHistory:pressed:!disabled,
 QPushButton#scienceClearHistory:pressed:!disabled,
-QPushButton#programmerClearHisoty:pressed:!disabled
+QPushButton#programmerClearHistory:pressed:!disabled
 {
     background-color:rgba(255,255,255,0.1);
 }

@@ -19,24 +19,23 @@
 #ifndef NUMCONVERSION_H
 #define NUMCONVERSION_H
 #include <QWidget>
-#include <QTableWidget>
+#include <QListWidget>
 #include "core/session.h"
 #include "core/sessionhistory.h"
 
 class Evaluator;
 class Session;
 class QString;
-class NumConversion : public QTableWidget
+class NumConversion : public QListWidget
 {
     Q_OBJECT
 public:
     NumConversion(QWidget* parent = nullptr);
 
-
 public slots:
     void showNumFormatConverted(const Quantity&);
     void clearItems();
-    void activateNumConversion(QTableWidgetItem*);
+    void activateNumConversion(QListWidgetItem*);
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,

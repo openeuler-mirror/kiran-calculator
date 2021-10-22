@@ -28,9 +28,9 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
   add_executable(kiran-calculator
     main.cpp
-    gui/window.cpp
-    gui/window.h
-    gui/window.ui
+    gui/calculator.cpp
+    gui/calculator.h
+    gui/calculator.ui
     gui/history-recoder.cpp
     gui/history-recoder.h
     gui/stage-page.cpp
@@ -73,6 +73,8 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     gui/programmer-mode-page/programmer-mode-page.ui
     gui/programmer-mode-page/programmer-keys-page.cpp
     gui/programmer-mode-page/programmer-keys-page.h
+    gui/programmer-mode-page/num-conversion-delegate.cpp
+    gui/programmer-mode-page/num-conversion-delegate.h
 
 
 

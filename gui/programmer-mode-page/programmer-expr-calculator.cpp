@@ -204,6 +204,24 @@ void ProgrammerExprCalculator::exprSelectAll()
     selectAll();
 }
 
+void ProgrammerExprCalculator::autoZoomFontSize()
+{
+    QFont font("Noto Sans CJK SC Regular");
+    for (int i = 30; i > 15 ; --i)
+    {
+        font.setPixelSize(i);
+        QFontMetrics fm(font);
+
+        int fontWidth = fm.width(text());
+        int editWidth = width() - 45;
+
+        if (fontWidth < editWidth)
+            break;
+    }
+
+    setFont(font);
+}
+
 
 
 void ProgrammerExprCalculator::exprFormatChanged(int format)
@@ -459,6 +477,7 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
         return;
     }
     setText(reformatExpr);
+    autoZoomFontSize();
 
     // reformat text.
     int oldLength = QString(text).length();

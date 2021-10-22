@@ -99,12 +99,12 @@ void HistoryRecoder::updateHistory()
         historyWidget[i] = new QWidget();
         historyItem[i] = new QListWidgetItem();
 
-
+        QString reformatExpr;
         if(m_currentMode == Calculation_Mode_Programmer)
         {
             m_programmerExpr = new ProgrammerExprCalculator();
             QString expressionConverted = m_programmerExpr->scanAndExec(FORMAT_DEC,m_currentFormat,expression);
-            QString reformatExpr;
+
 
             switch (m_currentFormat) {
             case Num_Format_Hex:
@@ -122,10 +122,9 @@ void HistoryRecoder::updateHistory()
             }
         }
 
-
         labelExpr[i]->setWordWrap(true);
         if(m_currentMode == Calculation_Mode_Programmer)
-            labelExpr[i]->setText(historyWordWrap((expression + "="), 24));
+            labelExpr[i]->setText(historyWordWrap((reformatExpr + "="), 24));
         else
             labelExpr[i]->setText(historyWordWrap((Utils::reformatSeparators(expression) + "="), 24));
 
@@ -403,5 +402,4 @@ void HistoryRecoder::handleItem(QListWidgetItem *item)
     emit resultSelected(result.remove(" ").remove("\n"));
     clearSelection();
 }
-
 

@@ -27,6 +27,7 @@ class HistoryRecoder;
 class StagePage;
 class ProgrammerExprCalculator;
 class NumConversion;
+class NumConversionModel;
 enum Button;
 namespace Ui {
 class ProgrammerModePage;
@@ -42,6 +43,7 @@ public:
 
 public slots:
     void handleProgrammerKeysButtonPress(Button);
+
 protected:
     virtual void showEvent(QShowEvent *event) override;
 private:

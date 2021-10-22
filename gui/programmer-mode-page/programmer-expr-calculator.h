@@ -71,6 +71,7 @@ public slots:
     void copyResultToClipboard();
     void paste();
     void exprSelectAll();
+    void autoZoomFontSize();
 
     QString scanAndExec(int,int,const QString&);
 

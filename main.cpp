@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     loadStylesheet();
-    Window w;
+    Calculator w;
     w.show();
     return a.exec();
 }

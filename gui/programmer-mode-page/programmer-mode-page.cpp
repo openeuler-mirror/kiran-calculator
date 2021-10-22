@@ -24,6 +24,8 @@
 #include "stage-page.h"
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "programmer-mode-page/num-conversion.h"
+#include "programmer-mode-page/num-conversion-model.h"
+#include "programmer-mode-page/num-conversion-view.h"
 
 #include <QDebug>
 
@@ -33,23 +35,25 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+//    NumConversionModel *numConversionModel = new NumConversionModel(this);
+//    ui->numConversionView->setModel(numConversionModel);
+//    ui->numConversionView->horizontalHeader()->hide();
+
     m_programmerSession = new Session();
     ui->programmerExprEdit->setSession(m_programmerSession);
     ui->programmerHistory->setSession(m_programmerSession);
     ui->programmerClearHistory->setEnabled(false);
 
-    ui->numConversionTable->verticalHeaderItem(0)->setSizeHint(QSize(64,28));
+//    ui->numConversion->item(0)->setSizeHint(QSize(332,24));
 
-    QFont font;
-    font.setPixelSize(14);
-    ui->numConversionTable->verticalHeader()->setFont(font);
-    ui->numConversionTable->resizeRowToContents(3);
-    ui->numConversionTable->adjustSize();
-
-    ui->numConversionTable->setStyleSheet("background-color:#222222;color:#FFFFFF;");
-
-
-
+//    ui->numConversion->horizontalHeader()->hide();
+//    ui->numConversion->verticalHeaderItem(0)->setSizeHint(QSize(64,24));
+//    ui->numConversion->verticalHeader()->setStretchLastSection(true);
+    //行宽自适应划分整个控件的高度,固定不可拖动
+//    ui->numConversion->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//    ui->numConversion->adjustSize();
+    //默认选中十进制
+//    ui->numConversion->selectRow(1);
 
 
     //计算成功，更新历史记录和暂存记录
@@ -72,35 +76,31 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     connect(ui->programmerStagePage,SIGNAL(stageExprSelected(const QString& )), ui->programmerExprEdit, SLOT(setText(const QString& )));
 
     //将10进制结果传给进制列表进行转换并显示
-    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionQuantityDec(const Quantity&)), ui->numConversionTable,SLOT(showNumFormatConverted(const Quantity&)));
-    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionMessageError( )), ui->numConversionTable,SLOT(clearItems( )));
-    connect(ui->programmerExprEdit,SIGNAL(programmerExprIsEmpty()),ui->numConversionTable,SLOT(clearItems()));
+    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionQuantityDec(const Quantity&)), ui->numConversion,SLOT(showNumFormatConverted(const Quantity&)));
+    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionMessageError( )), ui->numConversion,SLOT(clearItems( )));
+    connect(ui->programmerExprEdit,SIGNAL(programmerExprIsEmpty()),ui->numConversion,SLOT(clearItems()));
+
+
+//    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionQuantityDec(const Quantity&)), numConversionModel,SLOT(showNumFormatConverted(const Quantity&)));
+
 
     //切换进制时同步刷新输入栏,并限制键盘输入
-    connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(exprFormatChanged(int )));
-    connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(radixChanged(int )));
+    connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(exprFormatChanged(int )));
+    connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(radixChanged(int )));
     //切换进制时限制按钮输入
-    connect(ui->numConversionTable,SIGNAL(numConvered(int)), ui->programmerKeysPage, SLOT(switchProgrammerFormatKeys(int )));
+    connect(ui->numConversion,SIGNAL(numConvered(int)), ui->programmerKeysPage, SLOT(switchProgrammerFormatKeys(int )));
 
     //进制切换时刷新程序员历史记录
-    connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerHistory, SLOT(historyFormatChanged(int )));
-    connect(ui->numConversionTable,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateHistory()));
+    connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerHistory, SLOT(historyFormatChanged(int )));
+    connect(ui->numConversion,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateHistory()));
     //进制切换时刷新程序员暂存记录
-    connect(ui->numConversionTable,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
-    connect(ui->numConversionTable,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
+    connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
+
+    connect(ui->numConversion,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
+
 
     //
     connect(ui->programmerKeysPage,SIGNAL(programmerButtonPressed(Button)), this, SLOT(handleProgrammerKeysButtonPress(Button)));
-
-    //设置进制转换列表不可垂直滚动
-    ui->numConversionTable->verticalScrollBar()->setDisabled(true);
-    //行宽自适应划分整个控件的高度,固定不可拖动
-    ui->numConversionTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    //默认选中十进制
-    ui->numConversionTable->selectRow(1);
-
-
 }
 
 ProgrammerModePage::~ProgrammerModePage()
@@ -206,6 +206,8 @@ void ProgrammerModePage::handleProgrammerKeysButtonPress(Button button)
     default: break;
     }
 }
+
+
 
 void ProgrammerModePage::showEvent(QShowEvent *event){
     ui->programmerExprEdit->setFocus();

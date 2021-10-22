@@ -22,21 +22,27 @@
 #include "core/numberformatter.h"
 #include "core/evaluator.h"
 #include "utils.h"
+#include "num-conversion-delegate.h"
 #include <QDebug>
 #include <QString>
+#include <QListWidget>
 
-NumConversion::NumConversion(QWidget* parent) : QTableWidget(parent)
+NumConversion::NumConversion(QWidget* parent) : QListWidget(parent)
 {
-    connect(this, SIGNAL(itemClicked(QTableWidgetItem*)),this,
-            SLOT(activateNumConversion(QTableWidgetItem*)));
+    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,
+            SLOT(activateNumConversion(QListWidgetItem*)));
+
+    NumConversionDelegate *delegate = new NumConversionDelegate(this);
+    setItemDelegate(delegate);
 
     m_evaluator = Evaluator::instance();
-    setTextElideMode(Qt::ElideNone);
-//    adjustSize();
 
-//    setCurrentItem(item(1,0));
+    setTextElideMode(Qt::ElideNone);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 }
+
+
 
 void NumConversion::showNumFormatConverted(const Quantity & quantity)
 {
@@ -63,37 +69,41 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
     formatBin = Utils::reformatSeparatorsPro(formatBin, 2);
     formatDec = Utils::reformatSeparatorsPro(formatDec, 10);
 
-    QFont font;
-    font.setPixelSize(10);
-    setFont(font);
 
 
+//    QFont font;
+//    font.setPixelSize(10);
+//    setFont(font);
+
+    //插入换行符
+    /*
     if(formatBin.length() > 50 )
     {
         formatBin.insert(50,"\n");
     }
+    */
 
     qDebug() << "formatBin:";
     qDebug() << formatBin;
-    item(0,0)->setText(formatHex);
-    item(1,0)->setText(formatDec);
-    item(2,0)->setText(formatOct);
-    item(3,0)->setText(formatBin);
+    item(0)->setText(formatHex);
+    item(1)->setText(formatDec);
+    item(2)->setText(formatOct);
+    item(3)->setText(formatBin);
 
-    qDebug() << item(3,0)->sizeHint();
+    qDebug() << item(3)->sizeHint();
 
-    resizeRowToContents(3);
+//    resizeRowToContents(3);
 //    adjustSize();
 
 
 }
 
-void NumConversion::activateNumConversion(QTableWidgetItem* item)
+void NumConversion::activateNumConversion(QListWidgetItem* item)
 {
     qDebug() << "row:";
-    qDebug() << item->row();
+    qDebug() << row(item);
 
-    emit numConvered(item->row());
+    emit numConvered(row(item));
     emit refreshNumFormatHistory( );
     emit refreshNumFormatStage();
 }
@@ -116,14 +126,14 @@ QItemSelectionModel::SelectionFlags NumConversion::selectionCommand(const QModel
             return QItemSelectionModel::NoUpdate;
         }
     }
-    return QTableWidget::selectionCommand(index,event);
+    return QListWidget::selectionCommand(index,event);
 }
 
 void NumConversion::clearItems()
 {
     qDebug() << "clearItems";
-    item(0,0)->setText("");
-    item(1,0)->setText("");
-    item(2,0)->setText("");
-    item(3,0)->setText("");
+    item(0)->setText("");
+    item(1)->setText("");
+    item(2)->setText("");
+    item(3)->setText("");
 }
