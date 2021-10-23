@@ -20,6 +20,8 @@
 #define STAGEPAGE_H
 #include "quantity.h"
 #include <QListWidget>
+#include <QEvent>
+#include <QMouseEvent>
 
 class Evaluator;
 class ProgrammerExprCalculator;

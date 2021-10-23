@@ -29,6 +29,9 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QEvent>
+#include <QDesktopWidget>
 
 #define FORMAT_DEC 1
 int HistoryRecoder::m_currentFormat = Num_Format_Dec;

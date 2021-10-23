@@ -22,7 +22,8 @@
 #include <QListWidget>
 #include "core/session.h"
 #include "core/sessionhistory.h"
-
+#include <QEvent>
+#include <QMouseEvent>
 class Evaluator;
 class Session;
 class QString;

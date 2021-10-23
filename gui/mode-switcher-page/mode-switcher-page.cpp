@@ -86,9 +86,9 @@ void ModeSwitcherPage::controlAnimation()
     modeAnimation = new QPropertyAnimation(this, "geometry");
     modeAnimation->setDuration(300);
     // 起始位置
-    modeAnimation->setStartValue(QRect(-108,0,108,553));
+    modeAnimation->setStartValue(QRect(-108,0,108,550));
     // 终点位置
-    modeAnimation->setEndValue(QRect(0,0,108,553));
+    modeAnimation->setEndValue(QRect(0,0,108,550));
     modeAnimation->setEasingCurve(QEasingCurve::OutQuad);
 }
 

@@ -46,6 +46,7 @@ const QString AtoF = "ABCDEF";
 int ProgrammerExprCalculator::m_currentFormat = 1;
 int ProgrammerExprCalculator::m_previousFormat = 1;
 bool ProgrammerExprCalculator::m_numOutRange = false;
+bool ProgrammerExprCalculator::m_isShift = false;
 
 ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : QLineEdit(parent)
 {
@@ -706,6 +707,52 @@ void ProgrammerExprCalculator::handleProgrammerInsertText(const QString &text)
         return;
     }
     insert(text);
+}
+
+void ProgrammerExprCalculator::handleProgrammerFunction_Shift()
+{
+    if(!m_isShift)
+        m_isShift = true;
+    else
+        m_isShift = false;
+    qDebug() << "m_isShift_____:";
+    qDebug() << m_isShift;
+}
+
+void ProgrammerExprCalculator::handleProgrammerFunction_Lsh()
+{
+    if(m_isShift)
+    {
+        if(text().isEmpty())
+            handleProgrammerInsertText("0 rol");
+        else
+            handleProgrammerInsertText("rol");
+    }
+    else
+    {
+        if(text().isEmpty())
+            handleProgrammerInsertText("0 shl");
+        else
+            handleProgrammerInsertText("shl");
+    }
+}
+
+void ProgrammerExprCalculator::handleProgrammerFunction_Rsh()
+{
+    if(m_isShift)
+    {
+        if(text().isEmpty())
+            handleProgrammerInsertText("0 ror");
+        else
+            handleProgrammerInsertText("ror");
+    }
+    else
+    {
+        if(text().isEmpty())
+            handleProgrammerInsertText("0 shr");
+        else
+            handleProgrammerInsertText("shr");
+    }
 }
 
 void ProgrammerExprCalculator::triggerEnter()

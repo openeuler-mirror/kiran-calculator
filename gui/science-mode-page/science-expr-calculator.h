@@ -24,6 +24,7 @@
 #include "core/sessionhistory.h"
 #include "core/session.h"
 #include "sselection.h"
+#include <QKeyEvent>
 class Evaluator;
 class Session;
 class CNumber;

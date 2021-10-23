@@ -56,6 +56,7 @@ private:
     QMap<Button, QPushButton*> m_keyEnumMap;
 signals:
     void programmerButtonPressed(Button) const;
+    void programmerIsShift();
 
 };
 #endif // PROGRAMMERKEYSPAGE_H

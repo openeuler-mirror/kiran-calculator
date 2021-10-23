@@ -23,6 +23,7 @@
 #include "sselection.h"
 #include "core/session.h"
 #include <QLineEdit>
+#include <QKeyEvent>
 
 class Evaluator;
 class Session;

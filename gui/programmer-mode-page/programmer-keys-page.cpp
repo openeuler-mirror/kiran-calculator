@@ -23,7 +23,7 @@
 bool ProgrammerKeysPage::m_isShifted = false;
 
 const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] = {
-    {"Rol", Button_Key_RoL,1,0,"btn_rol"},{"Ror", Button_Key_RoR,1,1,"btn_ror"},
+    {"Lsh", Button_Key_Lsh, 1, 0,"btn_lsh"},{"Rsh", Button_Key_Rsh, 1, 1,"btn_rsh"},
     {"Or", Button_Key_Or, 1, 2,"btn_or"},{"Xor", Button_Key_Xor, 1, 3,"btn_xor"},{"Not", Button_Key_Not, 1, 4,"btn_not"},
     {"And", Button_Key_And, 2, 0,"btn_and"},{"Shift", Button_Key_Shift, 2, 1,"btn_shift"},{"Mod", Button_Key_Mod, 2, 2,"btn_mod"},
     {"CE", Button_Key_ClearEntry, 2, 3,"btn_clearEntry"}, {"C", Button_Key_Clear, 2, 4,"btn_clear"},
@@ -40,7 +40,6 @@ const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] =
     {"0", Button_Key_0, 7, 2,"btn_0"},
     {".", Button_Key_Point, 7,3,"btn_point"},{"=", Button_Key_Equal, 7, 4,"btn_equal"},
 
-    {"Lsh", Button_Key_Lsh, 1, 0,"btn_lsh"},{"Rsh", Button_Key_Rsh, 1, 1,"btn_rsh"},
 };
 
 ProgrammerKeysPage::ProgrammerKeysPage(QWidget *parent) : QWidget(parent)
@@ -142,18 +141,20 @@ void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
     QPushButton* keyRsh = m_keyEnumMap.value(Button_Key_Rsh);
     if(!m_isShifted)
     {
-        keyLsh->setVisible(false);
-        keyRsh->setVisible(false);
+        keyLsh->setText("Rol");
+        keyRsh->setText("Ror");
         m_isShifted = true;
         qDebug() << "switchLogicalAndShift___m_isShifted = true";
+        emit programmerIsShift();
 
     }
     else
     {
-        keyLsh->setVisible(true);
-        keyRsh->setVisible(true);
+        keyLsh->setText("Lsh");
+        keyRsh->setText("Rsh");
         m_isShifted = false;
         qDebug() << "switchLogicalAndShift___m_isShifted = false";
+        emit programmerIsShift();
 
     }
 }

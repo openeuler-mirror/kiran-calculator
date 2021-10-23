@@ -54,13 +54,17 @@ Calculator::Calculator(QWidget *parent)
    //侧边栏按钮布局，待确定
     //侧边栏按钮在最上层
     QPushButton *m_drawerButton = new QPushButton(this);
+    m_drawerButton->setObjectName("drawerButton");
     m_drawerButton->show();
     m_drawerButton->move(7,7);
     m_drawerButton->resize(16,16);
+    m_drawerButton->setIcon(QIcon(":/kiran-calculator-images/模式选择icon.svg"));
+    m_drawerButton->setIconSize(QSize(16,16));
+    m_drawerButton->setFocusPolicy(Qt::NoFocus);
 
-    connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_modeLabelChanged(int )));
-    connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(on_switchKeyborad(int )));
-    connect(m_drawerButton,SIGNAL(clicked()),this,SLOT(on_drawerButton()));
+    connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(modeLabelChanged(int )));
+    connect(m_drawer,SIGNAL(clickList(int )),this,SLOT(switchKeyborad(int )));
+    connect(m_drawerButton,SIGNAL(clicked()),this,SLOT(drawerButton()));
 
     ui->stackedWidget->setCurrentIndex(0);
 
@@ -71,7 +75,7 @@ Calculator::~Calculator()
     delete ui;
 }
 
-void Calculator::on_modeLabelChanged(int mode )
+void Calculator::modeLabelChanged(int mode )
 {
     if(mode == Calculation_Mode_Standard) {ui->modeLabel->setText("标准");}
 
@@ -83,7 +87,7 @@ void Calculator::on_modeLabelChanged(int mode )
 }
 
 //不同模式下的键盘切换
-void Calculator::on_switchKeyborad(int mode)
+void Calculator::switchKeyborad(int mode)
 {
     ui->stackedWidget->setCurrentIndex(mode);
 }
@@ -110,7 +114,7 @@ void Calculator::on_switchKeyborad(int mode)
 //}
 
 //点击切换按钮
-void Calculator::on_drawerButton()
+void Calculator::drawerButton()
 {
     m_drawer->activateAnimation();
 }

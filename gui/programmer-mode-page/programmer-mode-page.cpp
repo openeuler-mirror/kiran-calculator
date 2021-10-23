@@ -101,6 +101,8 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 
     //
     connect(ui->programmerKeysPage,SIGNAL(programmerButtonPressed(Button)), this, SLOT(handleProgrammerKeysButtonPress(Button)));
+    connect(ui->programmerKeysPage,SIGNAL(programmerIsShift()), ui->programmerExprEdit,SLOT(handleProgrammerFunction_Shift()));
+
 }
 
 ProgrammerModePage::~ProgrammerModePage()
@@ -147,29 +149,18 @@ void ProgrammerModePage::handleProgrammerKeysButtonPress(Button button)
             ui->programmerExprEdit->handleProgrammerInsertText("mod");
         break;
     case Button_Key_Lsh:
-        if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->handleProgrammerInsertText("0 shl");
-        else
-            ui->programmerExprEdit->handleProgrammerInsertText("shl");
+//        if(ui->programmerExprEdit->text().isEmpty())
+//            ui->programmerExprEdit->handleProgrammerInsertText("0 shl");
+//        else
+//            ui->programmerExprEdit->handleProgrammerInsertText("shl");
+        ui->programmerExprEdit->handleProgrammerFunction_Lsh();
         break;
     case Button_Key_Rsh:
-        if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->handleProgrammerInsertText("0 shr");
-        else
-            ui->programmerExprEdit->handleProgrammerInsertText("shr");
-        break;
-    case Button_Key_RoL:
-        if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->handleProgrammerInsertText("0 rol");
-        else
-            ui->programmerExprEdit->handleProgrammerInsertText("rol");
-        break;
-        break;
-    case Button_Key_RoR:
-        if(ui->programmerExprEdit->text().isEmpty())
-            ui->programmerExprEdit->handleProgrammerInsertText("0 ror");
-        else
-            ui->programmerExprEdit->handleProgrammerInsertText("ror");
+//        if(ui->programmerExprEdit->text().isEmpty())
+//            ui->programmerExprEdit->handleProgrammerInsertText("0 shr");
+//        else
+//            ui->programmerExprEdit->handleProgrammerInsertText("shr");
+        ui->programmerExprEdit->handleProgrammerFunction_Rsh();
         break;
     case Button_Key_Shift:
         ui->programmerKeysPage->switchProgrammerLogicalAndShift();

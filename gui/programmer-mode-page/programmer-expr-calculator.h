@@ -23,6 +23,7 @@
 #include "core/session.h"
 #include "core/sessionhistory.h"
 #include "sselection.h"
+#include <QKeyEvent>
 class Evaluator;
 class Session;
 class CNumber;
@@ -52,12 +53,17 @@ public:
     static int  m_currentFormat;
     static int  m_previousFormat;
     static bool m_numOutRange;
+    static bool m_isShift;
 
     SSelection getSelection() { return m_selected; }
 
 public slots:
     void insert(const QString&);
     void handleProgrammerInsertText(const QString&);
+    void handleProgrammerFunction_Shift();
+    void handleProgrammerFunction_Lsh();
+    void handleProgrammerFunction_Rsh();
+
     bool isNumberOutOfRange(const QString&);
     void setText(const QString&);
     void programmerExprCalc();

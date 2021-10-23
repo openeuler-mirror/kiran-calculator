@@ -55,7 +55,7 @@ ModeList::Item{
 
 ModeList{
     color:#FFFFFF;
-    background-color: #222222;
+    background-color:#222222;
     border-radius:0px;
     font:14px;
     font-family: "Noto Sans CJK SC Regular";
@@ -224,4 +224,11 @@ QPushButton#programmerClearHistory:pressed:!disabled
 {
     background-color:rgba(255,255,255,0.1);
 }
+
+QPushButton#drawerButton{
+    border-radius:0px;
+    border: 0px;
+    background:transparent;
+}
+
 

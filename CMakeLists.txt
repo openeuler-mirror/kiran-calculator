@@ -25,6 +25,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #endif()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_search_module(KIRAN_WIDGETS_QT5 REQUIRED kiranwidgets-qt5)
+
 
   add_executable(kiran-calculator
     main.cpp
@@ -75,8 +78,6 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
     gui/programmer-mode-page/programmer-keys-page.h
     gui/programmer-mode-page/num-conversion-delegate.cpp
     gui/programmer-mode-page/num-conversion-delegate.h
-
-
 
     core/book.cpp
     core/book.h
@@ -161,10 +162,16 @@ target_include_directories(kiran-calculator PRIVATE
     core
     math
     resources
-    ${CMAKE_BINARY_DIR}
     gui/mode-switcher-page
     gui/programmer-mode-page
     gui/science-mode-page
-    gui/standard-mode-page)
-target_link_libraries(kiran-calculator PRIVATE Qt5::Widgets)
+    gui/standard-mode-page
+    ${CMAKE_BINARY_DIR}
+    ${KIRAN_WIDGETS_QT5_INCLUDE_DIRS}
+    )
+target_link_libraries(kiran-calculator PRIVATE
+    Qt5::Widgets
+    kiranwidgets-qt5
+    ${KIRAN_WIDGETS_QT5_LIBRARIES}
+    )
 

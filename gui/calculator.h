@@ -67,9 +67,9 @@ private:
 
 
 public slots:
-    void on_modeLabelChanged(int );
-    void on_switchKeyborad(int );
-    void on_drawerButton();
+    void modeLabelChanged(int );
+    void switchKeyborad(int );
+    void drawerButton();
     //void handleStandardKeysButtonPress(Button);
     //void handleScienceKeysButtonPress(Button);
 
