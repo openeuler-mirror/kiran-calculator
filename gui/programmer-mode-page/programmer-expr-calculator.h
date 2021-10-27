@@ -40,7 +40,7 @@ public:
 
     QString  AddPrefixForExpr(int ,const QString&);
 
-    QString handleProgrammerFunction_Opposite_Dec(const QString&);
+//    QString handleProgrammerFunction_Opposite_Dec(const QString&);
     void handleProgrammerFunction_Opposite();
     void handleProgrammerFunction_Backspace();
 

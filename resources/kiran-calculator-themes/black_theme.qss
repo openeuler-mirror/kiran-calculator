@@ -22,7 +22,6 @@ QWidget#Calculator{
     background-color:#222222;
 }
 
-
 HistoryRecoder::Item:hover{background:rgba(255,255,255,0.3); }
 HistoryRecoder::Item:selected{background:rgba(255,255,255,0.1); }
 HistoryRecoder{
@@ -30,12 +29,11 @@ HistoryRecoder{
     border-radius:0px;
 }
 
-StagePage::Item:hover{background:rgba(255,255,255,0.3);  }
-StagePage::Item:selected{background:rgba(255,255,255,0.1); color:#919191;}
 StagePage{
     background-color: #222222;
     border-radius:0px;
     color:#919191;
+    text-align: right;
     font-size:14px;
     font-family: "Noto Sans CJK SC Regular";
     padding-top:20px;
@@ -86,37 +84,35 @@ QLineEdit{
     padding-bottom:14px;
 }
 
-
 ProgrammerExprCalculator{
-    /*background-color:red;*/
     padding: 0px;
 }
 
 
-QPushButton#btn_0:!hover:!disabled,
-QPushButton#btn_1:!hover:!disabled,
-QPushButton#btn_2:!hover:!disabled,
-QPushButton#btn_3:!hover:!disabled,
-QPushButton#btn_4:!hover:!disabled,
-QPushButton#btn_5:!hover:!disabled,
-QPushButton#btn_6:!hover:!disabled,
-QPushButton#btn_7:!hover:!disabled,
-QPushButton#btn_8:!hover:!disabled,
-QPushButton#btn_9:!hover:!disabled,
-QPushButton#btn_a:!hover:!disabled,
-QPushButton#btn_b:!hover:!disabled,
-QPushButton#btn_c:!hover:!disabled,
-QPushButton#btn_d:!hover:!disabled,
-QPushButton#btn_e:!hover:!disabled,
-QPushButton#btn_f:!hover:!disabled
+QPushButton#btn_0:!hover:!pressed:!disabled,
+QPushButton#btn_1:!hover:!pressed:!disabled,
+QPushButton#btn_2:!hover:!pressed:!disabled,
+QPushButton#btn_3:!hover:!pressed:!disabled,
+QPushButton#btn_4:!hover:!pressed:!disabled,
+QPushButton#btn_5:!hover:!pressed:!disabled,
+QPushButton#btn_6:!hover:!pressed:!disabled,
+QPushButton#btn_7:!hover:!pressed:!disabled,
+QPushButton#btn_8:!hover:!pressed:!disabled,
+QPushButton#btn_9:!hover:!pressed:!disabled,
+QPushButton#btn_a:!hover:!pressed:!disabled,
+QPushButton#btn_b:!hover:!pressed:!disabled,
+QPushButton#btn_c:!hover:!pressed:!disabled,
+QPushButton#btn_d:!hover:!pressed:!disabled,
+QPushButton#btn_e:!hover:!pressed:!disabled,
+QPushButton#btn_f:!hover:!pressed:!disabled
 {
     background-color:#393939;
 }
 
 
-QPushButton#btn_shift:!hover:!checked,
-QPushButton#btn_HYP:!hover:!checked,
-QPushButton#btn_FE:!hover:!checked{
+QPushButton#btn_shift:!hover:!pressed:!checked,
+QPushButton#btn_HYP:!hover:!pressed:!checked,
+QPushButton#btn_FE:!hover:!pressed:!checked{
     background-color:#2d2d2d;
 }
 
@@ -136,9 +132,9 @@ QPushButton#btn_equal:hover{background-color:#77ceff;}
 QPushButton#btn_equal:pressed{background-color:#2eb3ff;}
 
 
-QPushButton:hover { background-color: rgba(255,255,255,0.3);}
-QPushButton:pressed{background-color: rgba(255,255,255,0.1);}
-QPushButton:checked {background-color: #2eb3ff;}
+.QPushButton:hover { background-color: rgba(255,255,255,0.3);}
+.QPushButton:pressed{background-color: rgba(255,255,255,0.2);}
+.QPushButton:checked {background-color: #2eb3ff;}
 
 
 StandardKeysPage >  QPushButton

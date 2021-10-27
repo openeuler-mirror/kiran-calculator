@@ -24,7 +24,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Test REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(KIRAN_WIDGETS_QT5 REQUIRED kiranwidgets-qt5)
 
@@ -171,6 +171,7 @@ target_include_directories(kiran-calculator PRIVATE
     )
 target_link_libraries(kiran-calculator PRIVATE
     Qt5::Widgets
+    Qt5::Test
     kiranwidgets-qt5
     ${KIRAN_WIDGETS_QT5_LIBRARIES}
     )

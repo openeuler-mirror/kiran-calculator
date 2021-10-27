@@ -20,13 +20,14 @@
 #define STAGEPAGE_H
 #include "quantity.h"
 #include <QListWidget>
+#include <QPushButton>
 #include <QEvent>
 #include <QMouseEvent>
 
 class Evaluator;
 class ProgrammerExprCalculator;
 
-class StagePage : public QListWidget
+class StagePage : public QPushButton
 {
     Q_OBJECT
 public:
@@ -40,16 +41,12 @@ public slots:
     void setStageNanMessage();
     void setHistoryResult(const QString&);
     void NumFormatStageResult();
-    void handleStagePageItem(QListWidgetItem *);
+    void handleStagePageClicked( );
     void stageFormatChanged(int );
-
-
     void receiveCalculatedExpr(const QString&);
     void receiveCalculatedQuantity(const Quantity&);
+    void clear();
 
-protected:
-    QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
-                                                         const QEvent *event) const override;
 private:
     Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;

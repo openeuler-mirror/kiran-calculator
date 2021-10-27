@@ -52,12 +52,14 @@ public slots:
 //    void updateHistoryLabel();
 
     void historyFEChanged();
+    void historyFEIndex(QList<int >);
     void historyFormatChanged(int );
 
     void clearHistory();
     bool isHistoryEmpty();
 
     QString historyWordWrap(const QString&, int );
+
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
@@ -69,6 +71,7 @@ private:
     Session* m_session;
     Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;
+    QList<int> m_historyFEIndex;
 
 
 //    QString m_textorder;

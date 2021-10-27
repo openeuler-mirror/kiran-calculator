@@ -60,12 +60,6 @@
      </property>
      <item>
       <widget class="StagePage" name="scienceStagePage">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <property name="minimumSize">
         <size>
          <width>332</width>
@@ -81,11 +75,8 @@
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
-       <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -240,14 +231,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>StagePage</class>
-   <extends>QListWidget</extends>
-   <header location="global">stage-page.h</header>
-  </customwidget>
-  <customwidget>
    <class>HistoryRecoder</class>
    <extends>QListWidget</extends>
    <header location="global">history-recoder.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StagePage</class>
+   <extends>QPushButton</extends>
+   <header location="global">stage-page.h</header>
   </customwidget>
   <customwidget>
    <class>ScienceKeysPage</class>

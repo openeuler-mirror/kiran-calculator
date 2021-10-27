@@ -60,19 +60,24 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : QLineEdit(
 
 
     //textChanged和textEdited信号不同在于，当以编程方式更改文本时，例如，通过调用setText()会发出textChanged信号，不会发出textEdited信号。
-//    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(autoProgrammerExprCalc()));
-    connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(autoProgrammerExprCalc()));
+
+
 //    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
 
-//    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
+
+//    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(autoProgrammerExprCalc()));
+    connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(autoProgrammerExprCalc()));
+
+
+    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
 
     m_funclist = { "not", "xor", "and", "nor", "ror", "rol",
                       "shl", "shr", "or", "mod",
                  };
 
     initMenuAndAction();
-    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));
+//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));
 }
 
 void ProgrammerExprCalculator::setSession(Session *session)
@@ -356,7 +361,7 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
     m_numvec.clear();
     m_opvec.clear();
     m_textorder = QString();
-//    QString oldtext = QLineEdit::text();
+
     QString oldtext = text;
     oldtext.remove(",").remove(" ");
     for (int i = 0; i < oldtext.length();) {
@@ -421,9 +426,13 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
         Quantity ans(HNumber(num.toLatin1().data(), true));
         if (ans.isNan())
             return true;
-        num = DMath::format(ans, Quantity::Format::Complement() + Quantity::Format::Binary()).remove("0b");
-        qDebug() << "isNumberOutOfRange___num:";
+        // 二进制默认输出最大位数为64位,使用Ncut关闭位数限制
+        num = DMath::format(ans, Quantity::Format::Complement() + Quantity::Format::Binary() +  Quantity::Format::NCut()).remove("0b");
+
+        qDebug() << "*****************isNumberOutOfRange:num******************:";
         qDebug() << num;
+        qDebug() << "num.length() --------------------:";
+        qDebug() << num.length();
         if (m_currentFormat == Num_Format_Dec) {
             Quantity posans;
             Quantity negans;
@@ -433,22 +442,20 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
                 return true;
         } else {
             if (num.length() > 64)
+            {
+                qDebug() << "num.length() > 64:-------------------";
                 return true;
+            }
         }
     }
     return false;
 }
 
-//添加10进制千位符，其他进制用空格分隔
+//添加10进制千位符，其他进制用空格分隔,检查位数
 void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
 {
+    qDebug() << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^";
     int oldPosition = this->cursorPosition();
-    QDateTime time = QDateTime::currentDateTime();
-    int timeT = time.toTime_t();
-    qDebug () << "QTime_reformatShowExpr:";
-    qDebug () << timeT;
-
-    qInfo() << "QTime_reformatShowExpr:" << time;
 
     QString reformatExpr;
     switch (m_currentFormat) {
@@ -460,9 +467,6 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
         break;
     case Num_Format_Dec:
         reformatExpr = Utils::reformatSeparatorsPro(QString(text).remove(" ").remove(","), 10);
-
-//        reformatExpr = reformatExpr.replace("-","+");
-
 //        reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
         break;
     case Num_Format_Hex:
@@ -471,12 +475,15 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
     }
 
     //检查是否超出位数
-    QString checkExpr = reformatExpr;
-    if(isNumberOutOfRange(checkExpr.remove(",").remove(" "))){
-        qDebug() << "isNumberOutOfRange__________checkExpr:" ;
-        qDebug() <<isNumberOutOfRange(checkExpr);
-        return;
-    }
+//    QString checkExpr = reformatExpr;
+//    if(isNumberOutOfRange(checkExpr.remove(",").remove(" "))){
+//        qInfo() << "reformatShowExpr___isNumberOutOfRange__________checkExpr:" ;
+//        qInfo() <<isNumberOutOfRange(checkExpr);
+//        qInfo() << "***************************************************************";
+//        return;
+//    }
+
+
     setText(reformatExpr);
     autoZoomFontSize();
 
@@ -550,11 +557,6 @@ void ProgrammerExprCalculator::programmerExprCalc()
     QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(",")
                                                   .replace(QString::fromUtf8("−"),"-").replace("÷","\\"));
     qDebug() << "programmerExpr:" + programmerExpr;
-    if(isNumberOutOfRange(programmerExpr)){
-        qDebug() << "programmerExprCalc_______isNumberOutOfRange:" ;
-        qDebug() <<isNumberOutOfRange(programmerExpr);
-        return;
-    }
 
     if(programmerExpr.isEmpty())
         return;
@@ -634,17 +636,10 @@ void ProgrammerExprCalculator::programmerExprCalc()
 //自动计算，结果为10进制，不存入历史记录
 void ProgrammerExprCalculator::autoProgrammerExprCalc()
 {
-    QDateTime time = QDateTime::currentDateTime();
-    int timeT = time.toTime_t();
-    qDebug () << "QTime_autoProgrammerExprCalc:";
-    qDebug () << timeT;
-    qInfo() << "QTime_autoProgrammerExprCalc:" << time;
-
     QString programmerExpr = m_evaluator->autoFix(QLineEdit::text().remove(" ").remove(",")
                                                   .replace("−","-").replace("÷","\\"));  //含有括号自动补全
 
     qDebug() << "programmerExpr:   " +programmerExpr;
-
 
     //当超出位数时，限制输入框输入
     if (isNumberOutOfRange(programmerExpr))
@@ -1157,16 +1152,17 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
     case Qt::Key_Escape: clear(); break;
     }
 //    QLineEdit::keyPressEvent(event);
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
-    {
-        copyResultToClipboard();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
-    {
-        paste();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
-    {
-        exprSelectAll();
-    }
+    //暂时禁用复制、粘贴、全选
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
+//    {
+//        copyResultToClipboard();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
+//    {
+//        paste();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
+//    {
+//        exprSelectAll();
+//    }
 }

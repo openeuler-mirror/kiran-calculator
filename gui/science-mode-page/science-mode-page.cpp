@@ -37,13 +37,10 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     ui->scienceHistory->setSession(m_scienceSession);
 
 
-
     ui->scienceClearHistory->setEnabled(false);
 
     connect(ui->scienceKeysPage, SIGNAL(scienceButtonPressed(Button)), this, SLOT(handleScienceKeysButtonPress(Button)));
     connect(ui->scienceExprEdit, SIGNAL(scienceCalculateMode(int)), ui->scienceHistory, SLOT(setCalculateMode(int)));
-
-    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateHistory( )));
 
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageExprFormat(const QString&)),ui->scienceStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->scienceExprEdit,SIGNAL(scienceToStageQuantity(const Quantity&)), ui->scienceStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
@@ -64,7 +61,10 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     connect(ui->scienceKeysPage,SIGNAL(scienceIsShift()), ui->scienceExprEdit,SLOT(handleFunction_Shift()));
     connect(ui->scienceKeysPage,SIGNAL(scienceIsHYP()), ui->scienceExprEdit,SLOT(handleFunction_HYP()));
     connect(ui->scienceExprEdit,SIGNAL(scienceFEChanged()),ui->scienceHistory,SLOT(historyFEChanged()));
+    connect(ui->scienceExprEdit,SIGNAL(scienceFEIndexList(QList<int>)),ui->scienceHistory,SLOT(historyFEIndex(QList<int>)));
 
+    //更新历史记录
+    connect(ui->scienceExprEdit, SIGNAL(scienceHistoryChanged( )), ui->scienceHistory, SLOT(updateHistory( )));
 
 
 }

@@ -23,6 +23,7 @@
 #include "stage-page.h"
 #include "standard-mode-page/standard-keys-page.h"
 #include "standard-mode-page/expr-calculator.h"
+#include <QTest>
 
 StandardModePage::StandardModePage(QWidget *parent) :
     QWidget(parent),
@@ -35,6 +36,7 @@ StandardModePage::StandardModePage(QWidget *parent) :
     m_standardSession = new Session();
     ui->standardExprEdit->setSession(m_standardSession);
     ui->standardHistory->setSession(m_standardSession);
+    ui->standardExprEdit->setKeysPage(ui->standardKeysPage);
 
     ui->standardClearHistory->setEnabled(false);
 
@@ -117,7 +119,6 @@ void StandardModePage::handleStandardKeysButtonPress(Button button)
     default: break;
     }
 }
-
 
 void StandardModePage::showEvent(QShowEvent *event)
 {

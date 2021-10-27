@@ -22,6 +22,8 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QObject>
+#include <QVariant>
+#include <QTimer>
 #include "keys-page.h"
 
 enum Button;
@@ -36,8 +38,14 @@ public:
 
     void initButtons();
 
+
 public slots:
     void handleButtonClicked();
+    void handleButtonAnimate(Button );
+
+    void buttonAnimate(Button );
+    void setTimerConnect();
+    void simulateButtonClick(Button );
 
 protected slots:
     void emitButtonPressed(int button) const;
@@ -51,9 +59,12 @@ private:
         int column;
         QString objectName;
     }keyDescriptions[];
+    QMap<Button, QPushButton*> m_keyEnumMap;
+
+    QMap<Button, QTimer*> m_timerMap;
 
     QGridLayout* m_gridLayout = nullptr;
-
+    QTimer timer;
 signals:
     void buttonPressed(Button) const;
 

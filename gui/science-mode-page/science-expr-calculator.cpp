@@ -26,6 +26,8 @@
 #include "core/sessionhistory.h"
 #include "utils.h"
 #include "general-enum.h"
+#include "keys-page.h"
+#include "science-keys-page.h"
 #include <QDebug>
 #include <QRegularExpression>
 #include <QMenu>
@@ -42,12 +44,14 @@ ScienceExprCalculator::ScienceExprCalculator(QWidget* parent) : QLineEdit(parent
     DMath::complexMode = false;                    //关闭复数模式
     m_evaluator = Evaluator::instance();
 
+    m_scienceKeys = new ScienceKeysPage();
+
     connect(this,&ScienceExprCalculator::returnPressed,this,&ScienceExprCalculator::triggerEnter);
     connect(this, SIGNAL(returnPressed()), this, SLOT(triggerEnter()));
     connect(this, SIGNAL(scienceExprCalcMessage(const QString&)), this, SLOT(setText(const QString&)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
 
-    //    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
+    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
 
     m_funclist = {"arcsin", "arccos", "arctan","arsinh","arcosh","artanh",
                   "sin", "cos", "tan", "sinh","cosh","tanh",
@@ -55,7 +59,7 @@ ScienceExprCalculator::ScienceExprCalculator(QWidget* parent) : QLineEdit(parent
                  };
 
     initMenuAndAction();
-    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
+//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
 }
 
 void ScienceExprCalculator::setSession(Session *session)
@@ -210,29 +214,43 @@ void ScienceExprCalculator::scienceExprCalc()
 
     m_evaluator->setExpression(scienceExpr);
     Quantity quantity = m_evaluator->evalUpdateAns();
-    QString  message;
+    QString  formatDec;
     if(m_evaluator->error().isEmpty())
     {
         if(!quantity.isNan())
         {
             if(m_FE)
-                message= DMath::format(quantity, Quantity::Format::Scientific());
+                formatDec= DMath::format(quantity, Quantity::Format::Scientific());
             else
-                message = NumberFormatter::format(quantity);
-
-            emit scienceExprCalcMessage(message);
+            {
+                QString valueLenth = formatDec = NumberFormatter::format(quantity);
+                if(valueLenth.remove(".").length() > 24)
+                {
+                    formatDec= DMath::format(quantity, Quantity::Format::Scientific());
+                }
+            }
+            emit scienceExprCalcMessage(formatDec);
             emit scienceExprCalcQuantity(quantity);
             emit scienceCalculateMode(Calculation_Mode_Science);
 
-            qDebug() << "science message";
-            qDebug() << message;
+            qDebug() << "science formatDec";
+            qDebug() << formatDec;
 
             m_scienceSession->addHistoryEntry(HistoryEntry(scienceExpr,quantity));
-            emit scienceHistoryChanged();
 
+            int indexHistory = m_scienceSession->historyToList().count() - 1;
+
+            if((indexHistory != -1) && (m_FE))
+            {
+                m_FEIndexList << indexHistory;
+                qDebug() << "indexHistory:--------";
+                qDebug() << indexHistory;
+            }
+            emit scienceFEIndexList(m_FEIndexList);
             emit scienceToStageExprFormat(scienceExpr);
             emit scienceToStageQuantity(quantity);
             emit scienceStageChanged();
+            emit scienceHistoryChanged();
         }
         else
             emit scienceExprCalcNan();
@@ -752,17 +770,9 @@ void ScienceExprCalculator::handleFunction_Exp()
 
     //科学计数法，不是指数函数
     if(text().isEmpty())
-        insert(QLatin1String("0.e+"));
+        insert(QLatin1String("0e+"));
     else
-    {
-        if(text().contains("."))
-//            insert(QLatin1String("e+"));
-            handleInsertText("e+");
-
-        else
-//            insert(QLatin1String(".e+"));
-            handleInsertText(".e+");
-    }
+        handleInsertText("e+");
 }
 
 void ScienceExprCalculator::handleFunction_Reciprocal()
@@ -870,7 +880,10 @@ void ScienceExprCalculator::keyPressEvent(QKeyEvent * event)
     int key = event->key();
 
     switch (key) {
-    case Qt::Key_0: handleInsertText("0"); break;
+    case Qt::Key_0:
+        handleInsertText("0");
+        m_scienceKeys->handleButtonAnimate(Button_Key_0);
+        break;
     case Qt::Key_1: handleInsertText("1"); break;
     case Qt::Key_2: handleInsertText("2"); break;
     case Qt::Key_3: handleInsertText("3"); break;
@@ -942,17 +955,17 @@ void ScienceExprCalculator::keyPressEvent(QKeyEvent * event)
         break;
     case Qt::Key_Escape: clear(); break;
     }
-
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
-    {
-        copyResultToClipboard();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
-    {
-        paste();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
-    {
-        exprSelectAll();
-    }
+    //暂时禁用复制、粘贴、全选
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
+//    {
+//        copyResultToClipboard();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
+//    {
+//        paste();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
+//    {
+//        exprSelectAll();
+//    }
 }

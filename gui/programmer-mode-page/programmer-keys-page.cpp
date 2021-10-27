@@ -25,10 +25,10 @@ bool ProgrammerKeysPage::m_isShifted = false;
 const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] = {
     {"Lsh", Button_Key_Lsh, 1, 0,"btn_lsh"},{"Rsh", Button_Key_Rsh, 1, 1,"btn_rsh"},
     {"Or", Button_Key_Or, 1, 2,"btn_or"},{"Xor", Button_Key_Xor, 1, 3,"btn_xor"},{"Not", Button_Key_Not, 1, 4,"btn_not"},
-    {"And", Button_Key_And, 2, 0,"btn_and"},{"Shift", Button_Key_Shift, 2, 1,"btn_shift"},{"Mod", Button_Key_Mod, 2, 2,"btn_mod"},
+    {"And", Button_Key_And, 2, 0,"btn_and"},{"↑", Button_Key_Shift, 2, 1,"btn_shift"},{"Mod", Button_Key_Mod, 2, 2,"btn_mod"},
     {"CE", Button_Key_ClearEntry, 2, 3,"btn_clearEntry"}, {"C", Button_Key_Clear, 2, 4,"btn_clear"},
-    {"÷", Button_Key_Divide, 3, 0,"btn_divide"},{"×", Button_Key_Mult, 3, 1,"btn_mult"},{"-", Button_Key_Sub, 3, 2,"btn_sub"},
-    {"+", Button_Key_Add, 3, 3,"btn_add"},{"←", Button_Key_Backspace, 3, 4,"btn_backspace"},
+    {"÷", Button_Key_Divide, 3, 0,"btn_divide"},{"×", Button_Key_Mult, 3, 1,"btn_mult"},{"－", Button_Key_Sub, 3, 2,"btn_sub"},
+    {"＋", Button_Key_Add, 3, 3,"btn_add"},{"←", Button_Key_Backspace, 3, 4,"btn_backspace"},
     {"A", Button_Key_A, 4, 0,"btn_a"},{"B", Button_Key_B, 4, 1,"btn_b"},{"7", Button_Key_7, 4,2,"btn_7"},
     {"8", Button_Key_8, 4, 3,"btn_8"},{"9", Button_Key_9, 4, 4,"btn_9"},
     {"C", Button_Key_C, 5, 0,"btn_c"},{"D", Button_Key_D, 5, 1,"btn_d"},{"4", Button_Key_4, 5, 2,"btn_4"},
@@ -38,7 +38,7 @@ const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] =
     {"(", Button_Key_LeftBracket, 7, 0,"btn_leftBracket"}, {")", Button_Key_RightBracket, 7, 1,"btn_rightBracket"},
 //    {"±", Button_Key_Opposite, 7, 1},   //暂时禁用取反函数
     {"0", Button_Key_0, 7, 2,"btn_0"},
-    {".", Button_Key_Point, 7,3,"btn_point"},{"=", Button_Key_Equal, 7, 4,"btn_equal"},
+    {".", Button_Key_Point, 7,3,"btn_point"},{"＝", Button_Key_Equal, 7, 4,"btn_equal"},
 
 };
 

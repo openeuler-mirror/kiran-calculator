@@ -34,7 +34,7 @@ class QTreeWidget;
 class QWidget;
 class HistoryEntry;
 class Settings;
-
+class ScienceKeysPage;
 class ScienceExprCalculator : public QLineEdit
 {
     Q_OBJECT
@@ -99,6 +99,8 @@ private:
     int m_currentScienceHistoryIndex;
     Session* m_scienceSession;
     QList<QString> m_funclist;
+    QList<int> m_FEIndexList;
+    ScienceKeysPage* m_scienceKeys;
 
     SSelection m_selected;
 
@@ -122,6 +124,7 @@ signals:
     void scienceStageChanged();
 
     void scienceFEChanged();
+    void scienceFEIndexList(QList<int>);
 };
 
 #endif // SCIENCEEXPRCALCULATOR_H

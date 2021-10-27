@@ -131,6 +131,7 @@ void HistoryRecoder::updateHistory()
         else
             labelExpr[i]->setText(historyWordWrap((Utils::reformatSeparators(expression) + "="), 24));
 
+
         labelExpr[i]->setStyleSheet("padding-right:4px;color:#919191;font-size:14px;font-family: Noto Sans CJK SC Regular;");
         labelExpr[i]->setAlignment(Qt::AlignRight);
         labelExpr[i]->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
@@ -163,13 +164,28 @@ void HistoryRecoder::updateHistory()
             }
             else if(m_currentMode == Calculation_Mode_Science)
             {
-                if(m_FE)
+                if(m_historyFEIndex.contains(i))
+                {
+                    labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
+                }
+                else
+                {
+                    QString scienceValueLength = NumberFormatter::format(value);
+                    if(scienceValueLength.remove(".").length() > 24)
+                        labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
+                    else
+                        labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
+                }
+            }
+            else
+            {
+                QString standardValueLength =  NumberFormatter::format(value);
+                if(standardValueLength.remove(".").length() > 16)
                     labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
                 else
                     labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
+
             }
-            else
-                labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
 
             labelValue[i]->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
             labelValue[i]->setAlignment(Qt::AlignRight);
@@ -321,15 +337,19 @@ void HistoryRecoder::historyFEChanged()
         m_FE = false;
 }
 
+void HistoryRecoder::historyFEIndex(QList<int> index)
+{
+    m_historyFEIndex = index;
+}
+
 
 void HistoryRecoder::clearHistory()
 {
     m_session->clearHistory();
+    m_historyFEIndex.clear();
     emit historyClearSuccess();
     updateHistory();
 }
-
-
 
 bool HistoryRecoder::isHistoryEmpty()
 {

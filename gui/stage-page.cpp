@@ -17,9 +17,7 @@
 * Author:     luoqing <luoqing@kylinos.com.cn>
 */
 #include "stage-page.h"
-
 #include "core/evaluator.h"
-
 #include "core/numberformatter.h"
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "utils.h"
@@ -30,11 +28,10 @@ int StagePage::m_currentFormat = 1;
 
 #define FORMAT_DEC 1
 
-StagePage::StagePage(QWidget *parent) : QListWidget(parent)
+StagePage::StagePage(QWidget *parent) : QPushButton(parent)
 {
-    connect(this,SIGNAL(itemClicked(QListWidgetItem *)),this,
-            SLOT(handleStagePageItem(QListWidgetItem *)));
-
+    connect(this,SIGNAL(clicked( )),this, SLOT(handleStagePageClicked( )));
+    setEnabled(false);
 }
 
 void StagePage::stageFormatChanged(int format)
@@ -52,26 +49,29 @@ void StagePage::receiveCalculatedQuantity(const Quantity &quantity)
     m_saveQuantity = quantity;
 }
 
+void StagePage::clear()
+{
+    setText("");
+    setEnabled(false);
+}
+
 void StagePage::setHistoryResult(const QString & result)
 {
-    clear();
-    clearSelection();
     QString stageResult = Utils::reformatSeparators(result);
-    QListWidget::addItem(stageResult);
-    item(0)->setTextAlignment(Qt::AlignRight);
+    setText(stageResult);
+    setEnabled(true);
 }
 
 
 void StagePage::NumFormatStageResult()
 {
     m_programmerExpr = new ProgrammerExprCalculator();
-    clear();
-    clearSelection();
     QString stageExprConverted;
     stageExprConverted = m_programmerExpr->scanAndExec(FORMAT_DEC,m_currentFormat,m_saveExpr);
 
     QString expr;
     QString reformatExpr;
+
     if(!stageExprConverted.isEmpty())
     {
         switch (m_currentFormat) {
@@ -93,15 +93,13 @@ void StagePage::NumFormatStageResult()
             break;
         }
         qDebug() << "reformatExpr:" + reformatExpr;
-        QListWidget::addItem(reformatExpr.replace("-",QString::fromUtf8("−")));
-        item(0)->setTextAlignment(Qt::AlignRight);
+        setText(reformatExpr.replace("-",QString::fromUtf8("−")));
+        setEnabled(true);
     }
 }
 
 void StagePage::setStageResult()
 {
-    clear();
-    clearSelection();
     QString stageList;
     QString stageExpr;
     stageExpr = Utils::reformatSeparators(m_saveExpr);
@@ -110,58 +108,30 @@ void StagePage::setStageResult()
     {
         stageList.append(stageExpr + "=" + Utils::reformatSeparators(NumberFormatter::format(m_saveQuantity)));
     }
-    QListWidget::addItem(stageList);
-    item(0)->setTextAlignment(Qt::AlignRight);
-
-//    qDebug() << "stagePage-font:";
-//    qDebug() << item(0)->data(Qt::FontRole).value<QFont>();
-//    qDebug() << item(0)->font();
+    setText(stageList);
+    setEnabled(true);
 }
 
 void StagePage::setStageErrorMessage()
 {
-    clear();
-    clearSelection();
     QString errorMessage = "表达式错误";
-    QListWidget::addItem(errorMessage);
-    item(0)->setTextAlignment(Qt::AlignRight);
+    setText(errorMessage);
+    setEnabled(false);
 }
 
 void StagePage::setStageNanMessage()
 {
-    clear();
-    clearSelection();
-    QString nanMessage = "结果无定义";
-    QListWidget::addItem(nanMessage);
-    item(0)->setTextAlignment(Qt::AlignRight);
+    QString nanMessage = "结果无定义";\
+    setText(nanMessage);
+    setEnabled(false);
 }
 
-QItemSelectionModel::SelectionFlags StagePage::selectionCommand(const QModelIndex &index, const QEvent *event) const
+void StagePage::handleStagePageClicked( )
 {
-    if(event==nullptr){
-        return QItemSelectionModel::NoUpdate;
-    }
-    if(event->type() == QEvent::MouseMove)
-        return QItemSelectionModel::NoUpdate;
-    if((event != nullptr) && (event->type() == QEvent::MouseButtonPress))
-    {
-        const QMouseEvent* mouseEvent = (QMouseEvent*) event;
-        if((mouseEvent->modifiers() & Qt::ControlModifier) != 0)
-        {
-            return QItemSelectionModel::NoUpdate;
-        }
-    }
-    return QListWidget::selectionCommand(index,event);
-}
-
-
-void StagePage::handleStagePageItem(QListWidgetItem *item)
-{
-    QString str = item->text();
+    QString str = text();
     //以'='号进行分割
     str = str.section('=',-2,-2);
-    qDebug() << "handleStagePageItem:" + str;
     emit stageExprSelected(str);
-    clearSelection();
+
 }
 

@@ -44,6 +44,7 @@ public slots:
     void switchScienceAngleUnit();
     void switchScienceHYP();
     void shiftScienceFunction();
+    void handleButtonAnimate(Button );
 
 protected slots:
     void emitScienceButtonPressed(int button) const;

@@ -25,6 +25,7 @@
 #include <QLineEdit>
 #include <QKeyEvent>
 
+
 class Evaluator;
 class Session;
 class CNumber;
@@ -34,6 +35,7 @@ class QWidget;
 class HistoryEntry;
 class Settings;
 class Session;
+class StandardKeysPage;
 
 class ExprCalculator : public QLineEdit
 {
@@ -48,14 +50,13 @@ public:
     void handleFunction_Reciprocal();
 
     void setSession(Session*);
+    void setKeysPage(StandardKeysPage*);
     bool expressionInFunc(QString &);
     bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
     SSelection getSelection() {return m_selected; }
     void setSelection(SSelection select) { m_selected = select; }
 
     void initMenuAndAction();
-
-
 
 protected:
     void keyPressEvent(QKeyEvent *) override;
@@ -82,14 +83,15 @@ protected slots:
 
 private:
     Evaluator* m_evaluator;
-
     QList<HistoryEntry> m_standardHistory;
     int m_currentStandardHistoryIndex;
     Session* m_standardSession;
     QString m_savedCurrentEditor;
     QList<QString> m_funclist;
+    StandardKeysPage* m_standardKeys;
 
     SSelection m_selected;
+
 
     //输入栏右键菜单
     QMenu *m_menu;

@@ -27,7 +27,8 @@
 #include "utils.h"
 #include "sselection.h"
 #include "general-enum.h"
-
+#include "standard-keys-page.h"
+#include "keys-page.h"
 
 #include <QRegularExpression>
 #include <QApplication>
@@ -38,18 +39,17 @@
 ExprCalculator::ExprCalculator(QWidget* parent) : QLineEdit(parent)
 {
     initMenuAndAction();
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
+    //禁用输入栏菜单
+//    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
 
     connect(this,SIGNAL(returnPressed()), this, SLOT(triggerEnter()));
     connect(this,SIGNAL(exprCalcMessageDec(const QString &)), this, SLOT(setText(const QString &)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
 
 
-//    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
+    connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));    //禁用选中
 //    m_funclist = {"lg", "ln", "log","sqrt","%"};
-    m_funclist = {"lg", "ln", "log","sqrt","+","-",};
-
+    m_funclist = {"lg", "ln", "log","sqrt","+","-","e"};
 }
 
 void ExprCalculator::setSession(Session *session)
@@ -57,6 +57,11 @@ void ExprCalculator::setSession(Session *session)
     m_standardSession = session;
     m_evaluator = Evaluator::instance();
     m_evaluator->setSession(m_standardSession);
+}
+
+void ExprCalculator::setKeysPage(StandardKeysPage * keys)
+{
+    m_standardKeys = keys;
 }
 
 void ExprCalculator::disableSelectText()
@@ -211,9 +216,17 @@ void ExprCalculator::exprCalc()
             //输出结果的进制转换
             //十进制
             auto formatDec = NumberFormatter::format(quantity);     //NumberFormatter和DMath结果的负号不一致
-    //        auto formatDec = DMath::format(quantity, Quantity::Format::Decimal());
+
+             // default:  Quantity::Format::Base::Decimal;  Mode::General; 另外可以通过设置Precison来精确位数
+//            auto formatDec = DMath::format(quantity, Quantity::Format::Decimal() + Quantity::Format::General());
     //        auto messageDec = tr("%1").arg(formatDec);
 
+            //结果超过16位自动转为科学计数法
+            QString valueLenth = formatDec;
+            if(valueLenth.remove(".").length() > 16)
+            {
+                formatDec = DMath::format(quantity,Quantity::Format::Scientific());
+            }
             emit exprCalcMessageDec(formatDec);
             emit exprCalcQuantityDec(quantity);
             emit standardCalculateMode(Calculation_Mode_Standard);
@@ -269,10 +282,16 @@ void ExprCalculator::keyPressEvent(QKeyEvent * event)
     qInfo() << "keyPressed:" << event;
 
 
-
     switch (key) {
-    case Qt::Key_0: handleInsertText("0"); break;
-    case Qt::Key_1: handleInsertText("1"); break;
+    case Qt::Key_0:
+        handleInsertText("0");
+        m_standardKeys->handleButtonAnimate(Button_Key_0);
+        break;
+    case Qt::Key_1:
+        handleInsertText("1");
+//        m_standardKeys->simulateButtonClick(Button_Key_1);
+//        m_standardKeys->buttonAnimate(Button_Key_1);
+        break;
     case Qt::Key_2: handleInsertText("2"); break;
     case Qt::Key_3: handleInsertText("3"); break;
     case Qt::Key_4: handleInsertText("4"); break;
@@ -315,18 +334,19 @@ void ExprCalculator::keyPressEvent(QKeyEvent * event)
     case Qt::Key_Escape: clear(); break;    
     }
 
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
-    {
-        copyResultToClipboard();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
-    {
-        paste();
-    }
-    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
-    {
-        exprSelectAll();
-    }
+    //暂时禁用复制、粘贴、全选
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
+//    {
+//        copyResultToClipboard();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_V))
+//    {
+//        paste();
+//    }
+//    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_A))
+//    {
+//        exprSelectAll();
+//    }
 
 }
 

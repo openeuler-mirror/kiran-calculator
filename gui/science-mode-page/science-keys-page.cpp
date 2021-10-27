@@ -18,6 +18,8 @@
 */
 #include "science-keys-page.h"
 #include "general-enum.h"
+#include <QTimer>
+#include <QDebug>
 
 int ScienceKeysPage::m_angleUnit = 0;
 bool ScienceKeysPage::m_isShift = false;
@@ -37,18 +39,18 @@ const ScienceKeysPage::KeyDescription ScienceKeysPage::keyDescriptions[] = {
     {"√", Button_Key_Sqrt, 2, 0,"btn_sqrt",1,1}, {"10^n", Button_Key_10n, 2, 1,"btn_10n",1,1}, {"log", Button_Key_Log, 2, 2,"btn_log",1,1},
 
     {"Exp", Button_Key_Exp, 2, 3,"btn_exp",1,1}, {"Mod", Button_Key_Mod, 2, 4,"btn_mod",1,1},
-    {"shift", Button_Key_Shift, 3, 0,"btn_shift",1,1},{"CE", Button_Key_ClearEntry, 3, 1,"btn_clearEntry",1,1},{"C", Button_Key_Clear, 3, 2,"btn_clear",1,1},
+    {"↑", Button_Key_Shift, 3, 0,"btn_shift",1,1},{"CE", Button_Key_ClearEntry, 3, 1,"btn_clearEntry",1,1},{"C", Button_Key_Clear, 3, 2,"btn_clear",1,1},
     {"←", Button_Key_Backspace, 3, 3,"btn_backspace",1,1},{"÷", Button_Key_Divide, 3, 4,"btn_divide",1,1},
     {"π", Button_Key_Pi, 4, 0,"btn_pi",1,1},    {"7", Button_Key_7, 4, 1,"btn_7",1,1},   {"8", Button_Key_8, 4, 2,"btn_8",1,1},
     {"9", Button_Key_9, 4, 3,"btn_9",1,1}, {"×", Button_Key_Mult, 4, 4,"btn_mult",1,1},
     {"n!", Button_Key_Factorials, 5, 0,"btn_factorials",1,1}, {"4", Button_Key_4, 5, 1,"btn_4",1,1}, {"5", Button_Key_5, 5, 2,"btn_5",1,1}, {"6", Button_Key_6, 5, 3,"btn_6",1,1},
-    {"-", Button_Key_Sub, 5, 4,"btn_sub",1,1},
+    {"－", Button_Key_Sub, 5, 4,"btn_sub",1,1},
     //暂时禁止取反函数
 //    {"±", Button_Key_Opposite, 6, 0,},
     {"(", Button_Key_LeftBracket, 6, 0,"btn_leftBracket",1,1},
     {"1", Button_Key_1, 6, 1,"btn_1",1,1},    {"2", Button_Key_2, 6, 2,"btn_2",1,1},  {"3", Button_Key_3, 6, 3,"btn_3",1,1},
-    {"+", Button_Key_Add, 6, 4,"btn_add",1,1},
-    {")", Button_Key_RightBracket, 7, 0,"btn_rightBracket",1,1}, {"0", Button_Key_0, 7, 1,"btn_0",1,1}, {".", Button_Key_Point, 7, 2,"btn_point",1,1},{"=", Button_Key_Equal, 7, 3,"btn_equal",1,2},
+    {"＋", Button_Key_Add, 6, 4,"btn_add",1,1},
+    {")", Button_Key_RightBracket, 7, 0,"btn_rightBracket",1,1}, {"0", Button_Key_0, 7, 1,"btn_0",1,1}, {".", Button_Key_Point, 7, 2,"btn_point",1,1},{"＝", Button_Key_Equal, 7, 3,"btn_equal",1,2},
 
 };
 
@@ -164,7 +166,7 @@ void ScienceKeysPage::switchScienceHYP()
 
 void ScienceKeysPage::shiftScienceFunction()
 {
-    QPushButton* key_shift = m_keyEnumMap.value(Button_Key_Shift);   //待增加切换动画
+    QPushButton* key_shift = m_keyEnumMap.value(Button_Key_Shift);
 
 
     QPushButton* keySquare = m_keyEnumMap.value(Button_Key_Square);
@@ -218,5 +220,17 @@ void ScienceKeysPage::shiftScienceFunction()
         m_isShift = false;
         emit scienceIsShift();
     }
+}
+
+void ScienceKeysPage::handleButtonAnimate(Button button )
+{
+    QPushButton* key = m_keyEnumMap.value(button);
+    key->setDown(true);
+    key->isDown();
+    qDebug() << "key->isDown()";
+    qDebug() << key->isDown();
+
+    QTimer::singleShot(300, this, [=](){key->setDown(false);});
+    qDebug() << "handleButtonAnimate --------";
 }
 

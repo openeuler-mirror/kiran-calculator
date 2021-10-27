@@ -35,26 +35,13 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    NumConversionModel *numConversionModel = new NumConversionModel(this);
-//    ui->numConversionView->setModel(numConversionModel);
-//    ui->numConversionView->horizontalHeader()->hide();
-
     m_programmerSession = new Session();
     ui->programmerExprEdit->setSession(m_programmerSession);
     ui->programmerHistory->setSession(m_programmerSession);
     ui->programmerClearHistory->setEnabled(false);
 
-//    ui->numConversion->item(0)->setSizeHint(QSize(332,24));
-
-//    ui->numConversion->horizontalHeader()->hide();
-//    ui->numConversion->verticalHeaderItem(0)->setSizeHint(QSize(64,24));
-//    ui->numConversion->verticalHeader()->setStretchLastSection(true);
-    //行宽自适应划分整个控件的高度,固定不可拖动
-//    ui->numConversion->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    ui->numConversion->adjustSize();
-    //默认选中十进制
-//    ui->numConversion->selectRow(1);
-
+    //进制转换默认选中十进制
+    ui->numConversion->setCurrentRow(1);
 
     //计算成功，更新历史记录和暂存记录
     connect(ui->programmerExprEdit, SIGNAL(programmerCalculateMode(int)), ui->programmerHistory, SLOT(setCalculateMode(int)));
@@ -80,10 +67,6 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionMessageError( )), ui->numConversion,SLOT(clearItems( )));
     connect(ui->programmerExprEdit,SIGNAL(programmerExprIsEmpty()),ui->numConversion,SLOT(clearItems()));
 
-
-//    connect(ui->programmerExprEdit,SIGNAL(programmerToNumConversionQuantityDec(const Quantity&)), numConversionModel,SLOT(showNumFormatConverted(const Quantity&)));
-
-
     //切换进制时同步刷新输入栏,并限制键盘输入
     connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(exprFormatChanged(int )));
     connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerExprEdit, SLOT(radixChanged(int )));
@@ -96,8 +79,13 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     //进制切换时刷新程序员暂存记录
     connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
 
-    connect(ui->numConversion,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
-
+//    connect(ui->numConversion,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
+    connect(ui->numConversion,&NumConversion::refreshNumFormatStage,this,[=](){
+        if(!ui->programmerStagePage->text().isEmpty())
+        {
+            ui->programmerStagePage->NumFormatStageResult();
+        }
+    });
 
     //
     connect(ui->programmerKeysPage,SIGNAL(programmerButtonPressed(Button)), this, SLOT(handleProgrammerKeysButtonPress(Button)));
@@ -149,17 +137,9 @@ void ProgrammerModePage::handleProgrammerKeysButtonPress(Button button)
             ui->programmerExprEdit->handleProgrammerInsertText("mod");
         break;
     case Button_Key_Lsh:
-//        if(ui->programmerExprEdit->text().isEmpty())
-//            ui->programmerExprEdit->handleProgrammerInsertText("0 shl");
-//        else
-//            ui->programmerExprEdit->handleProgrammerInsertText("shl");
         ui->programmerExprEdit->handleProgrammerFunction_Lsh();
         break;
     case Button_Key_Rsh:
-//        if(ui->programmerExprEdit->text().isEmpty())
-//            ui->programmerExprEdit->handleProgrammerInsertText("0 shr");
-//        else
-//            ui->programmerExprEdit->handleProgrammerInsertText("shr");
         ui->programmerExprEdit->handleProgrammerFunction_Rsh();
         break;
     case Button_Key_Shift:
