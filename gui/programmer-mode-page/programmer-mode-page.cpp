@@ -24,8 +24,7 @@
 #include "stage-page.h"
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "programmer-mode-page/num-conversion.h"
-#include "programmer-mode-page/num-conversion-model.h"
-#include "programmer-mode-page/num-conversion-view.h"
+
 
 #include <QDebug>
 
