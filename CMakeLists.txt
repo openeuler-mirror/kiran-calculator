@@ -24,155 +24,55 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets Test REQUIRED)
+find_package(Qt5 COMPONENTS Widgets LinguistTools Test  REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(KIRAN_WIDGETS_QT5 REQUIRED kiranwidgets-qt5)
+pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 
+#翻译文件
+set(TS_FILES "translations/kiran-calculator.zh_CN.ts")
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
-  add_executable(kiran-calculator
-    main.cpp
-    gui/calculator.cpp
-    gui/calculator.h
-    gui/calculator.ui
-    gui/history-recoder.cpp
-    gui/history-recoder.h
-    gui/stage-page.cpp
-    gui/stage-page.h
-    gui/keys-page.h
-    gui/utils.cpp
-    gui/utils.h
-    gui/general-enum.h
-    gui/sselection.h
-
-    gui/mode-switcher-page/mode-switcher-page.cpp
-    gui/mode-switcher-page/mode-switcher-page.h
-    gui/mode-switcher-page/mode-switcher-page.ui
-    gui/mode-switcher-page/mode-list.cpp
-    gui/mode-switcher-page/mode-list.h
-
-    gui/standard-mode-page/expr-calculator.cpp
-    gui/standard-mode-page/expr-calculator.h
-    gui/standard-mode-page/standard-keys-page.cpp
-    gui/standard-mode-page/standard-keys-page.h
-    gui/standard-mode-page/standard-mode-page.ui
-    gui/standard-mode-page/standard-mode-page.cpp
-    gui/standard-mode-page/standard-mode-page.h
-
-    gui/science-mode-page/science-expr-calculator.cpp
-    gui/science-mode-page/science-expr-calculator.h
-    gui/science-mode-page/science-keys-page.cpp
-    gui/science-mode-page/science-keys-page.h
-    gui/science-mode-page/science-mode-page.cpp
-    gui/science-mode-page/science-mode-page.h
-    gui/science-mode-page/science-mode-page.ui
-
-
-    gui/programmer-mode-page/programmer-expr-calculator.cpp
-    gui/programmer-mode-page/programmer-expr-calculator.h
-    gui/programmer-mode-page/num-conversion.cpp
-    gui/programmer-mode-page/num-conversion.h
-    gui/programmer-mode-page/programmer-mode-page.cpp
-    gui/programmer-mode-page/programmer-mode-page.h
-    gui/programmer-mode-page/programmer-mode-page.ui
-    gui/programmer-mode-page/programmer-keys-page.cpp
-    gui/programmer-mode-page/programmer-keys-page.h
-    gui/programmer-mode-page/num-conversion-delegate.cpp
-    gui/programmer-mode-page/num-conversion-delegate.h
-
-    core/book.cpp
-    core/book.h
-    core/constants.cpp
-    core/constants.h
-    core/evaluator.cpp
-    core/evaluator.h
-    core/functions.cpp
-    core/functions.h
-    core/numberformatter.cpp
-    core/numberformatter.h
-    core/opcode.cpp
-    core/opcode.h
-    core/pageserver.cpp
-    core/pageserver.h
-    core/session.cpp
-    core/session.h
-    core/sessionhistory.cpp
-    core/sessionhistory.h
-    core/settings.cpp
-    core/settings.h
-    core/userfunction.cpp
-    core/userfunction.h
-    core/variable.cpp
-    core/variable.h
-
-    math/cmath.cpp
-    math/cmath.h
-    math/cnumberparser.cpp
-    math/cnumberparser.h
-    math/floatcommon.c
-    math/floatcommon.h
-    math/floatconfig.h
-    math/floatconst.c
-    math/floatconst.h
-    math/floatconvert.c
-    math/floatconvert.h
-    math/floaterf.c
-    math/floaterf.h
-    math/floatexp.c
-    math/floatexp.h
-    math/floatgamma.c
-    math/floatgamma.h
-    math/floathmath.c
-    math/floathmath.h
-    math/floatincgamma.c
-    math/floatincgamma.h
-    math/floatio.c
-    math/floatio.h
-    math/floatipower.c
-    math/floatipower.h
-    math/floatlog.c
-    math/floatlog.h
-    math/floatlogic.c
-    math/floatlogic.h
-    math/floatlong.c
-    math/floatlong.h
-    math/floatnum.c
-    math/floatnum.h
-    math/floatpower.c
-    math/floatpower.h
-    math/floatseries.c
-    math/floatseries.h
-    math/floattrig.c
-    math/floattrig.h
-    math/hmath.cpp
-    math/hmath.h
-    math/number.c
-    math/number.h
-    math/quantity.cpp
-    math/quantity.h
-    math/rational.cpp
-    math/rational.h
-    math/units.cpp
-    math/units.h
-
+file(GLOB_RECURSE SRC "src/*.cpp" "src/*.c" "src/*.h" "src/*.ui" )
+add_executable(kiran-calculator
+    ${SRC}
+    ${QM_FILES}
     resources/kiran-calculator-resources.qrc
-  )
+    )
 
 target_include_directories(kiran-calculator PRIVATE
-    gui
-    core
-    math
+    src
     resources
-    gui/mode-switcher-page
-    gui/programmer-mode-page
-    gui/science-mode-page
-    gui/standard-mode-page
+    data
+    src/gui
+    src/core
+    src/math
+    src/gui/mode-switcher-page
+    src/gui/programmer-mode-page
+    src/gui/science-mode-page
+    src/gui/standard-mode-page
     ${CMAKE_BINARY_DIR}
     ${KIRAN_WIDGETS_QT5_INCLUDE_DIRS}
+    ${KLOG_QT5_INCLUDE_DIRS}
     )
 target_link_libraries(kiran-calculator PRIVATE
     Qt5::Widgets
     Qt5::Test
     kiranwidgets-qt5
     ${KIRAN_WIDGETS_QT5_LIBRARIES}
+    ${KLOG_QT5_LIBRARIES}
     )
+
+include(GNUInstallDirs)
+# 安装
+set(CALCULATOR_ICON_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/24x24/apps)
+set(INSTALL_DATADIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR})
+set(TRANSLATION_DIR_INSTALL_PATH ${INSTALL_DATADIR}/${PROJECT_NAME}/translations)
+configure_file(${CMAKE_SOURCE_DIR}/data/config.h.in ${CMAKE_BINARY_DIR}/config.h @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/data/kiran-calculator.desktop.in ${CMAKE_BINARY_DIR}/kiran-calculator.desktop @ONLY)
+
+install(FILES ${CMAKE_BINARY_DIR}/kiran-calculator.desktop DESTINATION ${INSTALL_DATADIR}/applications )
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR} )
+install (FILES ${QM_FILES} DESTINATION ${TRANSLATION_DIR_INSTALL_PATH})
 

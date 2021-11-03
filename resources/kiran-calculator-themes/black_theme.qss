@@ -29,22 +29,6 @@ HistoryRecoder{
     border-radius:0px;
 }
 
-StagePage{
-    background-color: #222222;
-    border-radius:0px;
-    color:#919191;
-    text-align: right;
-    font-size:14px;
-    font-family: "Noto Sans CJK SC Regular";
-    padding-top:20px;
-    padding-bottom:0px;
-}
-
-StagePage#programmerStagePage{
-    padding-top:6px;
-
-}
-
 ModeList::Item:hover{ background:#393939;}
 ModeList::Item:selected{background:#2eb3ff; }
 ModeList::Item{
@@ -124,18 +108,16 @@ QPushButton#btn_FE
     height:24px;
 }
 
-QPushButton#btn_equal{
+QPushButton#btn_equal:!hover:!pressed{
     border:0px;
     background-color:#2eb3ff;
 }
 QPushButton#btn_equal:hover{background-color:#77ceff;}
 QPushButton#btn_equal:pressed{background-color:#2eb3ff;}
 
-
-.QPushButton:hover { background-color: rgba(255,255,255,0.3);}
-.QPushButton:pressed{background-color: rgba(255,255,255,0.2);}
-.QPushButton:checked {background-color: #2eb3ff;}
-
+QPushButton:hover { background-color: rgba(255,255,255,0.3);}
+QPushButton:pressed{background-color: rgba(255,255,255,0.2);}
+QPushButton:checked {background-color: #2eb3ff;}
 
 StandardKeysPage >  QPushButton
 {
@@ -165,6 +147,25 @@ ScienceKeysPage > QPushButton
     font-family: "Noto Sans CJK SC Regular";
 }
 
+
+
+
+StagePage{
+    background-color: #222222;
+    border-radius:0px;
+    color:#919191;
+    text-align: right;
+    font-size:14px;
+    font-family: "Noto Sans CJK SC Regular";
+    padding-top:20px;
+    padding-bottom:0px;
+}
+StagePage:hover { background-color: transparent;}
+StagePage:pressed{background-color: transparent;}
+
+StagePage#programmerStagePage{
+    padding-top:6px;
+}
 
 QLabel#modeLabel{
     background-color:#393939;
