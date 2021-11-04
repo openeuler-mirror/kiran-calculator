@@ -23,9 +23,9 @@
 #include "core/evaluator.h"
 #include "utils.h"
 #include "num-conversion-delegate.h"
-#include <QDebug>
 #include <QString>
 #include <QListWidget>
+#include <QDebug>
 
 NumConversion::NumConversion(QWidget* parent) : QListWidget(parent)
 {

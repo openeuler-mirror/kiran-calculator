@@ -21,11 +21,9 @@
 #include "./ui_calculator.h"
 
 #include "history-recoder.h"
-#include "mode-switcher-page/mode-switcher-page.h"
 #include "standard-mode-page/standard-keys-page.h"
 #include "standard-mode-page/standard-expr-calculator.h"
 #include "programmer-mode-page/num-conversion.h"
-
 #include "core/session.h"
 #include "core/evaluator.h"
 #include "core/settings.h"
@@ -33,38 +31,18 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <qt5-log-i.h>
 
 Calculator::Calculator(QWidget *parent)
     : QWidget(parent), ui(new Ui::Calculator)
 {
     ui->setupUi(this);
-    //并不一定后初始化，在上层
-    //m_drawer->raise(); 通过raise将图层放在上面
-    //通过new得到的控件，默认显示在比它new的早的控件上面
 
-    //    m_settings = Settings::instance();
 
     m_evaluator = Evaluator::instance();
     m_evaluator->initializeBuiltInVariables();
 
-    m_drawer = new ModeSwitcherPage(this);
-
-    //侧边栏按钮布局，待确定
-    //侧边栏按钮在最上层
-    QPushButton *m_drawerButton = new QPushButton(this);
-    m_drawerButton->setObjectName("drawerButton");
-    m_drawerButton->show();
-    m_drawerButton->move(7, 7);
-    m_drawerButton->resize(16, 16);
-    m_drawerButton->setIcon(QIcon(":/kiran-calculator-images/kc-mode.svg"));
-    m_drawerButton->setIconSize(QSize(16, 16));
-    m_drawerButton->setFocusPolicy(Qt::NoFocus);
-
-    connect(m_drawer, SIGNAL(clickList(int)), this, SLOT(modeLabelChanged(int)));
-    connect(m_drawer, SIGNAL(clickList(int)), this, SLOT(switchKeyborad(int)));
-    connect(m_drawerButton, SIGNAL(clicked()), this, SLOT(drawerButton()));
-
-    ui->stackedWidget->setCurrentIndex(0);
+    ui->stackedWidget->setCurrentIndex(Calculation_Mode_Standard);
 }
 
 Calculator::~Calculator()
@@ -72,8 +50,10 @@ Calculator::~Calculator()
     delete ui;
 }
 
-void Calculator::modeLabelChanged(int mode)
+//不同模式下的键盘切换
+void Calculator::switchKeyborad(int mode)
 {
+    ui->stackedWidget->setCurrentIndex(mode);
     if (mode == Calculation_Mode_Standard)
     {
         ui->modeLabel->setText(tr("Standard"));
@@ -88,25 +68,7 @@ void Calculator::modeLabelChanged(int mode)
     {
         ui->modeLabel->setText(tr("Programmer"));
     }
-
-    //    if(mode == Mode_Label_About) {ui->modeLabel->setText("关于");}
 }
 
-//不同模式下的键盘切换
-void Calculator::switchKeyborad(int mode)
-{
-    ui->stackedWidget->setCurrentIndex(mode);
-}
 
-//缩小时，隐藏历史记录栏
-//void Window::resizeEvent(QResizeEvent *event)
-//{
-//    qDebug() << this->frameGeometry().width();
-//    int width = this->frameGeometry().width();
-//}
 
-//点击切换按钮
-void Calculator::drawerButton()
-{
-    m_drawer->activateAnimation();
-}

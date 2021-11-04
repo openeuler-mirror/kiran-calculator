@@ -87,9 +87,6 @@ void ProgrammerKeysPage::handleProgrammerButtonClicked()
     auto keyEnumVar = sender()->property(PROPERTY_KEY_ENUM);
     int iKeyEnum = keyEnumVar.toInt();
 
-    qDebug() << "iKeyEnum____:";
-    qDebug() << iKeyEnum;
-
     emit programmerButtonClicked(Button(iKeyEnum));
 }
 
@@ -150,7 +147,6 @@ void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
         keyLsh->setText("Rol");
         keyRsh->setText("Ror");
         m_isShifted = true;
-        qDebug() << "switchLogicalAndShift___m_isShifted = true";
         emit programmerIsShift();
 
     }
@@ -159,7 +155,6 @@ void ProgrammerKeysPage::switchProgrammerLogicalAndShift()
         keyLsh->setText("Lsh");
         keyRsh->setText("Rsh");
         m_isShifted = false;
-        qDebug() << "switchLogicalAndShift___m_isShifted = false";
         emit programmerIsShift();
 
     }

@@ -68,11 +68,6 @@ private:
     ProgrammerExprCalculator* m_programmerExpr;
     QList<int> m_historyFEIndex;
 
-
-//    QString m_textorder;
-//    QFont m_exprFont;
-//    QFont m_resultFont;
-
 signals:
     void resultSelected(const QString &);
     void valueSelected(const QString &);

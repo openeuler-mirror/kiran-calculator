@@ -92,7 +92,6 @@ void StagePage::NumFormatStageResult()
             reformatExpr = Utils::reformatSeparatorsPro(expr.remove(","), 10);
             break;
         }
-        qDebug() << "reformatExpr:" + reformatExpr;
         setText(reformatExpr.replace("-",QString::fromUtf8("−")));
         setEnabled(true);
     }

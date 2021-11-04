@@ -53,7 +53,6 @@ private:
         int column;
         QString objectName;
     }keyDescriptions[];
-//    QMap<Button, QPushButton*> m_keyEnumMap;
 
     QMap<Button, AnimationClickButton*> m_keyEnumMap;
     QGridLayout* m_gridLayout = nullptr;

@@ -27,7 +27,7 @@
 #include <QDebug>
 ExprCalculator::ExprCalculator(QWidget* parent) : QLineEdit(parent)
 {
-
+    setAttribute(Qt::WA_InputMethodEnabled, false);  //禁止输入法
 }
 
 void ExprCalculator::setStagePage(StagePage *stage)
@@ -74,7 +74,7 @@ bool ExprCalculator::expressionInFunc(QString &text)
         int percentpos = cursorPosition();
         int operatorpos =
             newtext.lastIndexOf(QRegularExpression(QStringLiteral("[^0-9,.eπE]")), percentpos - 1);    //"[^0-9,.epi]"
-\
+
         bool nooperator = false;
         if (operatorpos > 0 && newtext.at(operatorpos - 1) == "E")
             operatorpos =

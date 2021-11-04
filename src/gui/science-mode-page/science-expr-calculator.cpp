@@ -94,9 +94,6 @@ void ScienceExprCalculator::scienceExprCalc()
             emit exprCalcQuantityDec(quantity);
             emit calculateMode(Calculation_Mode_Science);
 
-            qDebug() << "science formatDec";
-            qDebug() << formatDec;
-
             m_scienceSession->addHistoryEntry(HistoryEntry(scienceExpr,quantity));
 
             int indexHistory = m_scienceSession->historyToList().count() - 1;
@@ -104,8 +101,6 @@ void ScienceExprCalculator::scienceExprCalc()
             if((indexHistory != -1) && (m_FE))
             {
                 m_FEIndexList << indexHistory;
-                qDebug() << "indexHistory:--------";
-                qDebug() << indexHistory;
             }
             emit scienceFEIndexList(m_FEIndexList);
             emit stageExprFormat(scienceExpr);
@@ -313,9 +308,6 @@ void ScienceExprCalculator::handleFunction_Pi()
 
 void ScienceExprCalculator::handleFunction_Exp()
 {
-    //        ui->scienceExprEdit->insert("exp()");
-    //        ui->scienceExprEdit->cursorBackward(false);
-
     //科学计数法，不是指数函数
     if(text().isEmpty())
         insert(QLatin1String("0e+"));
@@ -357,8 +349,6 @@ void ScienceExprCalculator::handleFunction_FE()
     else
         m_FE = false;
     emit scienceFEChanged();
-    qDebug() << "m_FE________:";
-    qDebug() << m_FE;
 }
 
 void ScienceExprCalculator::handleFunction_Shift()
@@ -367,8 +357,6 @@ void ScienceExprCalculator::handleFunction_Shift()
         m_isShift = true;
     else
         m_isShift = false;
-    qDebug() << "m_isShift_____:";
-    qDebug() << m_isShift;
 }
 
 void ScienceExprCalculator::handleFunction_HYP()
@@ -377,8 +365,6 @@ void ScienceExprCalculator::handleFunction_HYP()
         m_isHYP = true;
     else
         m_isHYP = false;
-    qDebug() << "m_isHYP___:";
-    qDebug() << m_isHYP;
 }
 
 

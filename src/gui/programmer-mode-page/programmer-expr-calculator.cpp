@@ -28,10 +28,10 @@
 #include "core/sessionhistory.h"
 #include "utils.h"
 #include "general-enum.h"
-#include <QDebug>
 #include <QRegularExpression>
 #include <QDateTime>
 #include <QRegExp>
+#include <QDebug>
 
 #define NUM_FORMAT_DEC 1
 #define BASE_TAG(basetag) \
@@ -59,9 +59,6 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : ExprCalcul
     connect(this, SIGNAL(exprCalcMessageBin(const QString& )), this, SLOT(setText(const QString& )));
 
     //textChanged和textEdited信号不同在于，当以编程方式更改文本时，例如，通过调用setText()会发出textChanged信号，不会发出textEdited信号。
-
-//    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
-//    connect(this,SIGNAL(textEdited(const QString&)),this,SLOT(autoProgrammerExprCalc()));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(autoProgrammerExprCalc()));
     connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));
@@ -71,7 +68,7 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : ExprCalcul
                  };
     setFuncList(m_funclist);
     initMenuAndAction();
-//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));
+//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));    //禁用输入栏菜单
 }
 
 void ProgrammerExprCalculator::setSession(Session *session)
@@ -280,11 +277,6 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
             return true;
         // 二进制默认输出最大位数为64位,使用Ncut关闭位数限制
         num = DMath::format(ans, Quantity::Format::Complement() + Quantity::Format::Binary() +  Quantity::Format::NCut()).remove("0b");
-
-        qDebug() << "*****************isNumberOutOfRange:num******************:";
-        qDebug() << num;
-        qDebug() << "num.length() --------------------:";
-        qDebug() << num.length();
         if (m_currentFormat == Num_Format_Dec) {
             Quantity posans;
             Quantity negans;
@@ -295,7 +287,6 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
         } else {
             if (num.length() > 64)
             {
-                qDebug() << "num.length() > 64:-------------------";
                 return true;
             }
         }
@@ -306,7 +297,6 @@ bool ProgrammerExprCalculator::isNumberOutOfRange(const QString &text)
 //添加10进制千位符，其他进制用空格分隔,检查位数
 void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
 {
-    qDebug() << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^";
     int oldPosition = this->cursorPosition();
 
     QString reformatExpr;
@@ -421,12 +411,6 @@ void ProgrammerExprCalculator::programmerExprCalc()
             QString messageOct = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Octal() + Quantity::Format::Fixed());
             QString messageHex = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Hexadecimal() + Quantity::Format::Fixed());
             QString messageDec = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed());
-    //        auto messageDec = NumberFormatter::format(quantity);
-    //        auto test = NumberFormatter::format()
-
-    //        auto messageDec = DMath::format(quantity, Quantity::Format::Decimal());
-    //        emit programmerExprCalcMessageDec(messageDec);
-    //        emit programmerExprCalcQuantityDec(quantity);
 
             switch (m_currentFormat) {
             case Num_Format_Hex:
@@ -469,7 +453,7 @@ void ProgrammerExprCalculator::programmerExprCalc()
     }
     else
     {
-//        emit programmerExprCalcMessageDec(m_evaluator->error());
+//        emit programmerExprCalcMessageDec(m_evaluator->error());     
         emit exprCalcError();
     }
 
@@ -520,7 +504,6 @@ void ProgrammerExprCalculator::autoProgrammerExprCalc()
     }
     else
     {
-        qDebug() << "programmerToNumConversionFormatDec___m_evaluator->error():" + m_evaluator->error();
 //        emit programmerToNumConversionFormatDec(m_evaluator->error());
         //进制列表不需要具体错误信息
         emit programmerToNumConversionMessageError();
@@ -534,8 +517,6 @@ void ProgrammerExprCalculator::handleProgrammerFunction_Shift()
         m_isShift = true;
     else
         m_isShift = false;
-    qDebug() << "m_isShift_____:";
-    qDebug() << m_isShift;
 }
 
 void ProgrammerExprCalculator::handleProgrammerFunction_Lsh()
@@ -578,7 +559,6 @@ void ProgrammerExprCalculator::triggerEnter()
 {
     m_currentProgrammerHistoryIndex = m_programmerHistory.count();
     programmerExprCalc();
-
     emit equalPressed();
     qDebug() << "programmerEqualPressed";
 }

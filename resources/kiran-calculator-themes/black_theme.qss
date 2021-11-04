@@ -228,4 +228,17 @@ QPushButton#drawerButton{
     background:transparent;
 }
 
+ModeSelection{
+    border-radius:0px;
+    border: 0px;
+    background:transparent;
+}
+ModeSelection:hover { background-color: transparent;}
+ModeSelection:pressed{background-color: transparent;}
+ModeSelection::menu-indicator{
+    image:none;
+}
+
+
+
 

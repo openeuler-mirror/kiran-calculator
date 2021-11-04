@@ -355,17 +355,17 @@
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
         <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
-        <location filename="../src/gui/calculator.cpp" line="79"/>
+        <location filename="../src/gui/calculator.cpp" line="59"/>
         <source>Standard</source>
         <translation type="unfinished">标准</translation>
     </message>
     <message>
-        <location filename="../src/gui/calculator.cpp" line="84"/>
+        <location filename="../src/gui/calculator.cpp" line="64"/>
         <source>Science</source>
         <translation type="unfinished">科学</translation>
     </message>
     <message>
-        <location filename="../src/gui/calculator.cpp" line="89"/>
+        <location filename="../src/gui/calculator.cpp" line="69"/>
         <source>Programmer</source>
         <translation type="unfinished">程序员</translation>
     </message>
@@ -1936,6 +1936,24 @@
     </message>
 </context>
 <context>
+    <name>ModeSelection</name>
+    <message>
+        <location filename="../src/gui/mode-selection.cpp" line="29"/>
+        <source>standard</source>
+        <translation type="unfinished">标准</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mode-selection.cpp" line="30"/>
+        <source>science</source>
+        <translation type="unfinished">科学</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mode-selection.cpp" line="31"/>
+        <source>programmer</source>
+        <translation type="unfinished">程序员</translation>
+    </message>
+</context>
+<context>
     <name>ModeSwitcherPage</name>
     <message>
         <location filename="../src/gui/mode-switcher-page/mode-switcher-page.ui" line="32"/>
@@ -1980,7 +1998,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="53"/>
+        <location filename="../src/main.cpp" line="59"/>
         <source>Calculator</source>
         <translation type="unfinished">计算器</translation>
     </message>
@@ -2003,12 +2021,12 @@
 <context>
     <name>StagePage</name>
     <message>
-        <location filename="../src/gui/stage-page.cpp" line="118"/>
+        <location filename="../src/gui/stage-page.cpp" line="117"/>
         <source>Expression error</source>
         <translation type="unfinished">表达式错误</translation>
     </message>
     <message>
-        <location filename="../src/gui/stage-page.cpp" line="125"/>
+        <location filename="../src/gui/stage-page.cpp" line="124"/>
         <source>The result is undefined</source>
         <translation type="unfinished">结果无定义</translation>
     </message>

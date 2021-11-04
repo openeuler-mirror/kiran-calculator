@@ -237,41 +237,6 @@ QString Utils::reformatSeparatorsPro(const QString &exp, const int Base)
         formatStr.append(item);
     }
 
-//    for (int i = 0; i < formatStr.length();) {
-//        if (formatStr.at(i).isLower() && !(formatStr.at(i) == 'e')) {
-//            if(formatStr.at(i) == 's' && formatStr.at(i+1) == 'q'){
-//                i+=4;
-//            }else if (formatStr.at(i) == 'o' || formatStr.at(i) == 'l' || formatStr.at(i) == 'p') {
-//                i += 2;
-//            }
-//            else {
-//                i += 3;
-//            }
-//            if (i <= formatStr.length() - 1) {
-//                formatStr.insert(i, " ");
-//                i++;
-//            }
-//        } else if (i < formatStr.length() - 1 && formatStr.at(i + 1).isLower() && !(formatStr.at(i+1) == 'e')) {
-//            formatStr.insert(i + 1, " ");
-//            i += 2;
-//        } else if (formatStr.at(i) == '+' || formatStr.at(i) == "−" ||
-//                   formatStr.at(i) == "×" || formatStr.at(i) == "÷") {
-//            i+=1;
-//            if(i <= formatStr.length() - 1){
-//                formatStr.insert(i, " ");
-//                i++;
-//            }
-//        } else if( i < formatStr.length() - 1 &&
-//                   (formatStr.at(i+1) == '+' || formatStr.at(i+1) == "−" ||
-//                    formatStr.at(i+1) == "×" || formatStr.at(i+1) == "÷")) {
-//            formatStr.insert(i + 1," ");
-//            i += 2;
-//        }
-//        else {
-//            i++;
-//        }
-//    }
-
     for (int i = 0; i < formatStr.length();) {
             if (formatStr.at(i).isLower()) {
                 if (formatStr.at(i) == 'o') {

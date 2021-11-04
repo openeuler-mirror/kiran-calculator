@@ -62,7 +62,6 @@ void StandardKeysPage::initButtons()
 
         auto* key = new AnimationClickButton (description->token,this);
 
-//        QPushButton* key = new QPushButton(description->token, this);
         key->setObjectName(description->objectName);
         m_keyEnumMap[description->button] = key;
         m_gridLayout->addWidget(key,description->row,description->column);
@@ -90,7 +89,6 @@ void StandardKeysPage::handleButtonClicked()
 void StandardKeysPage::handleButtonAnimate(Button button)
 {
     m_keyEnumMap[button]->animation();
-//    m_keyEnumMap[button]->animateClick();
 }
 
 

@@ -22,7 +22,12 @@
 #include <kiran-titlebar-window.h>
 #include <qt5-log-i.h>
 #include <QTranslator>
+#include <QHBoxLayout>
+#include <QSpacerItem>
+
+#include "gui/mode-selection.h"
 #include "config.h"
+#include <kiran-application.h>
 
 void loadStylesheet()
 {
@@ -37,9 +42,10 @@ void loadStylesheet()
         qDebug() << "load stylesheet failed";
     }
 }
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    KiranApplication a(argc, argv);
     klog_qt5_init("", "kylinsec-session", "kiran-calculator", "calculator");
 
     QTranslator translator;
@@ -54,7 +60,21 @@ int main(int argc, char *argv[])
     window.setIcon(QIcon(CALCULATOR_ICON_PATH"/kc-calculator.png"));
     window.setButtonHints(KiranTitlebarWindow::TitlebarMinimizeButtonHint|KiranTitlebarWindow::TitlebarCloseButtonHint);
     window.setResizeable(false);
+
+
     Calculator calculator;
+    auto* mode = new ModeSelection(&calculator);
+    mode->setObjectName("modeButton");
+
+    auto spaceItemLeft = new QSpacerItem(20,20,QSizePolicy::Expanding,QSizePolicy::Minimum);
+    window.getTitlebarCustomLayout()->addItem(spaceItemLeft);
+
+    window.setTitlebarCustomLayoutAlignHCenter(false);
+    window.getTitlebarCustomLayout()->addWidget(mode,Qt::AlignRight);
+
+    auto spaceItemRight = new QSpacerItem(20,20,QSizePolicy::Fixed,QSizePolicy::Minimum);
+    window.getTitlebarCustomLayout()->addItem(spaceItemRight);
+
     window.setWindowContentWidget(&calculator);
     window.setContentWrapperMarginBottom(0);
     window.setTitleBarHeight(40);
@@ -63,3 +83,4 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+

@@ -187,8 +187,6 @@ void HistoryRecoder::updateHistory()
             labelValue[i]->adjustSize();
             vboxlayout[i]->addWidget(labelValue[i]);
 
-            qDebug() << "history labelValue font:";
-            qInfo() << labelValue[i]->font();
 
         }
         vboxlayout[i]->setMargin(0);
@@ -244,8 +242,6 @@ void HistoryRecoder::clearHistory()
 
 bool HistoryRecoder::isHistoryEmpty()
 {
-    qDebug() << "current count:";
-    qDebug() << count();
     if(count())
         return true;
     else

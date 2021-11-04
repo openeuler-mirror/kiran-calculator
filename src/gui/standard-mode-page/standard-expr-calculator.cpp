@@ -41,7 +41,6 @@ StandardExprCalculator::StandardExprCalculator(QWidget* parent) : ExprCalculator
     connect(this,SIGNAL(textChanged(const QString&)),this,SLOT(reformatShowExpr(const QString&)));
 
     connect(this,SIGNAL(selectionChanged()), this, SLOT(disableSelectText()));    //禁用选中
-//    m_funclist = {"lg", "ln", "log","sqrt","%"};
     m_funclist = {"lg", "ln", "log","sqrt","+","-","e"};
     setFuncList(m_funclist);
 }
@@ -66,7 +65,6 @@ void StandardExprCalculator::exprCalc()
 
     if (expr.isEmpty())
         return;
-    // Same reason as above, do not update "ans".
     m_evaluator->setExpression(expr);
 
     //先字符合法检测，然后进入堆栈计算,并返回计算结果
@@ -83,7 +81,6 @@ void StandardExprCalculator::exprCalc()
 
              // default:  Quantity::Format::Base::Decimal;  Mode::General; 另外可以通过设置Precison来精确位数
 //            auto formatDec = DMath::format(quantity, Quantity::Format::Decimal() + Quantity::Format::General());
-    //        auto messageDec = tr("%1").arg(formatDec);
 
             //结果超过16位自动转为科学计数法
             QString valueLenth = formatDec;

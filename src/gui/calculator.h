@@ -32,7 +32,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calculator; }
 QT_END_NAMESPACE
 
-class ModeSwitcherPage;
 class StandardKeysPage;
 class StandardExprCalculator;
 class HistoryRecoder;
@@ -40,7 +39,6 @@ class Session;
 class Evaluator;
 class Settings;
 enum Button;
-
 
 class Calculator : public QWidget
 {
@@ -50,18 +48,14 @@ public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
 
-//    void resizeEvent(QResizeEvent *event) override;
     void initKeyButton();
 
 private:
     Ui::Calculator *ui;
-    ModeSwitcherPage* m_drawer = nullptr;
     Evaluator* m_evaluator;
 
 public slots:
-    void modeLabelChanged(int );
     void switchKeyborad(int );
-    void drawerButton();
 
 signals:
 

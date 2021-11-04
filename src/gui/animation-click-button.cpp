@@ -17,7 +17,7 @@
 * Author:     luoqing <luoqing@kylinos.com.cn>
 */
 #include "animation-click-button.h"
-#include <QDebug>
+
 
 AnimationClickButton::AnimationClickButton(const QString &text,QWidget *parent) : QPushButton(parent)
 {
