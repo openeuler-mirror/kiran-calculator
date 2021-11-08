@@ -24,7 +24,7 @@
 #include "core/numberformatter.h"
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "utils.h"
-#include "general-enum.h"
+
 #include <QDebug>
 #include <QListWidget>
 #include <QLabel>
@@ -32,11 +32,6 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QDesktopWidget>
-
-#define FORMAT_DEC 1
-int HistoryRecoder::m_currentFormat = Num_Format_Dec;
-int HistoryRecoder::m_currentMode = Calculation_Mode_Standard;
-bool HistoryRecoder::m_FE = false; //科学计算法模式默认关闭
 
 HistoryRecoder::HistoryRecoder(QWidget *parent) : QListWidget(parent)
 {
@@ -55,8 +50,6 @@ void HistoryRecoder::setSession(Session *session)
 void HistoryRecoder::setCalculateMode(int mode)
 {
     m_currentMode = mode;
-    qDebug() << "m_currentMode:";
-    qDebug() << m_currentMode;
 }
 
 void HistoryRecoder::updateHistory()
@@ -98,8 +91,7 @@ void HistoryRecoder::updateHistory()
         if(m_currentMode == Calculation_Mode_Programmer)
         {
             m_programmerExpr = new ProgrammerExprCalculator();
-            QString expressionConverted = m_programmerExpr->scanAndExec(FORMAT_DEC,m_currentFormat,expression);
-
+            QString expressionConverted = m_programmerExpr->scanAndExec(Num_Format_Dec,m_currentFormat,expression);
 
             switch (m_currentFormat) {
             case Num_Format_Hex:
@@ -122,7 +114,6 @@ void HistoryRecoder::updateHistory()
             labelExpr[i]->setText(historyWordWrap((reformatExpr + "="), 24));
         else
             labelExpr[i]->setText(historyWordWrap((Utils::reformatSeparators(expression) + "="), 24));
-
 
         labelExpr[i]->setStyleSheet("padding-right:4px;color:#919191;font-size:14px;font-family: Noto Sans CJK SC Regular;");
         labelExpr[i]->setAlignment(Qt::AlignRight);
@@ -186,7 +177,6 @@ void HistoryRecoder::updateHistory()
             labelValue[i]->setMinimumHeight(30);
             labelValue[i]->adjustSize();
             vboxlayout[i]->addWidget(labelValue[i]);
-
 
         }
         vboxlayout[i]->setMargin(0);

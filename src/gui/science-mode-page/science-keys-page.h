@@ -36,10 +36,6 @@ public:
     explicit ScienceKeysPage(QWidget *parent = nullptr);
     void initScienceButtons();
 
-    static int m_angleUnit;
-    static bool m_isShift;
-    static bool m_isHYP;
-
 public slots:
     void handleScienceButtonClicked();
     void switchScienceAngleUnit();
@@ -47,17 +43,13 @@ public slots:
     void shiftScienceFunction();
     void handleButtonAnimate(Button );
 
-private:
-    static const struct KeyDescription{
-        QString token;
-        Button button;
-        int row;
-        int column;
-        QString objectName;
-        int rowcount;  //所占行数
-        int columncount;  //所占列数
-    }keyDescriptions[];
+signals:
+    void scienceButtonClicked(Button) const;
+    void scienceSwitchAngleUnit(int );
+    void scienceIsShift();
+    void scienceIsHYP();
 
+private:
     QGridLayout* m_gridLayout = nullptr;
     QMap<Button, AnimationClickButton*> m_keyEnumMap;
 
@@ -65,11 +57,9 @@ private:
     QPushButton* keyCos;
     QPushButton* keyTan;
 
-signals:
-    void scienceButtonClicked(Button) const;
-    void scienceSwitchAngleUnit(int );
-    void scienceIsShift();
-    void scienceIsHYP();
+    bool m_isShift = false;
+    bool m_isHYP = false;
+    int m_angleUnit = 0;
 };
 
 #endif // SCIENCEKEYSPAGE_H

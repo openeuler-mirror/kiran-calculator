@@ -355,17 +355,17 @@
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
         <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
-        <location filename="../src/gui/calculator.cpp" line="59"/>
+        <location filename="../src/gui/calculator.cpp" line="58"/>
         <source>Standard</source>
         <translation type="unfinished">标准</translation>
     </message>
     <message>
-        <location filename="../src/gui/calculator.cpp" line="64"/>
+        <location filename="../src/gui/calculator.cpp" line="63"/>
         <source>Science</source>
         <translation type="unfinished">科学</translation>
     </message>
     <message>
-        <location filename="../src/gui/calculator.cpp" line="69"/>
+        <location filename="../src/gui/calculator.cpp" line="68"/>
         <source>Programmer</source>
         <translation type="unfinished">程序员</translation>
     </message>
@@ -1956,28 +1956,16 @@
 <context>
     <name>ModeSwitcherPage</name>
     <message>
-        <location filename="../src/gui/mode-switcher-page/mode-switcher-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_mode-switcher-page.h" line="83"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/mode-switcher-page/mode-switcher-page.ui" line="118"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_mode-switcher-page.h" line="89"/>
         <source>        Standard</source>
-        <translation type="unfinished">        标准</translation>
+        <translation type="obsolete">        标准</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-switcher-page/mode-switcher-page.ui" line="126"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_mode-switcher-page.h" line="91"/>
         <source>        Science</source>
-        <translation type="unfinished">        科学</translation>
+        <translation type="obsolete">        科学</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-switcher-page/mode-switcher-page.ui" line="134"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_mode-switcher-page.h" line="93"/>
         <source>        Programmer</source>
-        <translation type="unfinished">        程序员</translation>
+        <translation type="obsolete">        程序员</translation>
     </message>
 </context>
 <context>
@@ -2021,12 +2009,12 @@
 <context>
     <name>StagePage</name>
     <message>
-        <location filename="../src/gui/stage-page.cpp" line="117"/>
+        <location filename="../src/gui/stage-page.cpp" line="111"/>
         <source>Expression error</source>
         <translation type="unfinished">表达式错误</translation>
     </message>
     <message>
-        <location filename="../src/gui/stage-page.cpp" line="124"/>
+        <location filename="../src/gui/stage-page.cpp" line="118"/>
         <source>The result is undefined</source>
         <translation type="unfinished">结果无定义</translation>
     </message>

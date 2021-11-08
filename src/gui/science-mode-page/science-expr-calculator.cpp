@@ -49,8 +49,7 @@ ScienceExprCalculator::ScienceExprCalculator(QWidget* parent) : ExprCalculator(p
                  };
 
     setFuncList(m_funclist);
-    initMenuAndAction();
-//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
+
 }
 
 void ScienceExprCalculator::setSession(Session *session)

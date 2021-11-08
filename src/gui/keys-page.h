@@ -42,9 +42,6 @@ enum Button
     Button_Key_Lsh, Button_Key_Rsh, Button_Key_RoR, Button_Key_RoL,
 
     Button_Key_Shift,Button_Key_AngleUnit,Button_Key_FE,Button_Key_HYP,
-
 };
-
-
 
 #endif // KEYSPAGE_H

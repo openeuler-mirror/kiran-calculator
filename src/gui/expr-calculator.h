@@ -40,49 +40,26 @@ public:
     bool expressionInFunc(QString &);
     bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
 
-    struct SSelection {
-        QString oldText; //选中时的当前text
-        QString selected; //被选中部分
-        QString clearText;
-        bool isChanged;
-        int curpos = 0;  // fix for bug-14249选中的左侧光标所在位置
-        SSelection() { isChanged = false; }
-    };
-
-    SSelection getSelection() {return m_selected; }
-    void setSelection(SSelection select) { m_selected = select; }
-    void initMenuAndAction();
-
     void handleFunction_Backspace();
+    //FIEME:取反函数在多项式取反时有问题,暂时禁用
     void handleFunction_Opposite();
     void handleFunction_Reciprocal();
 
+    
 public slots:
+    /*TODO:
+    1 检测四则运算,加减乘除符号不能连续出现
+    2 撤销和返回功能
+    3 光标选中删除复制粘贴等
+    */
     void insert(const QString&);
     void handleInsertText(const QString&);
     void setText(const QString&);
-
-    void reformatShowExpr(const QString&);
-    void disableSelectText();
-
-    void showMenu(const QPoint &point);
-    void copyResultToClipboard();
-    void paste();
-    void exprSelectAll();     //selectAll重名了
     void autoZoomFontSize(int fontSize=48);
 
-private:
-    Evaluator* m_evaluator;
-    Session* m_session;
-    QList<QString> m_funclist;
-    StagePage* m_stagePage;
-    SSelection m_selected;
-
-    //输入栏右键菜单
-    QMenu *m_menu;
-    QAction *m_copy;
-    QAction *m_paste;
-    QAction *m_selectAll;
+    //XXX:后续优化格式化函数
+    void reformatShowExpr(const QString&);
+    void disableSelectText();
 
 signals:
     void exprCalcMessageDec(const QString&);
@@ -95,12 +72,18 @@ signals:
     void exprCalcNan();
 
     void equalPressed();
-
     void historyChanged( );
-
+    
     void stageExprFormat(const QString&);
     void stageQuantity(const Quantity&);
     void stageChanged();
+
+private:
+    Evaluator* m_evaluator;
+    Session* m_session;
+    QList<QString> m_funclist;
+    StagePage* m_stagePage;
+
 };
 
 #endif // EXPRCALCULATOR_H

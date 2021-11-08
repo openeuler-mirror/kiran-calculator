@@ -45,7 +45,6 @@ void ExprCalculator::clearStagePage()
     m_stagePage->clear();
 }
 
-
 bool ExprCalculator::expressionInFunc(QString &text)
 {
     QString oldText = text;
@@ -92,7 +91,7 @@ bool ExprCalculator::expressionInFunc(QString &text)
             operatorpos++;
             nooperator = true;
         }
-//        QString exptext;  //表达式
+
         if (newtext.at(percentpos - 1) == ')') {
             if (operatorpos > 0 && newtext.at(operatorpos - 1) == '(')
                 return false;
@@ -150,23 +149,6 @@ bool ExprCalculator::judgeInsertPos()
         }
     }
     return true;
-}
-
-void ExprCalculator::initMenuAndAction()
-{
-    m_menu = new QMenu(this);
-//    m_copy = new QAction(tr("copy"),this);
-    m_copy = new QAction(this);
-    m_paste = new QAction(this);
-    m_selectAll = new QAction(this);
-
-    m_copy->setText("复制");
-    m_paste->setText("粘贴");
-    m_selectAll->setText("全选");
-
-    connect(m_copy,SIGNAL(triggered()), this, SLOT(copyResultToClipboard()));
-    connect(m_paste, SIGNAL(triggered()), this, SLOT(paste()));
-    connect(m_selectAll, SIGNAL(triggered()), this, SLOT(exprSelectAll()));
 }
 
 void ExprCalculator::handleFunction_Backspace()
@@ -239,7 +221,7 @@ void ExprCalculator::handleFunction_Backspace()
         }
     }
 }
-//取反功能有问题，考虑暂时不修改了，或者延后再做   例如：555 + sqrt(55)+44   5%
+//FIXEME:取反功能有问题，后续优化   例如：555 + sqrt(55)+44   5%
 void ExprCalculator::handleFunction_Opposite()
 {
     QString exptext = text();//表达式
@@ -253,12 +235,7 @@ void ExprCalculator::handleFunction_Opposite()
         setCursorPosition(curPos);
         return;
     } else {
-        qDebug() << "exptext";
-        qDebug() << exptext;
         if (exptext.count("(") == exptext.count(")")) {
-            qDebug() << "exptext____:";
-            qDebug() << exptext;
-
             setCursorPosition(curPos - exptext.length());
             insert("(-");
             int afterinsertpos = cursorPosition();
@@ -324,7 +301,6 @@ void ExprCalculator::reformatShowExpr(const QString &text)
     if (newLength > oldLength)
         pos = oldPosition + (newLength - oldLength);
     else
-//        pos = oldPosition;
         pos = oldPosition - (oldLength - newLength);
     if (pos > newLength)
         pos = newLength;
@@ -337,128 +313,6 @@ void ExprCalculator::disableSelectText()
     qobject_cast<QLineEdit*>(sender())->deselect();
 }
 
-void ExprCalculator::showMenu(const QPoint &point)
-{
-    m_menu->addAction(m_copy);
-    m_menu->addAction(m_paste);
-    m_menu->addSeparator();
-    m_menu->addAction(m_selectAll);
-
-    if(QApplication::clipboard()->text().isEmpty())
-        m_paste->setEnabled(false);
-    else
-        m_paste->setEnabled(true);
-
-    if(selectedText().isEmpty())
-        m_copy->setEnabled(false);
-    else
-        m_copy->setEnabled(true);
-
-    if(text().isEmpty())
-        m_selectAll->setEnabled(false);
-    else
-        m_selectAll->setEnabled(true);
-
-    m_menu->exec(mapToGlobal(point));
-}
-
-void ExprCalculator::copyResultToClipboard()
-{
-    if(text().isEmpty())
-        return;
-    QApplication::clipboard()->setText(selectedText());
-    qDebug() << QApplication::clipboard()->text();
-}
-
-void ExprCalculator::paste()
-{
-    if(!judgeInsertPos())
-        return;
-    if((!selectedText().isEmpty())&& !(selectedText() == QLineEdit::text()))
-    {
-        deselect();     //选中时不可以粘贴,全选时可以
-        return;
-    }
-
-    QString oldText = text(); //未粘贴操作的text
-    int curpos = cursorPosition(); //未粘贴操作的光标位
-
-    QString exp = text();
-    QString text = Utils::toHalfWidth(QApplication::clipboard()->text());
-    text = text.left(text.indexOf("="));
-    text = text.replace(QString::fromUtf8("＋"),"+")
-               .replace(QString::fromUtf8("－"),QString::fromUtf8("−"))
-               .replace("_", QString::fromUtf8("−"))
-               .replace("-",QString::fromUtf8("−"))
-               .replace('*', "×")
-               .replace('X', "×")
-               .replace(QString::fromUtf8("＊"), "×")
-               .replace(QString::fromUtf8("（"), "(")
-               .replace(QString::fromUtf8("）"), ")")
-               .replace(QString::fromUtf8("——"), QString::fromUtf8("−"))
-               .replace(QString::fromUtf8("％"), "%")
-               .replace('/', "÷")
-               .replace(QString::fromUtf8("。"), ".")
-               .replace(QString::fromUtf8("π"), "pi")
-               .replace("E", "e");
-
-    //匹配函数方法
-    QStringList list = text.split(QRegExp("[0-9+−×÷/()%^.,。]"));   //standard
-//    QStringList list = text.split(QRegExp("[0-9+−×÷/()%^!e.,。]")); // science
-
-    //根据不同进制，对应不同的筛选规则
-    // \\s ->通过 \和s 意义不明
-    /*
-    switch (m_currentFormat) {
-    case Num_Format_Hex:
-        text.remove(QRegExp("[G-Z]"));
-        list = text.split(QRegExp("[A-F0-9+−×÷()%\\s]"));
-        break;
-    case Num_Format_Oct:
-        text.remove(QRegExp("[8-9]"));
-        list = text.split(QRegExp("[0-7+−×÷()%\\s]"));
-        break;
-    case Num_Format_Bin:
-        text.remove(QRegExp("[2-9]"));
-        list = text.split(QRegExp("[0-1+−×÷()%\\s]"));
-        break;
-    default:
-        list = text.split(QRegExp("[0-9+−×÷(),%\\s]"));
-        break;
-    }
-    */
-    for (int i = 0; i < list.size(); i++) {
-        QString item = list[i];
-        for (int j = 0; j < m_funclist.size(); j++) {
-            if (item.toLower().contains(m_funclist[j])) {
-                item.replace(item, m_funclist[j]); //包含函数名的取出;item中若存在两个函数名，只可以替代最前面的函数名
-                break;
-            }
-            if (j == m_funclist.size() - 1)
-                item.replace(item, QString());
-        }
-        text.replace(list[i], item);
-    }
-
-    while (exp.count("(") + text.count("(") > 100) {
-        text.remove(text.lastIndexOf("("), 1);
-    }
-    while (exp.count(")") + text.count(")") > 100) {
-        text.remove(text.lastIndexOf(")"), 1);
-    }
-
-    handleInsertText(text);
-    if (QLineEdit::text() == exp) {
-        setText(oldText);
-        setCursorPosition(curpos);
-        qDebug() << "Invalid content"; //提示是否复制了无效内容,复制的内容全是字母等
-    }
-}
-
-void ExprCalculator::exprSelectAll()
-{
-    QLineEdit::selectAll();
-}
 
 void ExprCalculator::autoZoomFontSize(int fontSize)
 {

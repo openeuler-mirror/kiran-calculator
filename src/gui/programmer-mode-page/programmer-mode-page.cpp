@@ -24,8 +24,6 @@
 #include "stage-page.h"
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "programmer-mode-page/num-conversion.h"
-
-
 #include <QDebug>
 
 ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
@@ -80,8 +78,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     connect(ui->numConversion,SIGNAL(refreshNumFormatHistory()), ui->programmerHistory, SLOT(updateHistory()));
     //进制切换时刷新程序员暂存记录
     connect(ui->numConversion,SIGNAL(numConvered(int )), ui->programmerStagePage, SLOT(stageFormatChanged(int )));
-
-//    connect(ui->numConversion,SIGNAL(refreshNumFormatStage()), ui->programmerStagePage, SLOT(NumFormatStageResult( )));
+    
     connect(ui->numConversion,&NumConversion::refreshNumFormatStage,this,[=](){
         if(!ui->programmerStagePage->text().isEmpty())
         {
@@ -89,7 +86,6 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
         }
     });
 
-    //
     connect(ui->programmerKeysPage,SIGNAL(programmerButtonClicked(Button)), this, SLOT(handleProgrammerKeysButtonClicked(Button)));
     connect(ui->programmerKeysPage,SIGNAL(programmerIsShift()), ui->programmerExprEdit,SLOT(handleProgrammerFunction_Shift()));
 }
@@ -101,7 +97,6 @@ ProgrammerModePage::~ProgrammerModePage()
 
 void ProgrammerModePage::handleProgrammerKeysButtonClicked(Button button)
 {
-//    ui->programmerExprEdit->setFocus();
     switch (button) {
     case Button_Key_0: ui->programmerExprEdit->handleInsertText("0");break;
     case Button_Key_1: ui->programmerExprEdit->handleInsertText("1");break;
@@ -178,8 +173,6 @@ void ProgrammerModePage::handleProgrammerKeysButtonClicked(Button button)
     default: break;
     }
 }
-
-
 
 void ProgrammerModePage::showEvent(QShowEvent *event){
     ui->programmerExprEdit->setFocus();

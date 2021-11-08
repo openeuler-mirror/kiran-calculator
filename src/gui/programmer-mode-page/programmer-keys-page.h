@@ -34,27 +34,21 @@ public:
     void initProgrammerButtons();
     void switchProgrammerLogicalAndShift();
 
-    static bool m_isShifted;
-
 public slots:
     void handleProgrammerButtonClicked();
     void handleProgrammerButtonAnimate(Button );
     void switchProgrammerFormatKeys(int );
 
-private:
-    static const struct KeyDescription{
-        QString token;
-        Button button;
-        int row;
-        int column;
-        QString objectName;
-    }keyDescriptions[];
-
-    QGridLayout* m_gridLayout;
-    QMap<Button, AnimationClickButton*> m_keyEnumMap;
 signals:
     void programmerButtonClicked(Button) const;
     void programmerIsShift();
+
+private:
+    QGridLayout* m_gridLayout;
+    QMap<Button, AnimationClickButton*> m_keyEnumMap;
+    bool m_isShifted = false;
+
+
 
 };
 #endif // PROGRAMMERKEYSPAGE_H

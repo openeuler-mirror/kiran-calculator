@@ -41,12 +41,12 @@ public:
     void setSession(Session*);
     void setProgrammerKeysPage(ProgrammerKeysPage*);
 
-    QString  AddPrefixForExpr(int ,const QString&);
-    bool curposInNumber(int );
+    QString AddPrefixForExpr(int, const QString&);
+    bool curposInNumber(int);
     void handleProgrammerFunction_Opposite();
     void handleProgrammerFunction_Backspace();
 
-    static bool isNumber(QChar a);//判断是否为数字(分隔符)
+    bool isNumber(QChar a);  //判断是否为数字(分隔符)
 
 public slots:
     void handleProgrammerFunction_Shift();
@@ -57,17 +57,23 @@ public slots:
     void setText(const QString&);
     void programmerExprCalc();
     void autoProgrammerExprCalc();
-    void exprFormatChanged(int );
+    void exprFormatChanged(int);
     void radixChanged(int basedest);
     void reformatShowExpr(const QString&);
-    bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
-    QString scanAndExec(int,int,const QString&);
-
-protected:
-    virtual void keyPressEvent(QKeyEvent *) override;
+    bool judgeInsertPos();  //判断光标位置，禁止在函数名中间插入
+    QString scanAndExec(int, int, const QString&);
 
 protected slots:
     void triggerEnter();
+
+protected:
+    virtual void keyPressEvent(QKeyEvent*) override;
+
+signals:
+    void programmerToNumConversionFormatDec(const QString&);
+    void programmerToNumConversionQuantityDec(const Quantity&);
+    void programmerToNumConversionMessageError();
+    void programmerExprIsEmpty();
 
 private:
     Evaluator* m_evaluator;
@@ -81,16 +87,10 @@ private:
     QString m_tmpPreviousExpr;
     QList<QString> m_funclist;
 
-    int  m_currentFormat;
-    int  m_previousFormat;
+    int m_currentFormat;
+    int m_previousFormat;
     bool m_numOutRange;
     bool m_isShift;
-
-signals:
-    void programmerToNumConversionFormatDec(const QString&);
-    void programmerToNumConversionQuantityDec(const Quantity&);
-    void programmerToNumConversionMessageError( );
-    void programmerExprIsEmpty();
 };
 
-#endif // PROGRAMMEREXPRCALCULATOR_H
+#endif  // PROGRAMMEREXPRCALCULATOR_H

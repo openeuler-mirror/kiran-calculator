@@ -23,11 +23,6 @@
 #include "utils.h"
 #include <QDebug>
 
-
-int StagePage::m_currentFormat = 1;
-
-#define FORMAT_DEC 1
-
 StagePage::StagePage(QWidget *parent) : QPushButton(parent)
 {
     connect(this,SIGNAL(clicked( )),this, SLOT(handleStagePageClicked( )));
@@ -62,12 +57,11 @@ void StagePage::setHistoryResult(const QString & result)
     setEnabled(true);
 }
 
-
 void StagePage::NumFormatStageResult()
 {
     m_programmerExpr = new ProgrammerExprCalculator();
     QString stageExprConverted;
-    stageExprConverted = m_programmerExpr->scanAndExec(FORMAT_DEC,m_currentFormat,m_saveExpr);
+    stageExprConverted = m_programmerExpr->scanAndExec(Num_Format_Dec,m_currentFormat,m_saveExpr);
 
     QString expr;
     QString reformatExpr;

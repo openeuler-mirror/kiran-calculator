@@ -34,31 +34,18 @@ class StandardKeysPage : public QWidget
     Q_OBJECT
 public:
     explicit StandardKeysPage(QWidget *parent = nullptr);
-
     void initButtons();
-
-
+    
 public slots:
     void handleButtonClicked();
     void handleButtonAnimate(Button );
 
-protected slots:
-//    void paintEvent(QPaintEvent *event) override;
-
-private:
-    static const struct KeyDescription{
-        QString token;
-        Button button;
-        int row;
-        int column;
-        QString objectName;
-    }keyDescriptions[];
-
-    QMap<Button, AnimationClickButton*> m_keyEnumMap;
-    QGridLayout* m_gridLayout = nullptr;
-
 signals:
     void buttonClicked(Button) const;
+
+private:
+    QMap<Button, AnimationClickButton*> m_keyEnumMap;
+    QGridLayout* m_gridLayout = nullptr;
 
 };
 

@@ -52,6 +52,8 @@ public:
     void handleFunction_Tan();
     void handleFunction_Log();
     void handleFunction_Pi();
+
+    //XXX:后续优化科学模式下输入科学计数法以及输入指数函数,自然常数
     void handleFunction_Exp();         //科学计数法，不是指数函数
     void handleFunction_Factorials();
 
@@ -62,13 +64,16 @@ public slots:
     void handleFunction_Shift();
     void handleFunction_HYP();
 
-
-protected:
-    void keyPressEvent(QKeyEvent *) override;
-
 protected slots:
     void triggerEnter();
 
+signals:
+    void scienceFEChanged();
+    void scienceFEIndexList(QList<int>);
+
+protected:
+    void keyPressEvent(QKeyEvent *) override;
+    
 private:
     Evaluator* m_evaluator;
     QList<HistoryEntry> m_scienceHistory;
@@ -83,9 +88,6 @@ private:
     bool m_isHYP = false;
 
 
-signals:
-    void scienceFEChanged();
-    void scienceFEIndexList(QList<int>);
 };
 
 #endif // SCIENCEEXPRCALCULATOR_H

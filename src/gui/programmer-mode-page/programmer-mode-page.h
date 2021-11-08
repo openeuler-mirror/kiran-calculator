@@ -20,7 +20,6 @@
 #define PROGRAMMERMODEPAGE_H
 
 #include <QWidget>
-#include <QScrollBar>
 #include "keys-page.h"
 class Session;
 class HistoryRecoder;

@@ -63,8 +63,6 @@ private:
     QList<QString> m_funclist;
     StandardKeysPage* m_standardKeys;
 
-signals:
-
 };
 
 #endif // ExprCalculator_H

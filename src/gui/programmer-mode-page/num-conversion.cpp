@@ -29,8 +29,8 @@
 
 NumConversion::NumConversion(QWidget* parent) : QListWidget(parent)
 {
-    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,
-            SLOT(activateNumConversion(QListWidgetItem*)));
+    connect(this, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem *)),this,
+            SLOT(activateNumConversion(QListWidgetItem*,QListWidgetItem*)));
 
     NumConversionDelegate *delegate = new NumConversionDelegate(this);
     setItemDelegate(delegate);
@@ -48,7 +48,6 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
     QString formatOct = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Octal() + Quantity::Format::Fixed()).remove("0o");
     QString formatHex = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Hexadecimal() + Quantity::Format::Fixed()).remove("0x");
     QString formatDec = DMath::format(quantity, Quantity::Format::Complement() + Quantity::Format::Decimal() + Quantity::Format::Fixed());
-    //    QString formatDec = NumberFormatter::format(quantity);
 
     qDebug() << "NumConversion_formatDec:" + formatDec;
 
@@ -66,8 +65,7 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
     formatBin = Utils::reformatSeparatorsPro(formatBin, 2);
     formatDec = Utils::reformatSeparatorsPro(formatDec, 10);
 
-    qDebug() << "formatBin:";
-    qDebug() << formatBin;
+
     item(0)->setText(formatHex);
     item(1)->setText(formatDec);
     item(2)->setText(formatOct);
@@ -75,12 +73,12 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
 
 }
 
-void NumConversion::activateNumConversion(QListWidgetItem* item)
+void NumConversion::activateNumConversion(QListWidgetItem* current,QListWidgetItem* prev)
 {
     qDebug() << "row:";
-    qDebug() << row(item);
+    qDebug() << row(current);
 
-    emit numConvered(row(item));
+    emit numConvered(row(current));
     emit refreshNumFormatHistory( );
     emit refreshNumFormatStage();
 }

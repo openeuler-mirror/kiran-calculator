@@ -50,14 +50,11 @@ public:
 
     void initKeyButton();
 
-private:
-    Ui::Calculator *ui;
-    Evaluator* m_evaluator;
-
 public slots:
     void switchKeyborad(int );
 
-signals:
-
+private:
+    Ui::Calculator *ui;
+    Evaluator* m_evaluator;
 };
 #endif // CALCULATOR_H

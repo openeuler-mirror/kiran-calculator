@@ -38,7 +38,6 @@ Calculator::Calculator(QWidget *parent)
 {
     ui->setupUi(this);
 
-
     m_evaluator = Evaluator::instance();
     m_evaluator->initializeBuiltInVariables();
 

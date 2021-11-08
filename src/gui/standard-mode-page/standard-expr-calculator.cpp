@@ -32,9 +32,6 @@
 StandardExprCalculator::StandardExprCalculator(QWidget* parent) : ExprCalculator(parent)
 {
     m_evaluator = Evaluator::instance();
-    initMenuAndAction();
-    //禁用输入栏菜单
-//    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showMenu(const QPoint&)));
 
     connect(this,SIGNAL(returnPressed()), this, SLOT(triggerEnter()));
     connect(this,SIGNAL(exprCalcMessageDec(const QString &)), this, SLOT(setText(const QString &)));
@@ -56,7 +53,6 @@ void StandardExprCalculator::setStandardKeysPage(StandardKeysPage * keys)
     m_standardKeys = keys;
 }
 
-//传入QLineEdit::text()
 //Evaluator类中包含运算规则和计算，在该类外部只做括号匹配检测
 //内部没进行括号匹配，只进行将括号去除的操作
 void StandardExprCalculator::exprCalc()
@@ -77,11 +73,9 @@ void StandardExprCalculator::exprCalc()
         {
             //输出结果的进制转换
             //十进制
+            // default:  Quantity::Format::Base::Decimal;  Mode::General; 另外可以通过设置Precison来精确位数
             auto formatDec = NumberFormatter::format(quantity);     //NumberFormatter和DMath结果的负号不一致
-
-             // default:  Quantity::Format::Base::Decimal;  Mode::General; 另外可以通过设置Precison来精确位数
-//            auto formatDec = DMath::format(quantity, Quantity::Format::Decimal() + Quantity::Format::General());
-
+ 
             //结果超过16位自动转为科学计数法
             QString valueLenth = formatDec;
             if(valueLenth.remove(".").length() > 16)
@@ -172,11 +166,9 @@ void StandardExprCalculator::keyPressEvent(QKeyEvent * event)
         m_standardKeys->handleButtonAnimate(Button_Key_Add);
         break;
     case Qt::Key_Minus:
-        handleInsertText("−");   //speedcrunch
-//        insert(QString::fromUtf8("−"));
+        handleInsertText("−");
         m_standardKeys->handleButtonAnimate(Button_Key_Sub);
         break;
-
     case Qt::Key_Asterisk:
         handleInsertText("×");
         m_standardKeys->handleButtonAnimate(Button_Key_Mult);
@@ -243,7 +235,6 @@ void StandardExprCalculator::keyPressEvent(QKeyEvent * event)
         m_standardKeys->handleButtonAnimate(Button_Key_Clear);
         break;
     }
-
     //暂时禁用复制、粘贴、全选
 //    if((event->modifiers() == Qt::ControlModifier) && (event->key() == Qt::Key_C))
 //    {

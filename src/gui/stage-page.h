@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QEvent>
 #include <QMouseEvent>
+#include "general-enum.h"
 
 class Evaluator;
 class ProgrammerExprCalculator;
@@ -32,9 +33,7 @@ class StagePage : public QPushButton
     Q_OBJECT
 public:
     StagePage(QWidget *parent=nullptr);
-    static int m_currentFormat;
-
-
+    
 public slots:
     void setStageResult();
     void setStageErrorMessage();
@@ -47,16 +46,16 @@ public slots:
     void receiveCalculatedQuantity(const Quantity&);
     void clear();
 
+signals:
+    void stageExprSelected(const QString &);
+
 private:
     Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;
     QString m_saveExpr;
     Quantity m_saveQuantity;
-//    QString m_saveError;
 
-signals:
-    void stageExprSelected(const QString &);
-
+    int m_currentFormat = Num_Format_Dec;
 };
 
 #endif // STAGEPAGE_H

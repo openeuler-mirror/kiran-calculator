@@ -23,7 +23,7 @@
 #include "stage-page.h"
 #include "standard-mode-page/standard-keys-page.h"
 #include "standard-mode-page/standard-expr-calculator.h"
-#include <QTest>
+
 
 StandardModePage::StandardModePage(QWidget *parent) :
     QWidget(parent),
@@ -41,27 +41,26 @@ StandardModePage::StandardModePage(QWidget *parent) :
 
     ui->standardClearHistory->setEnabled(false);
 
+    //键盘按钮点击
     connect(ui->standardKeysPage, SIGNAL(buttonClicked(Button)),this, SLOT(handleStandardKeysButtonClicked(Button)));
-
+    //传递当前模式
     connect(ui->standardExprEdit,SIGNAL(calculateMode(int )),ui->standardHistory,SLOT(setCalculateMode(int )));
+    //更新历史记录
     connect(ui->standardExprEdit,SIGNAL(historyChanged( )),ui->standardHistory,SLOT(updateHistory( )));
-
+    //将表达式,结果,暂存变动,错误信息传递给暂存记录
     connect(ui->standardExprEdit,SIGNAL(stageExprFormat(const QString&)),ui->standardStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->standardExprEdit,SIGNAL(stageQuantity(const Quantity&)), ui->standardStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->standardExprEdit,SIGNAL(stageChanged()),ui->standardStagePage, SLOT(setStageResult( )));
     connect(ui->standardExprEdit,SIGNAL(exprCalcError()),ui->standardStagePage, SLOT(setStageErrorMessage( )));
     connect(ui->standardExprEdit,SIGNAL(exprCalcNan()),ui->standardStagePage, SLOT(setStageNanMessage( )));
-
-
+    //取出历史记录和暂存记录
     connect(ui->standardHistory,SIGNAL(valueSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
     connect(ui->standardHistory,SIGNAL(resultSelected(const QString&)), ui->standardStagePage,SLOT(setHistoryResult(const QString&)));
     connect(ui->standardStagePage,SIGNAL(stageExprSelected(const QString&)), ui->standardExprEdit,SLOT(setText(const QString& )));
-
+    //清除历史记录
     connect(ui->standardClearHistory,SIGNAL(clicked()), ui->standardHistory,SLOT(clearHistory()));
-
     connect(ui->standardHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->standardClearHistory->setEnabled(false);});
     connect(ui->standardExprEdit,&StandardExprCalculator::historyChanged,this,[=](){ui->standardClearHistory->setEnabled(true);});
-
 }
 
 void StandardModePage::handleStandardKeysButtonClicked(Button button)

@@ -18,15 +18,19 @@
 */
 #include "science-keys-page.h"
 #include "general-enum.h"
-
 #include <QDebug>
 #include <animation-click-button.h>
+#define PROPERTY_KEY_ENUM "Science_Button_Enum"
 
-int ScienceKeysPage::m_angleUnit = 0;
-bool ScienceKeysPage::m_isShift = false;
-bool ScienceKeysPage::m_isHYP = false;
-
-const ScienceKeysPage::KeyDescription ScienceKeysPage::keyDescriptions[] = {
+struct ScienceKeyDescription{
+    QString token;
+    Button button;
+    int row;
+    int column;
+    QString objectName;
+    int rowcount;  //所占行数
+    int columncount;  //所占列数
+}scienceKeyDescriptions[] = {
     {"DEG", Button_Key_AngleUnit,0, 0,"btn_DEG",1,1},{"HYP", Button_Key_HYP, 0, 1,"btn_HYP",1,1},{"F-E", Button_Key_FE,0,2,"btn_FE",1,1},
     {"x²", Button_Key_Square, 1, 0,"btn_square",1,1},{"xⁿ", Button_Key_Xn, 1, 1,"btn_xn",1,1},{"sin", Button_Key_Sin, 1, 2,"btn_sin",1,1},
     {"cos", Button_Key_Cos, 1, 3,"btn_cos",1,1}, {"tan", Button_Key_Tan, 1, 4,"btn_tan",1,1},
@@ -56,14 +60,12 @@ ScienceKeysPage::ScienceKeysPage(QWidget *parent) : QWidget(parent)
     initScienceButtons();
 }
 
-
-#define PROPERTY_KEY_ENUM "Science_Button_Enum"
 void ScienceKeysPage::initScienceButtons()
 {
-    int cout  = sizeof(keyDescriptions) / sizeof (keyDescriptions[0]);
+    int cout  = sizeof(scienceKeyDescriptions) / sizeof (scienceKeyDescriptions[0]);
     for(int i = 0; i < cout; ++i)
     {
-        const KeyDescription* description = keyDescriptions + i;
+        const ScienceKeyDescription* description = scienceKeyDescriptions + i;
         AnimationClickButton* key = new AnimationClickButton(description->token);
         key->setObjectName(description->objectName);
         m_keyEnumMap[description->button] = key;

@@ -36,7 +36,13 @@ public:
 public slots:
     void showNumFormatConverted(const Quantity&);
     void clearItems();
-    void activateNumConversion(QListWidgetItem*);
+    void activateNumConversion(QListWidgetItem*,QListWidgetItem*);
+
+signals:
+    void resultSelected(const QString&);
+    void numConvered(int );
+    void refreshNumFormatHistory( );
+    void refreshNumFormatStage();
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
@@ -46,12 +52,6 @@ private:
     Evaluator* m_evaluator;
     Session* m_programmerSession;
     QString m_messageDec;
-
-signals:
-    void resultSelected(const QString&);
-    void numConvered(int );
-    void refreshNumFormatHistory( );
-    void refreshNumFormatStage();
 };
 
 #endif // NUMCONVERSION_H

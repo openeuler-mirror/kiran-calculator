@@ -22,6 +22,7 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include "general-enum.h"
 
 class QListWidget;
 class QListWidgetItem;
@@ -30,7 +31,6 @@ class Evaluator;
 class Session;
 class ProgrammerExprCalculator;
 
-
 class HistoryRecoder : public QListWidget
 {
     Q_OBJECT
@@ -38,23 +38,16 @@ public:
     explicit HistoryRecoder(QWidget *parent = nullptr);
     void setSession(Session*);
 
-
-    static int m_currentFormat;
-    static int m_currentMode;
-    static bool m_FE;
-
 public slots:
+    //TODO:历史记录右键点击功能
     void setCalculateMode(int );
     void updateHistory();
     void historyFEChanged();
     void historyFEIndex(QList<int >);
     void historyFormatChanged(int );
-
     void clearHistory();
     bool isHistoryEmpty();
-
     QString historyWordWrap(const QString&, int );
-
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
@@ -62,17 +55,20 @@ protected:
 protected slots:
     void handleItem(QListWidgetItem *);
 
+signals:
+    void resultSelected(const QString &);
+    void valueSelected(const QString &);
+    void historyClearSuccess();
+
 private:
     Session* m_session;
     Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;
     QList<int> m_historyFEIndex;
 
-signals:
-    void resultSelected(const QString &);
-    void valueSelected(const QString &);
-    void historyClearSuccess();
-
+    int m_currentFormat = Num_Format_Dec;
+    int m_currentMode = Calculation_Mode_Standard;
+    bool m_FE = false; //科学计算法模式默认关闭
 };
 
 #endif // HISTORYRECODER_H

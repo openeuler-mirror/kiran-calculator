@@ -67,8 +67,7 @@ ProgrammerExprCalculator::ProgrammerExprCalculator(QWidget *parent) : ExprCalcul
                       "shl", "shr", "or", "mod",
                  };
     setFuncList(m_funclist);
-    initMenuAndAction();
-//    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showMenu(const QPoint&)));    //禁用输入栏菜单
+
 }
 
 void ProgrammerExprCalculator::setSession(Session *session)
@@ -485,9 +484,7 @@ void ProgrammerExprCalculator::autoProgrammerExprCalc()
     }
 
     QString formatExpr = AddPrefixForExpr(m_currentFormat,programmerExpr);
-    qDebug() << "autoProgrammerExprCalc_____AddPrefixForExpr:";
-    qDebug() << formatExpr;
-
+    
     m_evaluator->setExpression(formatExpr);
     Quantity quantity = m_evaluator->evalUpdateAns();
 
@@ -495,9 +492,6 @@ void ProgrammerExprCalculator::autoProgrammerExprCalc()
     {
         QString formatDec = DMath::format(quantity,  Quantity::Format::Decimal() + Quantity::Format::Fixed());
         int intResult = formatDec.toInt();
-
-        qDebug() << "intResult:";
-        qDebug() << intResult;
 
         emit programmerToNumConversionFormatDec(formatDec);
         emit programmerToNumConversionQuantityDec(quantity);
@@ -509,7 +503,6 @@ void ProgrammerExprCalculator::autoProgrammerExprCalc()
         emit programmerToNumConversionMessageError();
     }
 }
-
 
 void ProgrammerExprCalculator::handleProgrammerFunction_Shift()
 {
@@ -922,8 +915,7 @@ void ProgrammerExprCalculator::keyPressEvent(QKeyEvent * event)
         m_programmerKeysPage->handleProgrammerButtonAnimate(Button_Key_Add);
         break;
     case Qt::Key_Minus:
-//        insert("-"); //deepin   显示比较短
-        handleInsertText("−"); //speedcrush  显示比较长
+        handleInsertText("−");
         m_programmerKeysPage->handleProgrammerButtonAnimate(Button_Key_Sub);
         break;
 

@@ -43,13 +43,13 @@ public:
 
 protected:
     virtual void showEvent(QShowEvent *event) override;
-private:
-    Ui::ScienceModePage *ui;
-    Session *m_scienceSession = nullptr;
-
 
 public slots:
     void handleScienceKeysButtonClicked(Button);
+
+private:
+    Ui::ScienceModePage *ui;
+    Session *m_scienceSession = nullptr;
 };
 
 #endif // SCIENCEMODEPAGE_H

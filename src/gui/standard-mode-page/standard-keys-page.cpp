@@ -20,11 +20,16 @@
 #include "animation-click-button.h"
 #include <QDebug>
 #include <QGridLayout>
-#include <QTimer>
-#include <QTest>
 
 #define PROPERTY_KEY_ENUM "Button_Key"
-const StandardKeysPage::KeyDescription StandardKeysPage::keyDescriptions[] = {
+
+static const struct StandardKeyDescription{
+    QString token;
+    Button button;
+    int row;
+    int column;
+    QString objectName;
+}standardKeyDescriptions[] = {
     {"%", Button_Key_Percent, 1, 0,"btn_percent"},     {"√", Button_Key_Sqrt, 1, 3,"btn_sqrt"},
     {"x²", Button_Key_Square, 1, 6,"btn_square"},     {"1/x", Button_Key_Reciprocal, 1, 9,"btn_reciprocal"},
 
@@ -45,6 +50,7 @@ const StandardKeysPage::KeyDescription StandardKeysPage::keyDescriptions[] = {
     {".", Button_Key_Point, 6, 6,"btn_point"}, {"＝", Button_Key_Equal, 6, 9,"btn_equal"}
 };
 
+
 StandardKeysPage::StandardKeysPage(QWidget *parent) : QWidget(parent)
 {
     m_gridLayout = new QGridLayout(this);
@@ -55,10 +61,10 @@ StandardKeysPage::StandardKeysPage(QWidget *parent) : QWidget(parent)
 
 void StandardKeysPage::initButtons()
 {
-    const int count = sizeof(keyDescriptions) / sizeof (keyDescriptions[0]);
+    const int count = sizeof(standardKeyDescriptions) / sizeof (standardKeyDescriptions[0]);
     for(int i = 0; i < count; ++i)
     {
-        const KeyDescription* description = keyDescriptions + i;
+        const StandardKeyDescription* description = standardKeyDescriptions + i;
 
         auto* key = new AnimationClickButton (description->token,this);
 
@@ -76,12 +82,8 @@ void StandardKeysPage::initButtons()
 
 void StandardKeysPage::handleButtonClicked()
 {
-
     auto keyEnumVar = sender()->property(PROPERTY_KEY_ENUM);
     int iKeyEnum = keyEnumVar.toInt();
-
-    qDebug() << "handleButtonClicked:";
-    qDebug() << iKeyEnum;
 
      emit buttonClicked(Button(iKeyEnum));
 }

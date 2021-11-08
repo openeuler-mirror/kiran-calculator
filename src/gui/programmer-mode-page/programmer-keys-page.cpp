@@ -20,10 +20,15 @@
 #include "general-enum.h"
 #include "animation-click-button.h"
 #include <QDebug>
+#define PROPERTY_KEY_ENUM "Programmer_Button_Enum"
 
-bool ProgrammerKeysPage::m_isShifted = false;
-
-const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] = {
+struct ProgrammerKeyDescription{
+    QString token;
+    Button button;
+    int row;
+    int column;
+    QString objectName;
+}programmerKeyDescriptions[]  = {
     {"Lsh", Button_Key_Lsh, 1, 0,"btn_lsh"},{"Rsh", Button_Key_Rsh, 1, 1,"btn_rsh"},
     {"Or", Button_Key_Or, 1, 2,"btn_or"},{"Xor", Button_Key_Xor, 1, 3,"btn_xor"},{"Not", Button_Key_Not, 1, 4,"btn_not"},
     {"And", Button_Key_And, 2, 0,"btn_and"},{"↑", Button_Key_Shift, 2, 1,"btn_shift"},{"Mod", Button_Key_Mod, 2, 2,"btn_mod"},
@@ -43,6 +48,8 @@ const ProgrammerKeysPage::KeyDescription ProgrammerKeysPage::keyDescriptions[] =
 
 };
 
+
+
 ProgrammerKeysPage::ProgrammerKeysPage(QWidget *parent) : QWidget(parent)
 {
     m_gridLayout = new QGridLayout(this);
@@ -52,14 +59,12 @@ ProgrammerKeysPage::ProgrammerKeysPage(QWidget *parent) : QWidget(parent)
     switchProgrammerFormatKeys(NumFormat::Num_Format_Dec);   //默认十进制键盘
 }
 
-#define PROPERTY_KEY_ENUM "Programmer_Button_Enum"
-
 void ProgrammerKeysPage::initProgrammerButtons()
 {
-    int cout = sizeof(keyDescriptions) / sizeof(keyDescriptions[0]);
+    int cout = sizeof(programmerKeyDescriptions) / sizeof(programmerKeyDescriptions[0]);
     for(int i = 0; i< cout; i++)
     {
-        const  KeyDescription* description = keyDescriptions + i;
+        const  ProgrammerKeyDescription* description = programmerKeyDescriptions + i;
         AnimationClickButton* key = new AnimationClickButton(description->token);
 
         key->setObjectName(description->objectName);

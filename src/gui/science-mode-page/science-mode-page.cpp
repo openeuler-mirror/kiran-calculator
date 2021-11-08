@@ -38,23 +38,26 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
     ui->scienceExprEdit->setScienceKeysPage(ui->scienceKeysPage);
     ui->scienceExprEdit->setStagePage(ui->scienceStagePage);
 
-
     ui->scienceClearHistory->setEnabled(false);
 
+    //键盘按钮点击
     connect(ui->scienceKeysPage, SIGNAL(scienceButtonClicked(Button)), this, SLOT(handleScienceKeysButtonClicked(Button)));
+    //当前计算模式传递给历史记录
     connect(ui->scienceExprEdit, SIGNAL(calculateMode(int)), ui->scienceHistory, SLOT(setCalculateMode(int)));
 
+    //将表达式,结果,暂存变动,错误信息传递给暂存记录
     connect(ui->scienceExprEdit,SIGNAL(stageExprFormat(const QString&)),ui->scienceStagePage,SLOT(receiveCalculatedExpr(const QString&)));
     connect(ui->scienceExprEdit,SIGNAL(stageQuantity(const Quantity&)), ui->scienceStagePage,SLOT(receiveCalculatedQuantity(const Quantity&)));
     connect(ui->scienceExprEdit,SIGNAL(stageChanged()),ui->scienceStagePage, SLOT(setStageResult( )));
     connect(ui->scienceExprEdit,SIGNAL(exprCalcError()),ui->scienceStagePage, SLOT(setStageErrorMessage( )));
     connect(ui->scienceExprEdit,SIGNAL(exprCalcNan()),ui->scienceStagePage, SLOT(setStageNanMessage( )));
 
-
+    //取出历史记录和暂存记录
     connect(ui->scienceHistory,SIGNAL(valueSelected(const QString&)), ui->scienceExprEdit, SLOT(setText(const QString& )));
     connect(ui->scienceHistory,SIGNAL(resultSelected(const QString&)), ui->scienceStagePage,SLOT(setHistoryResult(const QString&)));
     connect(ui->scienceStagePage,SIGNAL(stageExprSelected(const QString&)), ui->scienceExprEdit,SLOT(setText(const QString& )));
 
+    //清除历史记录
     connect(ui->scienceClearHistory, SIGNAL(clicked()), ui->scienceHistory, SLOT(clearHistory()));
     connect(ui->scienceHistory,&HistoryRecoder::historyClearSuccess, this,[=](){ui->scienceClearHistory->setEnabled(false);});
     connect(ui->scienceExprEdit,&ScienceExprCalculator::historyChanged,this,[=](){ui->scienceClearHistory->setEnabled(true);});
@@ -68,8 +71,6 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
 
     //更新历史记录
     connect(ui->scienceExprEdit, SIGNAL(historyChanged( )), ui->scienceHistory, SLOT(updateHistory( )));
-
-
 }
 
 ScienceModePage::~ScienceModePage()
@@ -100,7 +101,6 @@ void ScienceModePage::handleScienceKeysButtonClicked(Button button)
     case Button_Key_Add: ui->scienceExprEdit->handleInsertText("+"); break;
     case Button_Key_Sub: ui->scienceExprEdit->handleInsertText("−"); break;
     case Button_Key_Mult:
-//        ui->scienceExprEdit->insert("×");
         ui->scienceExprEdit->handleInsertText(QString::fromUtf8("×"));
         break;
     case Button_Key_Divide: ui->scienceExprEdit->handleInsertText("÷"); break;

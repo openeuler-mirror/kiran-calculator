@@ -39,7 +39,7 @@ void loadStylesheet()
     }
     else
     {
-        qDebug() << "load stylesheet failed";
+        KLOG_INFO() << "load stylesheet failed";
     }
 }
 

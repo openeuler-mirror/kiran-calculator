@@ -40,12 +40,12 @@ public:
     explicit StandardModePage(QWidget *parent = nullptr);
     ~StandardModePage();
 
-
 public slots:
     void handleStandardKeysButtonClicked(Button);
 
 protected:
     virtual void showEvent(QShowEvent *event) override;
+
 private:
     Ui::StandardModePage *ui;
     Session *m_standardSession = nullptr;
