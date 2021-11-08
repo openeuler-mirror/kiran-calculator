@@ -73,7 +73,7 @@ void NumConversion::showNumFormatConverted(const Quantity & quantity)
 
 }
 
-void NumConversion::activateNumConversion(QListWidgetItem* current,QListWidgetItem* prev)
+void NumConversion::activateNumConversion(QListWidgetItem* current,QListWidgetItem* previous)
 {
     qDebug() << "row:";
     qDebug() << row(current);

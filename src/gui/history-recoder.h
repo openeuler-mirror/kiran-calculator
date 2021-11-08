@@ -36,28 +36,28 @@ class HistoryRecoder : public QListWidget
     Q_OBJECT
 public:
     explicit HistoryRecoder(QWidget *parent = nullptr);
-    void setSession(Session*);
+    void setSession(Session* session);
 
 public slots:
     //TODO:历史记录右键点击功能
-    void setCalculateMode(int );
+    void setCalculateMode(int mode);
     void updateHistory();
     void historyFEChanged();
-    void historyFEIndex(QList<int >);
-    void historyFormatChanged(int );
+    void historyFEIndex(QList<int > index);
+    void historyFormatChanged(int format);
     void clearHistory();
     bool isHistoryEmpty();
-    QString historyWordWrap(const QString&, int );
+    QString historyWordWrap(const QString& text, int limitLength);
 
 protected:
     QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
                                                          const QEvent *event) const override;
 protected slots:
-    void handleItem(QListWidgetItem *);
+    void handleItem(QListWidgetItem *item);
 
 signals:
-    void resultSelected(const QString &);
-    void valueSelected(const QString &);
+    void resultSelected(const QString &result);
+    void valueSelected(const QString &value);
     void historyClearSuccess();
 
 private:

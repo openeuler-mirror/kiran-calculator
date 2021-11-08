@@ -38,10 +38,10 @@ public:
     
 public slots:
     void handleButtonClicked();
-    void handleButtonAnimate(Button );
+    void handleButtonAnimate(Button button);
 
 signals:
-    void buttonClicked(Button) const;
+    void buttonClicked(Button button) const;
 
 private:
     QMap<Button, AnimationClickButton*> m_keyEnumMap;

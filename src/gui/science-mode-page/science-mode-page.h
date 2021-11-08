@@ -45,7 +45,7 @@ protected:
     virtual void showEvent(QShowEvent *event) override;
 
 public slots:
-    void handleScienceKeysButtonClicked(Button);
+    void handleScienceKeysButtonClicked(Button button);
 
 private:
     Ui::ScienceModePage *ui;

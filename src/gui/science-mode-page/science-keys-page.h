@@ -41,11 +41,11 @@ public slots:
     void switchScienceAngleUnit();
     void switchScienceHYP();
     void shiftScienceFunction();
-    void handleButtonAnimate(Button );
+    void handleButtonAnimate(Button button);
 
 signals:
-    void scienceButtonClicked(Button) const;
-    void scienceSwitchAngleUnit(int );
+    void scienceButtonClicked(Button button) const;
+    void scienceSwitchAngleUnit(int angleUnit);
     void scienceIsShift();
     void scienceIsHYP();
 

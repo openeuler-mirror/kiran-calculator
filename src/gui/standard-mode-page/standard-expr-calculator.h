@@ -42,14 +42,14 @@ class StandardExprCalculator : public ExprCalculator
 public:
     StandardExprCalculator(QWidget *parent = nullptr);
 
-    void setStandardKeysPage(StandardKeysPage*);
-    void setSession(Session*);
+    void setStandardKeysPage(StandardKeysPage* keys);
+    void setSession(Session* session);
 
     void handleFunction_Sqrt();
     void handleFunction_Square();
 
 protected:
-    void keyPressEvent(QKeyEvent *) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 public slots:
     void exprCalc();

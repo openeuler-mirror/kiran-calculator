@@ -36,11 +36,11 @@ public:
 
 public slots:
     void handleProgrammerButtonClicked();
-    void handleProgrammerButtonAnimate(Button );
-    void switchProgrammerFormatKeys(int );
+    void handleProgrammerButtonAnimate(Button button);
+    void switchProgrammerFormatKeys(int currentFormat);
 
 signals:
-    void programmerButtonClicked(Button) const;
+    void programmerButtonClicked(Button button) const;
     void programmerIsShift();
 
 private:

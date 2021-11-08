@@ -34,10 +34,10 @@ class ExprCalculator : public QLineEdit
 public:
     ExprCalculator(QWidget *parent = nullptr);
 
-    void setStagePage(StagePage*);
-    void setFuncList(QList<QString>);
+    void setStagePage(StagePage* stage);
+    void setFuncList(QList<QString> funcList);
     void clearStagePage();
-    bool expressionInFunc(QString &);
+    bool expressionInFunc(QString &text);
     bool judgeInsertPos();     //判断光标位置，禁止在函数名中间插入
 
     void handleFunction_Backspace();
@@ -52,30 +52,30 @@ public slots:
     2 撤销和返回功能
     3 光标选中删除复制粘贴等
     */
-    void insert(const QString&);
-    void handleInsertText(const QString&);
-    void setText(const QString&);
+    void insert(const QString& text);
+    void handleInsertText(const QString& text);
+    void setText(const QString& result);
     void autoZoomFontSize(int fontSize=48);
 
     //XXX:后续优化格式化函数
-    void reformatShowExpr(const QString&);
+    void reformatShowExpr(const QString& text);
     void disableSelectText();
 
 signals:
-    void exprCalcMessageDec(const QString&);
-    void exprCalcMessageHex(const QString&);
-    void exprCalcMessageOct(const QString&);
-    void exprCalcMessageBin(const QString&);
-    void exprCalcQuantityDec(const Quantity&);
-    void calculateMode(int );
+    void exprCalcMessageDec(const QString& formatDec);
+    void exprCalcMessageHex(const QString& formatHex);
+    void exprCalcMessageOct(const QString& formatOct);
+    void exprCalcMessageBin(const QString& formatBin);
+    void exprCalcQuantityDec(const Quantity& quantity);
+    void calculateMode(int mode);
     void exprCalcError();
     void exprCalcNan();
 
     void equalPressed();
     void historyChanged( );
     
-    void stageExprFormat(const QString&);
-    void stageQuantity(const Quantity&);
+    void stageExprFormat(const QString& expr);
+    void stageQuantity(const Quantity& quantity);
     void stageChanged();
 
 private:

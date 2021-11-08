@@ -34,13 +34,12 @@ public:
     NumConversion(QWidget* parent = nullptr);
 
 public slots:
-    void showNumFormatConverted(const Quantity&);
+    void showNumFormatConverted(const Quantity& quantity);
     void clearItems();
-    void activateNumConversion(QListWidgetItem*,QListWidgetItem*);
+    void activateNumConversion(QListWidgetItem* current,QListWidgetItem* previous);
 
 signals:
-    void resultSelected(const QString&);
-    void numConvered(int );
+    void numConvered(int currentRow);
     void refreshNumFormatHistory( );
     void refreshNumFormatStage();
 

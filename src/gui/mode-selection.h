@@ -7,7 +7,7 @@ class ModeSelection : public QPushButton
 {
     Q_OBJECT
 public:
-    ModeSelection(Calculator*, QWidget *parent=nullptr);
+    ModeSelection(Calculator* calculator, QWidget *parent=nullptr);
     void initMenu();
 private:
     QMenu* m_menu;

@@ -38,16 +38,16 @@ public slots:
     void setStageResult();
     void setStageErrorMessage();
     void setStageNanMessage();
-    void setHistoryResult(const QString&);
+    void setHistoryResult(const QString& result);
     void NumFormatStageResult();
     void handleStagePageClicked( );
-    void stageFormatChanged(int );
-    void receiveCalculatedExpr(const QString&);
-    void receiveCalculatedQuantity(const Quantity&);
+    void stageFormatChanged(int format);
+    void receiveCalculatedExpr(const QString& expr);
+    void receiveCalculatedQuantity(const Quantity& quantity);
     void clear();
 
 signals:
-    void stageExprSelected(const QString &);
+    void stageExprSelected(const QString &expr);
 
 private:
     Evaluator* m_evaluator;

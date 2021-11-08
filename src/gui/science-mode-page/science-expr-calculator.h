@@ -40,8 +40,8 @@ class ScienceExprCalculator : public ExprCalculator
     Q_OBJECT
 public:
     ScienceExprCalculator(QWidget* parent = nullptr);
-    void setSession(Session*);
-    void setScienceKeysPage(ScienceKeysPage*);
+    void setSession(Session* session);
+    void setScienceKeysPage(ScienceKeysPage* keys);
 
     void handleFunction_10n();
     void handleFunction_Sqrt();
@@ -59,7 +59,7 @@ public:
 
 public slots:
     void scienceExprCalc();
-    void handleFunction_SwitchAngleUnit(int );
+    void handleFunction_SwitchAngleUnit(int angleUnit);
     void handleFunction_FE();
     void handleFunction_Shift();
     void handleFunction_HYP();
@@ -69,10 +69,10 @@ protected slots:
 
 signals:
     void scienceFEChanged();
-    void scienceFEIndexList(QList<int>);
+    void scienceFEIndexList(QList<int> indexList);
 
 protected:
-    void keyPressEvent(QKeyEvent *) override;
+    void keyPressEvent(QKeyEvent *event) override;
     
 private:
     Evaluator* m_evaluator;

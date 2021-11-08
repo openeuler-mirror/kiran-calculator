@@ -41,7 +41,7 @@ public:
     ~ProgrammerModePage();
 
 public slots:
-    void handleProgrammerKeysButtonClicked(Button);
+    void handleProgrammerKeysButtonClicked(Button button);
 
 protected:
     virtual void showEvent(QShowEvent *event) override;

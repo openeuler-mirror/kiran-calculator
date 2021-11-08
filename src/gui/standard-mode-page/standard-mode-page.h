@@ -41,7 +41,7 @@ public:
     ~StandardModePage();
 
 public slots:
-    void handleStandardKeysButtonClicked(Button);
+    void handleStandardKeysButtonClicked(Button button);
 
 protected:
     virtual void showEvent(QShowEvent *event) override;

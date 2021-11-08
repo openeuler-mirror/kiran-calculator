@@ -38,11 +38,11 @@ class ProgrammerExprCalculator : public ExprCalculator
 public:
     ProgrammerExprCalculator(QWidget* parent = nullptr);
 
-    void setSession(Session*);
-    void setProgrammerKeysPage(ProgrammerKeysPage*);
+    void setSession(Session* session);
+    void setProgrammerKeysPage(ProgrammerKeysPage* keys);
 
-    QString AddPrefixForExpr(int, const QString&);
-    bool curposInNumber(int);
+    QString AddPrefixForExpr(int format, const QString& text);
+    bool curposInNumber(int curpos);
     void handleProgrammerFunction_Opposite();
     void handleProgrammerFunction_Backspace();
 
@@ -53,25 +53,25 @@ public slots:
     void handleProgrammerFunction_Lsh();
     void handleProgrammerFunction_Rsh();
 
-    bool isNumberOutOfRange(const QString&);
-    void setText(const QString&);
+    bool isNumberOutOfRange(const QString& text);
+    void setText(const QString& result);
     void programmerExprCalc();
     void autoProgrammerExprCalc();
-    void exprFormatChanged(int);
+    void exprFormatChanged(int format);
     void radixChanged(int basedest);
-    void reformatShowExpr(const QString&);
+    void reformatShowExpr(const QString& text);
     bool judgeInsertPos();  //判断光标位置，禁止在函数名中间插入
-    QString scanAndExec(int, int, const QString&);
+    QString scanAndExec(int previousFormat, int cureentFormat, const QString& text);
 
 protected slots:
     void triggerEnter();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent*) override;
+    virtual void keyPressEvent(QKeyEvent* event) override;
 
 signals:
-    void programmerToNumConversionFormatDec(const QString&);
-    void programmerToNumConversionQuantityDec(const Quantity&);
+    void programmerToNumConversionFormatDec(const QString& formatDec);
+    void programmerToNumConversionQuantityDec(const Quantity& quantity);
     void programmerToNumConversionMessageError();
     void programmerExprIsEmpty();
 

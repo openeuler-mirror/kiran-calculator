@@ -51,7 +51,7 @@ public:
     void initKeyButton();
 
 public slots:
-    void switchKeyborad(int );
+    void switchKeyborad(int mode);
 
 private:
     Ui::Calculator *ui;

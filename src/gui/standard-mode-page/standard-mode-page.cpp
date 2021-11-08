@@ -42,7 +42,7 @@ StandardModePage::StandardModePage(QWidget *parent) :
     ui->standardClearHistory->setEnabled(false);
 
     //键盘按钮点击
-    connect(ui->standardKeysPage, SIGNAL(buttonClicked(Button)),this, SLOT(handleStandardKeysButtonClicked(Button)));
+    connect(ui->standardKeysPage, SIGNAL(buttonClicked(Button )),this, SLOT(handleStandardKeysButtonClicked(Button )));
     //传递当前模式
     connect(ui->standardExprEdit,SIGNAL(calculateMode(int )),ui->standardHistory,SLOT(setCalculateMode(int )));
     //更新历史记录
