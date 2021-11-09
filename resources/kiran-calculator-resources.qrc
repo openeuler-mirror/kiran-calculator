@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>kiran-calculator-themes/black_theme.qss</file>
+        <file>kiran-calculator-images/kc-calculator.png</file>
+        <file>kiran-calculator-images/kc-mode.svg</file>
+    </qresource>
+</RCC>
