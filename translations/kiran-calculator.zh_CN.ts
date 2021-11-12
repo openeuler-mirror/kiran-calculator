@@ -348,13 +348,13 @@
     <name>Calculator</name>
     <message>
         <location filename="../src/gui/calculator.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
         <source>Widget</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
         <location filename="../src/gui/calculator.cpp" line="58"/>
         <source>Standard</source>
         <translation type="unfinished">标准</translation>
@@ -1938,17 +1938,17 @@
 <context>
     <name>ModeSelection</name>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="29"/>
+        <location filename="../src/gui/mode-selection.cpp" line="30"/>
         <source>standard</source>
         <translation type="unfinished">标准</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="30"/>
+        <location filename="../src/gui/mode-selection.cpp" line="31"/>
         <source>science</source>
         <translation type="unfinished">科学</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="31"/>
+        <location filename="../src/gui/mode-selection.cpp" line="32"/>
         <source>programmer</source>
         <translation type="unfinished">程序员</translation>
     </message>
@@ -1972,13 +1972,13 @@
     <name>ProgrammerModePage</name>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="26"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="270"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
         <source>Clear</source>
         <translation type="unfinished">清除</translation>
     </message>
@@ -1986,7 +1986,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="59"/>
+        <location filename="../src/main.cpp" line="60"/>
         <source>Calculator</source>
         <translation type="unfinished">计算器</translation>
     </message>
@@ -1995,13 +1995,13 @@
     <name>ScienceModePage</name>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="222"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
         <source>Clear</source>
         <translation type="unfinished">清除</translation>
     </message>
@@ -2023,13 +2023,13 @@
     <name>StandardModePage</name>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="275"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
+        <location filename="../cmake-build-debug/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
         <source>Clear</source>
         <translation type="unfinished">清除</translation>
     </message>

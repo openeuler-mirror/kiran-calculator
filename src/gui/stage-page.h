@@ -25,7 +25,7 @@
 #include <QMouseEvent>
 #include "general-enum.h"
 
-class Evaluator;
+
 class ProgrammerExprCalculator;
 
 class StagePage : public QPushButton
@@ -50,7 +50,6 @@ signals:
     void stageExprSelected(const QString &expr);
 
 private:
-    Evaluator* m_evaluator;
     ProgrammerExprCalculator* m_programmerExpr;
     QString m_saveExpr;
     Quantity m_saveQuantity;
