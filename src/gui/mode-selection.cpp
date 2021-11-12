@@ -11,6 +11,7 @@ ModeSelection::ModeSelection(Calculator* calculator,QWidget *parent) : QPushButt
     setFocusPolicy(Qt::NoFocus);
     m_calculator = calculator;
     initMenu();
+
     connect(m_standard,&QAction::triggered,m_calculator,
             [=](){
                 m_calculator->switchKeyborad(Calculation_Mode_Standard);});
@@ -44,6 +45,23 @@ void ModeSelection::initMenu()
     m_menu->addAction(m_science);
     m_menu->addAction(m_programmer);
     m_menu->setMinimumWidth(108);
-    setMenu(m_menu);
+
+//    setMenu(m_menu);
 }
 
+void ModeSelection::setPos(ModeSelection* button)
+{
+    auto buttonSzie = button->sizeHint();
+    auto menuSize = m_menu->sizeHint();
+
+    int x = button->rect().center().x() - (menuSize.width()/2);
+    int y = button->rect().bottomLeft().y() + 4;
+
+    KLOG_INFO() << "button->rect().center().x() :" << x;
+    KLOG_INFO() << "button->rect().bottomLeft().y() :" << y;
+
+    connect(this,&ModeSelection::clicked,this,
+            [=](){
+              m_menu->exec(button->mapToGlobal(QPoint(x,y)));}
+            );
+}

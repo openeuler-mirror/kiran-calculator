@@ -9,6 +9,10 @@ class ModeSelection : public QPushButton
 public:
     ModeSelection(Calculator* calculator, QWidget *parent=nullptr);
     void initMenu();
+    void setPos(ModeSelection* button);
+
+    QPoint m_menuPoint;
+
 private:
     QMenu* m_menu;
     QAction* m_standard;

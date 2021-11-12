@@ -24,6 +24,7 @@
 #include <QTranslator>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include <QWidget>
 
 #include "gui/mode-selection.h"
 #include "config.h"
@@ -61,7 +62,6 @@ int main(int argc, char *argv[])
     window.setButtonHints(KiranTitlebarWindow::TitlebarMinimizeButtonHint|KiranTitlebarWindow::TitlebarCloseButtonHint);
     window.setResizeable(false);
 
-
     Calculator calculator;
     auto* mode = new ModeSelection(&calculator);
     mode->setObjectName("modeButton");
@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
 
     auto spaceItemRight = new QSpacerItem(20,20,QSizePolicy::Fixed,QSizePolicy::Minimum);
     window.getTitlebarCustomLayout()->addItem(spaceItemRight);
+
+    mode->setPos(mode);
 
     window.setWindowContentWidget(&calculator);
     window.setContentWrapperMarginBottom(0);
