@@ -26,8 +26,6 @@
 #include "general-enum.h"
 
 
-class ProgrammerExprCalculator;
-
 class StagePage : public QPushButton
 {
     Q_OBJECT
@@ -50,7 +48,6 @@ signals:
     void stageExprSelected(const QString &expr);
 
 private:
-    ProgrammerExprCalculator* m_programmerExpr;
     QString m_saveExpr;
     Quantity m_saveQuantity;
 

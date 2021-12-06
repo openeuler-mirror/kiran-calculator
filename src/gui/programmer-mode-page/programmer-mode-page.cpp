@@ -31,6 +31,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
     ui(new Ui::ProgrammerModePage)
 {
     ui->setupUi(this);
+    ui->programmerExprEdit->autoZoomFontSize(30);
 
     m_programmerSession = new Session();
     ui->programmerExprEdit->setSession(m_programmerSession);

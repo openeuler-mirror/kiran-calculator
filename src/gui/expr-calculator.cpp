@@ -25,6 +25,7 @@
 #include <QClipboard>
 #include <QMenu>
 #include <QDebug>
+#include <qt5-log-i.h>
 ExprCalculator::ExprCalculator(QWidget* parent) : QLineEdit(parent)
 {
     setAttribute(Qt::WA_InputMethodEnabled, false);  //禁止输入法
@@ -260,6 +261,7 @@ void ExprCalculator::handleFunction_Reciprocal()
 void ExprCalculator::insert(const QString &text)
 {
     QLineEdit::insert(text);
+    KLOG_INFO() << "insert" << text;
 }
 
 void ExprCalculator::handleInsertText(const QString &text)
