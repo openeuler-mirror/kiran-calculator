@@ -59,9 +59,9 @@ void StagePage::setHistoryResult(const QString & result)
 
 void StagePage::NumFormatStageResult()
 {
-    m_programmerExpr = new ProgrammerExprCalculator();
+    ProgrammerExprCalculator programmerExprCalculator;
     QString stageExprConverted;
-    stageExprConverted = m_programmerExpr->scanAndExec(Num_Format_Dec,m_currentFormat,m_saveExpr);
+    stageExprConverted = programmerExprCalculator.scanAndExec(Num_Format_Dec,m_currentFormat,m_saveExpr);
 
     QString expr;
     QString reformatExpr;

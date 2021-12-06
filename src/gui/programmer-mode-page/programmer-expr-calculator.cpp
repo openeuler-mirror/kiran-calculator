@@ -308,13 +308,14 @@ void ProgrammerExprCalculator::reformatShowExpr(const QString& text)
         break;
     case Num_Format_Dec:
         reformatExpr = Utils::reformatSeparatorsPro(QString(text).remove(" ").remove(","), 10);
-//        reformatExpr = Utils::reformatSeparators(QString(text).remove(" ").remove(","));
         break;
     case Num_Format_Hex:
         reformatExpr = Utils::reformatSeparatorsPro(QLineEdit::text().remove(" "), 16);
         break;
+    default:
+        reformatExpr = Utils::reformatSeparatorsPro(QString(text).remove(" ").remove(","), 10);
+        break;
     }
-
     setText(reformatExpr);
     autoZoomFontSize(30);
 

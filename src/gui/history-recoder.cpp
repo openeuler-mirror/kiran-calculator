@@ -52,46 +52,65 @@ void HistoryRecoder::setCalculateMode(int mode)
     m_currentMode = mode;
 }
 
+//重新更新历史记录时，要释放之前的内存
 void HistoryRecoder::updateHistory()
 {
+    //注意释放内存时返回到首位
+    if(m_labelExpr != nullptr){
+        // m_labelExpr head ptr position
+        m_labelExpr -=m_lastHistoryCount;
+        m_labelValue -=m_lastHistoryCount;
+        m_vboxlayout -=m_lastHistoryCount;
+        m_historyWidget -=m_lastHistoryCount;
+        m_historyItem -=m_lastHistoryCount;
+
+        delete []m_labelExpr;
+        m_labelExpr == nullptr;
+        delete []m_labelValue;
+        m_labelValue == nullptr;
+        delete []m_vboxlayout;
+        m_vboxlayout == nullptr;
+        delete []m_historyWidget;
+        m_historyWidget == nullptr;
+        delete []m_historyItem;
+        m_historyItem == nullptr;
+    }
+
     m_evaluator = Evaluator::instance();
     m_evaluator->setSession(m_session);
     QList<HistoryEntry> history = Evaluator::instance()->session()->historyToList();
+    m_lastHistoryCount = history.count();
     clear();
     clearSelection();
     QStringList historyList;
     QString expression;
     Quantity value;
 
-    QLabel *labelExpr[history.count()];    //指针数组
-    QLabel *labelValue[history.count()];
-    QVBoxLayout *vboxlayout[history.count()];
-    QWidget *historyWidget[history.count()];
-    QListWidgetItem *historyItem[history.count()];
+
+    //指针数组
+    m_labelExpr = new QLabel[history.count()];
+    m_labelValue = new QLabel[history.count()];
+    m_vboxlayout = new QVBoxLayout[history.count()];
+    m_historyWidget = new QWidget[history.count()];
+    m_historyItem = new QListWidgetItem[history.count()];
 
     for(int i=0; i<history.count();i++)
     {
         expression = history[i].expr();
         value = history[i].result();
-        labelExpr[i] = new QLabel();
         QString labelExprObjectName = "labelExpr_";
         labelExprObjectName.append(QString::number(i));
-        labelExpr[i]->setObjectName(labelExprObjectName);
+        m_labelExpr->setObjectName(labelExprObjectName);
 
-        labelValue[i] = new QLabel();
         QString labelValueObjectName = "labelValue_";
         labelValueObjectName.append(QString::number(i));
-        labelValue[i]->setObjectName(labelValueObjectName);
-
-        vboxlayout[i] = new QVBoxLayout();
-        historyWidget[i] = new QWidget();
-        historyItem[i] = new QListWidgetItem();
+        m_labelValue->setObjectName(labelValueObjectName);
 
         QString reformatExpr;
         if(m_currentMode == Calculation_Mode_Programmer)
         {
-            m_programmerExpr = new ProgrammerExprCalculator();
-            QString expressionConverted = m_programmerExpr->scanAndExec(Num_Format_Dec,m_currentFormat,expression);
+            ProgrammerExprCalculator programmerExprCalculator;
+            QString expressionConverted = programmerExprCalculator.scanAndExec(Num_Format_Dec,m_currentFormat,expression);
 
             switch (m_currentFormat) {
             case Num_Format_Hex:
@@ -108,24 +127,23 @@ void HistoryRecoder::updateHistory()
                 break;
             }
         }
-
-        labelExpr[i]->setWordWrap(true);
+        m_labelExpr->setWordWrap(true);
         if(m_currentMode == Calculation_Mode_Programmer)
-            labelExpr[i]->setText(historyWordWrap((reformatExpr + "="), 24));
+            m_labelExpr->setText(historyWordWrap((reformatExpr + "="), 24));
         else
-            labelExpr[i]->setText(historyWordWrap((Utils::reformatSeparators(expression) + "="), 24));
+            m_labelExpr->setText(historyWordWrap((Utils::reformatSeparators(expression) + "="), 24));
 
-        labelExpr[i]->setStyleSheet("padding-right:4px;color:#919191;font-size:14px;font-family: Noto Sans CJK SC Regular;");
-        labelExpr[i]->setAlignment(Qt::AlignRight);
-        labelExpr[i]->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
-        labelExpr[i]->setFixedWidth(214);
-        labelExpr[i]->setMinimumHeight(18);
-        labelExpr[i]->adjustSize();
-        vboxlayout[i]->addWidget(labelExpr[i]);
+        m_labelExpr->setStyleSheet("padding-right:4px;color:#919191;font-size:14px;font-family: Noto Sans CJK SC Regular;");
+        m_labelExpr->setAlignment(Qt::AlignRight);
+        m_labelExpr->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
+        m_labelExpr->setFixedWidth(214);
+        m_labelExpr->setMinimumHeight(18);
+        m_labelExpr->adjustSize();
+        m_vboxlayout->addWidget(m_labelExpr);
 
         if(!value.isNan())
         {
-            labelValue[i]->setWordWrap(true);
+            m_labelValue->setWordWrap(true);
             if(m_currentMode == Calculation_Mode_Programmer)
             {
                 QString reformatValue;
@@ -143,62 +161,67 @@ void HistoryRecoder::updateHistory()
                     reformatValue = Utils::reformatSeparatorsPro(DMath::format(value, Quantity::Format::Complement() + Quantity::Format::Binary() + Quantity::Format::Fixed()).remove("0b"), 2);
                     break;
                 }
-                labelValue[i]->setText(historyWordWrap(reformatValue.replace("-",QString::fromUtf8("−")), 16));
+                m_labelValue->setText(historyWordWrap(reformatValue.replace("-",QString::fromUtf8("−")), 16));
             }
             else if(m_currentMode == Calculation_Mode_Science)
             {
                 if(m_historyFEIndex.contains(i))
                 {
-                    labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
+                    m_labelValue->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
                 }
                 else
                 {
                     QString scienceValueLength = NumberFormatter::format(value);
                     if(scienceValueLength.remove(".").length() > 24)
-                        labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
+                        m_labelValue->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
                     else
-                        labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
+                        m_labelValue->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
                 }
             }
             else
             {
                 QString standardValueLength =  NumberFormatter::format(value);
                 if(standardValueLength.remove(".").length() > 16)
-                    labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
+                    m_labelValue->setText(historyWordWrap(Utils::reformatSeparators(DMath::format(value, Quantity::Format::Scientific())), 16));
                 else
-                    labelValue[i]->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
+                    m_labelValue->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
 
             }
 
-            labelValue[i]->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
-            labelValue[i]->setAlignment(Qt::AlignRight);
-            labelValue[i]->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
-            labelValue[i]->setFixedWidth(214);
-            labelValue[i]->setMinimumHeight(30);
-            labelValue[i]->adjustSize();
-            vboxlayout[i]->addWidget(labelValue[i]);
+            m_labelValue->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
+            m_labelValue->setAlignment(Qt::AlignRight);
+            m_labelValue->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
+            m_labelValue->setFixedWidth(214);
+            m_labelValue->setMinimumHeight(30);
+            m_labelValue->adjustSize();
+            m_vboxlayout->addWidget(m_labelValue);
 
         }
-        vboxlayout[i]->setMargin(0);
-        vboxlayout[i]->setSpacing(4);
+        m_vboxlayout->setMargin(0);
+        m_vboxlayout->setSpacing(4);
 
-        historyWidget[i]->setLayout(vboxlayout[i]);
+        m_historyWidget->setLayout(m_vboxlayout);
 
-        historyWidget[i]->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
-        historyWidget[i]->setFixedWidth(214);
-        historyWidget[i]->setMinimumHeight(54);
+        m_historyWidget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
+        m_historyWidget->setFixedWidth(214);
+        m_historyWidget->setMinimumHeight(54);
 
-        historyWidget[i]->resize(204,labelExpr[i]->rect().height() + labelValue[i]->rect().height()
-                                 + vboxlayout[i]->spacing());
+        m_historyWidget->resize(204,m_labelExpr->rect().height() + m_labelValue->rect().height()
+                                 + m_vboxlayout->spacing());
 
-        historyItem[i]->setSizeHint(QSize(214,
-                                          labelExpr[i]->rect().height() + labelValue[i]->rect().height()
-                                          + vboxlayout[i]->spacing()));
+        m_historyItem->setSizeHint(QSize(214,
+                                          m_labelExpr->rect().height() + m_labelValue->rect().height()
+                                          + m_vboxlayout->spacing()));
 
-        QListWidget::addItem(historyItem[i]);
-        QListWidget::setItemWidget(historyItem[i],historyWidget[i]);
+        QListWidget::addItem(m_historyItem);
+        QListWidget::setItemWidget(m_historyItem,m_historyWidget);
+
+        m_labelExpr++;
+        m_labelValue++;
+        m_vboxlayout++;
+        m_historyWidget++;
+        m_historyItem++;
     }
-
     QListWidget::scrollToBottom();
 }
 

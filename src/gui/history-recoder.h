@@ -29,7 +29,8 @@ class QListWidgetItem;
 class HistoryEntry;
 class Evaluator;
 class Session;
-class ProgrammerExprCalculator;
+class QLabel;
+class QVBoxLayout;
 
 class HistoryRecoder : public QListWidget
 {
@@ -63,9 +64,15 @@ signals:
 private:
     Session* m_session;
     Evaluator* m_evaluator;
-    ProgrammerExprCalculator* m_programmerExpr;
     QList<int> m_historyFEIndex;
 
+    QLabel *m_labelExpr = nullptr;
+    QLabel *m_labelValue = nullptr;
+    QVBoxLayout *m_vboxlayout = nullptr;
+    QWidget *m_historyWidget = nullptr;
+    QListWidgetItem *m_historyItem = nullptr;
+
+    int m_lastHistoryCount = 0;
     int m_currentFormat = Num_Format_Dec;
     int m_currentMode = Calculation_Mode_Standard;
     bool m_FE = false; //科学计算法模式默认关闭
