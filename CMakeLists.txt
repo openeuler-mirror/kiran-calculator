@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 if(${CMAKE_C_COMPILER_VERSION} VERSION_LESS 5.1.0)
-    set(CMAKE_C_FLAGS "-std=c99")
+    set(CMAKE_C_FLAGS "-std=gnu99")
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
