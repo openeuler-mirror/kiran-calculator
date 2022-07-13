@@ -28,9 +28,7 @@
 #include "core/evaluator.h"
 #include "core/settings.h"
 #include "general-enum.h"
-
 #include <QMessageBox>
-#include <QDebug>
 #include <qt5-log-i.h>
 
 Calculator::Calculator(QWidget *parent)
@@ -42,6 +40,9 @@ Calculator::Calculator(QWidget *parent)
     m_evaluator->initializeBuiltInVariables();
 
     ui->stackedWidget->setCurrentIndex(Calculation_Mode_Standard);
+
+    loadStylesheet(Kiran::StylePalette::instance()->paletteType());
+    QObject::connect(Kiran::StylePalette::instance(), &Kiran::StylePalette::themeChanged, this,&Calculator::loadStylesheet);
 }
 
 Calculator::~Calculator()
@@ -69,5 +70,28 @@ void Calculator::switchKeyborad(int mode)
     }
 }
 
-
-
+void Calculator::loadStylesheet(Kiran::PaletteType paletteType)
+{
+    QString qssPath;
+    switch (paletteType)
+    {
+    case Kiran::PALETTE_LIGHT:
+        qssPath= ":/kiran-calculator-themes/light_theme.qss";
+        break ;
+    case Kiran::PALETTE_DARK:
+        qssPath= ":/kiran-calculator-themes/black_theme.qss";
+        break ;
+    default:
+        break ;
+    }
+    QFile file(qssPath);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString style = file.readAll();
+        this->setStyleSheet(style);
+    }
+    else
+    {
+        KLOG_INFO() << "load stylesheet failed";
+    }
+}
