@@ -20,6 +20,7 @@
 #include "num-conversion.h"
 #include <QPainter>
 #include <QDebug>
+#include <style-palette.h>
 
 const int NAME_WIDTH = 64;
 NumConversionDelegate::NumConversionDelegate(QObject *parent) : QStyledItemDelegate(parent)
@@ -37,8 +38,16 @@ void NumConversionDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     QRect numRect(option.rect.x() + NAME_WIDTH + 4, option.rect.y(), 268, 24);
 
     QColor  fontColor, hoverColor, selectedColor;
-    fontColor = QColor("#FFFFFF");
-    hoverColor = QColor(255,255,255);
+    if(Kiran::StylePalette::instance()->paletteType() ==  Kiran::PALETTE_DARK)
+    {
+        fontColor = QColor("#FFFFFF");
+        hoverColor = QColor(255,255,255);
+    }
+    else
+    {
+        fontColor = QColor("#222222");
+        hoverColor = QColor(0,0,0);
+    }
     hoverColor.setAlphaF(0.3);
     selectedColor = QColor("#2eb3ff");
 
