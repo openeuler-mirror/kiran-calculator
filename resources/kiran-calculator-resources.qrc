@@ -2,7 +2,14 @@
     <qresource prefix="/">
         <file>kiran-calculator-themes/black_theme.qss</file>
         <file>kiran-calculator-themes/light_theme.qss</file>
-        <file>kiran-calculator-images/kc-calculator.png</file>
+        <file>kiran-calculator-images/kc-calculator-16.png</file>
+        <file>kiran-calculator-images/kc-calculator-22.png</file>
+        <file>kiran-calculator-images/kc-calculator-24.png</file>
+        <file>kiran-calculator-images/kc-calculator-32.png</file>
+        <file>kiran-calculator-images/kc-calculator-48.png</file>
+        <file>kiran-calculator-images/kc-calculator-64.png</file>
+        <file>kiran-calculator-images/kc-calculator-96.png</file>
+        <file>kiran-calculator-images/kc-calculator-128.png</file>
         <file>kiran-calculator-images/kc-mode.svg</file>
     </qresource>
 </RCC>

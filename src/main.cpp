@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     }
     KiranTitlebarWindow window;
     window.setTitle(QObject::tr("Calculator"));
-    window.setIcon(QIcon(CALCULATOR_ICON_PATH "/kc-calculator.png"));
+    window.setIcon(QIcon(CALCULATOR_ICON_PATH "/16x16/apps/kc-calculator.png"));
     window.setButtonHints(KiranTitlebarWindow::TitlebarMinimizeButtonHint | KiranTitlebarWindow::TitlebarCloseButtonHint);
     window.setResizeable(false);
 
