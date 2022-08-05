@@ -58,14 +58,23 @@ target_link_libraries(kiran-calculator PRIVATE
 
 include(GNUInstallDirs)
 # 安装
-set(CALCULATOR_ICON_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/24x24/apps)
+set(CALCULATOR_ICON_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor)
 set(INSTALL_DATADIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR})
 set(TRANSLATION_DIR_INSTALL_PATH ${INSTALL_DATADIR}/${PROJECT_NAME}/translations)
 configure_file(${CMAKE_SOURCE_DIR}/data/config.h.in ${CMAKE_BINARY_DIR}/config.h @ONLY)
 configure_file(${CMAKE_SOURCE_DIR}/data/kiran-calculator.desktop.in ${CMAKE_BINARY_DIR}/kiran-calculator.desktop @ONLY)
 
 install(FILES ${CMAKE_BINARY_DIR}/kiran-calculator.desktop DESTINATION ${INSTALL_DATADIR}/applications)
-install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH})
+
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-16.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/16x16/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-22.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/22x22/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-24.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/24x24/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-32.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/32x32/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-48.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/48x48/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-64.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/64x64/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-96.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/96x96/apps RENAME kc-calculator.png)
+install(FILES ${CMAKE_SOURCE_DIR}/resources/kiran-calculator-images/kc-calculator-128.png DESTINATION ${CALCULATOR_ICON_INSTALL_PATH}/128x128/apps RENAME kc-calculator.png)
+
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 install(FILES ${QM_FILES} DESTINATION ${TRANSLATION_DIR_INSTALL_PATH})
 
