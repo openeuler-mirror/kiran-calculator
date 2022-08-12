@@ -14,29 +14,29 @@
 * You should have received a copy of the GNU General Public License
 * along with this program; If not, see <http: //www.gnu.org/licenses/>.
 *
-* Author:     luoqing <luoqing@kylinos.com.cn>
+* Author:     luoqing <luoqing@kylinsec.com.cn>
 */
 
 QWidget#Calculator{
-    background-color:#222222;
+    background-color:#ffffff;
 }
 
-HistoryRecoder::Item:hover{background:rgba(255,255,255,0.3); }
-HistoryRecoder::Item:selected{background:rgba(255,255,255,0.1); }
+HistoryRecoder::Item:hover{background:rgba(0,0,0,0.3); }
+HistoryRecoder::Item:selected{background:rgba(0,0,0,0.1); }
 HistoryRecoder{
-    background:#222222;
+    background:#ffffff;
     border-radius:0px;
 }
 
-ModeList::Item:hover{ background:#393939;}
+ModeList::Item:hover{ background:#cccccc;}
 ModeList::Item:selected{background:#2eb3ff; }
 ModeList::Item{
     height:30px;
 }
 
 ModeList{
-    color:#FFFFFF;
-    background-color:#222222;
+    color:#222222;
+    background-color:#ffffff;
     border-radius:0px;
     font:14px;
     font-family: "Noto Sans CJK SC Regular";
@@ -45,20 +45,20 @@ ModeList{
     border-right-width: 1px;
     border-bottom-width: 1px;
     border-style: solid;
-    border-color: #393939;
+    border-color: #e8e8e8;
 }
 
 NumConversion{
-    background-color:#222222;
-    color:#FFFFFF;
+    background-color:#ffffff;
+    color:#222222;
     border:0px;
 }
 
-NumConversion::Item:hover{ background-color:rgba(255,255,255,0.3);}
+NumConversion::Item:hover{ background-color:rgba(0,0,0,0.3);}
 
 QLineEdit{
-    background-color: #222222;
-    color:#FFFFFF;
+    background-color: #ffffff;
+    color:#222222;
     border-radius:0px;
     /*
     font:48px;
@@ -89,14 +89,14 @@ QPushButton#btn_d:!hover:!pressed:!disabled,
 QPushButton#btn_e:!hover:!pressed:!disabled,
 QPushButton#btn_f:!hover:!pressed:!disabled
 {
-    background-color:#393939;
+    background-color:#cccccc;
 }
 
 
 QPushButton#btn_shift:!hover:!pressed:!checked,
 QPushButton#btn_HYP:!hover:!pressed:!checked,
 QPushButton#btn_FE:!hover:!pressed:!checked{
-    background-color:#2d2d2d;
+    background-color:#f4f4f4;
 }
 
 QPushButton#btn_DEG,
@@ -107,6 +107,10 @@ QPushButton#btn_FE
     height:24px;
 }
 
+QPushButton#btn_equal
+{
+    color:#ffffff;
+}
 QPushButton#btn_equal:!hover:!pressed{
     border:0px;
     background-color:#2eb3ff;
@@ -114,15 +118,15 @@ QPushButton#btn_equal:!hover:!pressed{
 QPushButton#btn_equal:hover{background-color:#77ceff;}
 QPushButton#btn_equal:pressed{background-color:#2eb3ff;}
 
-QPushButton:hover { background-color: rgba(255,255,255,0.3);}
-QPushButton:pressed{background-color: rgba(255,255,255,0.2);}
+QPushButton:hover { background-color: rgba(0,0,0,0.3);}
+QPushButton:pressed{background-color: rgba(0,0,0,0.1);}
 QPushButton:checked {background-color: #2eb3ff;}
 
 StandardKeysPage >  QPushButton
 {
     border-radius:0px;
-    color:#FFFFFF;
-    background-color:#2d2d2d;
+    color:#222222;
+    background-color:#f4f4f4;
     height:60px;
     width:80px;
     font:14px;
@@ -138,8 +142,8 @@ ProgrammerKeysPage > QPushButton,
 ScienceKeysPage > QPushButton
 {
     border-radius:0px;
-    color:#FFFFFF;
-    background-color:#2d2d2d;
+    color:#222222;
+    background-color:#f4f4f4;
     height:64px;
     width:48px;
     font-size:14px;
@@ -150,7 +154,7 @@ ScienceKeysPage > QPushButton
 
 
 StagePage{
-    background-color: #222222;
+    background-color: #ffffff;
     border-radius:0px;
     color:#919191;
     text-align: right;
@@ -167,26 +171,26 @@ StagePage#programmerStagePage{
 }
 
 QLabel#modeLabel{
-    background-color:#393939;
-    color:#FFFFFF;
+    background-color:#f4f4f4;
+    color:#222222;
     font:14px;
     font-family: "Noto Sans CJK SC Regular";
     border-radius:0px;
 }
 QLabel#historyLabel{
-    background-color:#222222;
-    color:#FFFFFF;
+    background-color:#ffffff;
+    color:#222222;
     border-radius:0px
 }
 
 QLabel#modeListBlank{
-    background-color: #222222;
+    background-color: #ffffff;
     border-top-width: 1px;
     border-left-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 0px;
     border-style: solid;
-    border-color: #393939;
+    border-color: #e8e8e8;
 }
 
 QPushButton#standardClearHistory,
@@ -194,8 +198,8 @@ QPushButton#scienceClearHistory,
 QPushButton#programmerClearHistory
 {
     border-radius:2px;
-    background-color:#393939;
-    color:#FFFFFF;
+    background-color:#cccccc;
+    color:#222222;
     font:14px;
     font-family: "Noto Sans CJK SC Regular";
 }
@@ -211,14 +215,14 @@ QPushButton#standardClearHistory:hover:!disabled,
 QPushButton#scienceClearHistory:hover:!disabled,
 QPushButton#programmerClearHistory:hover:!disabled
 {
-    background-color:rgba(255,255,255,0.3);
+    background-color:rgba(0,0,0,0.3);
 }
 
 QPushButton#standardClearHistory:pressed:!disabled,
 QPushButton#scienceClearHistory:pressed:!disabled,
 QPushButton#programmerClearHistory:pressed:!disabled
 {
-    background-color:rgba(255,255,255,0.1);
+    background-color:rgba(0,0,0,0.1);
 }
 
 QPushButton#drawerButton{

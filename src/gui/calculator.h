@@ -27,6 +27,7 @@
 
 #include "standard-mode-page/standard-keys-page.h"
 #include "keys-page.h"
+#include <style-palette.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calculator; }
@@ -52,6 +53,7 @@ public:
 
 public slots:
     void switchKeyborad(int mode);
+    void loadStylesheet(Kiran::PaletteType paletteType);
 
 private:
     Ui::Calculator *ui;

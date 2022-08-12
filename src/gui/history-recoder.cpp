@@ -25,21 +25,22 @@
 #include "programmer-mode-page/programmer-expr-calculator.h"
 #include "utils.h"
 
-#include <QDebug>
 #include <QListWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMouseEvent>
 #include <QEvent>
 #include <QDesktopWidget>
+#include <style-palette.h>
 
 HistoryRecoder::HistoryRecoder(QWidget *parent) : QListWidget(parent)
 {
-    connect(this, SIGNAL(itemClicked(QListWidgetItem *)),this,
-            SLOT(handleItem(QListWidgetItem *)));
-
     setWordWrap(true);
     adjustSize();
+
+    connect(this, SIGNAL(itemClicked(QListWidgetItem *)),this,
+            SLOT(handleItem(QListWidgetItem *)));
+    connect(Kiran::StylePalette::instance(),&Kiran::StylePalette::themeChanged,this,&HistoryRecoder::updateHistory);
 }
 
 void HistoryRecoder::setSession(Session *session)
@@ -53,6 +54,7 @@ void HistoryRecoder::setCalculateMode(int mode)
 }
 
 //重新更新历史记录时，要释放之前的内存
+//TODO:优化历史代码
 void HistoryRecoder::updateHistory()
 {
     //注意释放内存时返回到首位
@@ -188,7 +190,10 @@ void HistoryRecoder::updateHistory()
 
             }
 
-            m_labelValue->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
+            if(Kiran::StylePalette::instance()->paletteType() == Kiran::PALETTE_DARK)
+                m_labelValue->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
+            else
+                m_labelValue->setStyleSheet("color:#222222;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
             m_labelValue->setAlignment(Qt::AlignRight);
             m_labelValue->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
             m_labelValue->setFixedWidth(214);
@@ -307,8 +312,6 @@ QItemSelectionModel::SelectionFlags HistoryRecoder::selectionCommand(const QMode
 
 void HistoryRecoder::handleItem(QListWidgetItem *item)
 {
-    qDebug() << "handleItem_row:";
-    qDebug() << QListWidget::row(item);
 
     auto widget = itemWidget(item);
     QString labelValueName = "labelValue_";
