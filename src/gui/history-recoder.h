@@ -66,13 +66,12 @@ private:
     Evaluator* m_evaluator;
     QList<int> m_historyFEIndex;
 
-    QLabel *m_labelExpr = nullptr;
-    QLabel *m_labelValue = nullptr;
-    QVBoxLayout *m_vboxlayout = nullptr;
-    QWidget *m_historyWidget = nullptr;
-    QListWidgetItem *m_historyItem = nullptr;
+    QList<QLabel *> m_labelExprList;
+    QList<QLabel *> m_labelValueList;
+    QList<QVBoxLayout *> m_vboxlayoutList;
+    QList<QWidget *>m_historyWidgetList;
+    QList<QListWidgetItem *>m_historyItemList;
 
-    int m_lastHistoryCount = 0;
     int m_currentFormat = Num_Format_Dec;
     int m_currentMode = Calculation_Mode_Standard;
     bool m_FE = false; //科学计算法模式默认关闭
