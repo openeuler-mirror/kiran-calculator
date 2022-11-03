@@ -76,6 +76,7 @@ ScienceModePage::ScienceModePage(QWidget *parent) :
 ScienceModePage::~ScienceModePage()
 {
     delete ui;
+    delete m_scienceSession;
 }
 
 void ScienceModePage::showEvent(QShowEvent *event)
