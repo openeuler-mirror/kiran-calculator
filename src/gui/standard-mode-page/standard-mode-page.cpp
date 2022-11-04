@@ -127,4 +127,5 @@ void StandardModePage::showEvent(QShowEvent *event)
 StandardModePage::~StandardModePage()
 {
     delete ui;
+    delete m_standardSession;
 }

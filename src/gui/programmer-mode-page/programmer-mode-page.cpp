@@ -94,6 +94,7 @@ ProgrammerModePage::ProgrammerModePage(QWidget *parent) :
 ProgrammerModePage::~ProgrammerModePage()
 {
     delete ui;
+    delete m_programmerSession;
 }
 
 void ProgrammerModePage::handleProgrammerKeysButtonClicked(Button button)
