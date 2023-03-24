@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
 <context>
     <name>Book</name>
     <message>
@@ -86,7 +84,7 @@
     <message>
         <location filename="../src/core/book.cpp" line="98"/>
         <location filename="../src/core/book.cpp" line="137"/>
-        <source>Ohm&apos;s Law</source>
+        <source>Ohm's Law</source>
         <translation type="unfinished">欧姆定律། </translation>
     </message>
     <message>
@@ -283,12 +281,12 @@
     </message>
     <message>
         <location filename="../src/core/book.cpp" line="348"/>
-        <source>outer conductor&apos;s inner diameter</source>
+        <source>outer conductor's inner diameter</source>
         <translation type="unfinished">ཕྱི་འི་འདྲེན་གཟུགས་ཚངས་ཐིག་ནང་མ། </translation>
     </message>
     <message>
         <location filename="../src/core/book.cpp" line="349"/>
-        <source>inner conductor&apos;s outer diameter</source>
+        <source>inner conductor's outer diameter</source>
         <translation type="unfinished">ནང་དངོས་གཟུགས་ཕུད་ཞེང་ཁ། </translation>
     </message>
     <message>
@@ -348,26 +346,24 @@
     <name>Calculator</name>
     <message>
         <location filename="../src/gui/calculator.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
         <source>Widget</source>
         <translation type="unfinished">ཚོད་འཛིན་བྱ་བ། </translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
         <location filename="../src/gui/calculator.cpp" line="59"/>
         <source>Standard</source>
-        <translation type="unfinished">ཚད་གཞི། </translation>
+        <translation>ཚད་གཞི། </translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.cpp" line="64"/>
         <source>Science</source>
-        <translation type="unfinished">ཚན་རིག། </translation>
+        <translation>ཚན་རིག། </translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.cpp" line="69"/>
         <source>Programmer</source>
-        <translation type="unfinished">程序员། </translation>
+        <translation>程序员། </translation>
     </message>
 </context>
 <context>
@@ -379,12 +375,12 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="562"/>
-        <source>Archimedes&apos; constant Pi</source>
+        <source>Archimedes' constant Pi</source>
         <translation type="unfinished">阿基米德རྒྱུན་གྲངས་སྒོར་མཐའི་གྲངས་ཚད། </translation>
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="563"/>
-        <source>Euler&apos;s number</source>
+        <source>Euler's number</source>
         <translation type="unfinished">ཡོ་རོབ་དང་ལྷ་གྲངས། </translation>
     </message>
     <message>
@@ -404,7 +400,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="570"/>
-        <source>Dirac&apos;s Constant</source>
+        <source>Dirac's Constant</source>
         <translation type="unfinished">狄拉克རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -424,7 +420,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="574"/>
-        <source>Planck&apos;s Constant</source>
+        <source>Planck's Constant</source>
         <translation type="unfinished">普朗克རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -454,7 +450,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="584"/>
-        <source>Coulomb&apos;s Constant</source>
+        <source>Coulomb's Constant</source>
         <translation type="unfinished">ཁུ་ལུམ་རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -564,7 +560,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="612"/>
-        <source>Avogadro&apos;s Number</source>
+        <source>Avogadro's Number</source>
         <translation type="unfinished">阿伏伽德罗འི་ཁ་པར་ཨང་གྲངས། </translation>
     </message>
     <message>
@@ -1228,13 +1224,13 @@
     <message>
         <location filename="../src/core/evaluator.cpp" line="90"/>
         <location filename="../src/core/evaluator.cpp" line="154"/>
-        <source>underflow - tiny result is out of SpeedCrunch&apos;s number range</source>
+        <source>underflow - tiny result is out of SpeedCrunch's number range</source>
         <translation type="unfinished">འོག་ཏུ་མཐོང། - ཕྲ་མོ་འི་འབྲས་བུ་ལས་བརྒལ་བ་འི། SpeedCrunchཨང་ཀི་འི་ཁྱབ་ཁོངས། </translation>
     </message>
     <message>
         <location filename="../src/core/evaluator.cpp" line="94"/>
         <location filename="../src/core/evaluator.cpp" line="150"/>
-        <source>overflow - huge result is out of SpeedCrunch&apos;s number range</source>
+        <source>overflow - huge result is out of SpeedCrunch's number range</source>
         <translation type="unfinished">འཕྱུར་བ། - འབྲས་བུ་ཧ་ཅང་ཆེན་པོ་ལས་བརྒལ་བ་SpeedCrunchཨང་ཀི་འི་ཁྱབ་ཁོངས། </translation>
     </message>
     <message>
@@ -1940,47 +1936,30 @@
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="33"/>
         <source>standard</source>
-        <translation type="unfinished">ཚད་གཞི། </translation>
+        <translation>ཚད་གཞི། </translation>
     </message>
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="34"/>
         <source>science</source>
-        <translation type="unfinished">ཚན་རིག། </translation>
+        <translation>ཚན་རིག། </translation>
     </message>
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="35"/>
         <source>programmer</source>
-        <translation type="unfinished">程序员། </translation>
-    </message>
-</context>
-<context>
-    <name>ModeSwitcherPage</name>
-    <message>
-        <source>        Standard</source>
-        <translation type="obsolete">ཚད་གཞི། </translation>
-    </message>
-    <message>
-        <source>        Science</source>
-        <translation type="obsolete">ཚན་རིག། </translation>
-    </message>
-    <message>
-        <source>        Programmer</source>
-        <translation type="obsolete">程序员། </translation>
+        <translation>程序员། </translation>
     </message>
 </context>
 <context>
     <name>ProgrammerModePage</name>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="26"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="270"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
         <source>Clear</source>
-        <translation type="unfinished">གསལ་པོ་ར། </translation>
+        <translation>གསལ་པོ་ར། </translation>
     </message>
 </context>
 <context>
@@ -1988,22 +1967,20 @@
     <message>
         <location filename="../src/main.cpp" line="43"/>
         <source>Calculator</source>
-        <translation type="unfinished">རྩི་ཆས། </translation>
+        <translation>རྩི་ཆས། </translation>
     </message>
 </context>
 <context>
     <name>ScienceModePage</name>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="222"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
         <source>Clear</source>
-        <translation type="unfinished">གསལ་པོ་ར། </translation>
+        <translation>གསལ་པོ་ར། </translation>
     </message>
 </context>
 <context>
@@ -2011,27 +1988,25 @@
     <message>
         <location filename="../src/gui/stage-page.cpp" line="111"/>
         <source>Expression error</source>
-        <translation type="unfinished">表达式ནོར་འཁྲུལ། </translation>
+        <translation>表达式ནོར་འཁྲུལ། </translation>
     </message>
     <message>
         <location filename="../src/gui/stage-page.cpp" line="118"/>
         <source>The result is undefined</source>
-        <translation type="unfinished">འབྲས་བུ་མེད་པའི་མཚན་ཉིད། </translation>
+        <translation>འབྲས་བུ་མེད་པའི་མཚན་ཉིད། </translation>
     </message>
 </context>
 <context>
     <name>StandardModePage</name>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="275"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
         <source>Clear</source>
-        <translation type="unfinished">གསལ་པོ་ར། </translation>
+        <translation>གསལ་པོ་ར། </translation>
     </message>
 </context>
 </TS>
