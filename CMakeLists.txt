@@ -27,7 +27,7 @@ pkg_search_module(KIRAN_STYLE_HELPER REQUIRED kiran-style-helper)
 file(GLOB TS_FILES translations/*.ts)
 foreach(TS_FILE ${TS_FILES})
     message(STATUS "TS_FILE is ${TS_FILE}")
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} /home/wangyucheng/workspace/kiran-calculator/translations/kiran-calculator.bo_CN.ts ${TS_FILE})
+    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILE})
 endforeach()
 
 file(GLOB_RECURSE SRC "src/*.cpp" "src/*.c" "src/*.h" "src/*.ui")

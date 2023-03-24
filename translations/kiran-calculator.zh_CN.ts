@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Book</name>
     <message>
@@ -348,26 +348,24 @@
     <name>Calculator</name>
     <message>
         <location filename="../src/gui/calculator.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
         <source>Widget</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
         <location filename="../src/gui/calculator.cpp" line="59"/>
         <source>Standard</source>
-        <translation type="unfinished">标准</translation>
+        <translation>标准</translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.cpp" line="64"/>
         <source>Science</source>
-        <translation type="unfinished">科学</translation>
+        <translation>科学</translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.cpp" line="69"/>
         <source>Programmer</source>
-        <translation type="unfinished">程序员</translation>
+        <translation>程序员</translation>
     </message>
 </context>
 <context>
@@ -1940,47 +1938,30 @@
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="33"/>
         <source>standard</source>
-        <translation type="unfinished">标准</translation>
+        <translation>标准</translation>
     </message>
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="34"/>
         <source>science</source>
-        <translation type="unfinished">科学</translation>
+        <translation>科学</translation>
     </message>
     <message>
         <location filename="../src/gui/mode-selection.cpp" line="35"/>
         <source>programmer</source>
-        <translation type="unfinished">程序员</translation>
-    </message>
-</context>
-<context>
-    <name>ModeSwitcherPage</name>
-    <message>
-        <source>        Standard</source>
-        <translation type="obsolete">        标准</translation>
-    </message>
-    <message>
-        <source>        Science</source>
-        <translation type="obsolete">        科学</translation>
-    </message>
-    <message>
-        <source>        Programmer</source>
-        <translation type="obsolete">        程序员</translation>
+        <translation>程序员</translation>
     </message>
 </context>
 <context>
     <name>ProgrammerModePage</name>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="26"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="270"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
         <source>Clear</source>
-        <translation type="unfinished">清除</translation>
+        <translation>清除</translation>
     </message>
 </context>
 <context>
@@ -1988,22 +1969,20 @@
     <message>
         <location filename="../src/main.cpp" line="43"/>
         <source>Calculator</source>
-        <translation type="unfinished">计算器</translation>
+        <translation>计算器</translation>
     </message>
 </context>
 <context>
     <name>ScienceModePage</name>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="222"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
         <source>Clear</source>
-        <translation type="unfinished">清除</translation>
+        <translation>清除</translation>
     </message>
 </context>
 <context>
@@ -2011,27 +1990,25 @@
     <message>
         <location filename="../src/gui/stage-page.cpp" line="111"/>
         <source>Expression error</source>
-        <translation type="unfinished">表达式错误</translation>
+        <translation>表达式错误</translation>
     </message>
     <message>
         <location filename="../src/gui/stage-page.cpp" line="118"/>
         <source>The result is undefined</source>
-        <translation type="unfinished">结果无定义</translation>
+        <translation>结果无定义</translation>
     </message>
 </context>
 <context>
     <name>StandardModePage</name>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="32"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="275"/>
-        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
         <source>Clear</source>
-        <translation type="unfinished">清除</translation>
+        <translation>清除</translation>
     </message>
 </context>
 </TS>
