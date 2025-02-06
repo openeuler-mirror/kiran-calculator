@@ -19,7 +19,7 @@ find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(KIRAN_WIDGETS_QT5 REQUIRED kiranwidgets-qt5)
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
-pkg_search_module(KIRAN_STYLE_HELPER REQUIRED kiran-style-helper)
+pkg_search_module(KIRAN_INTEGRATION_THEME REQUIRED kiran-integration-theme)
 
 #翻译文件
 # set(TS_FILES "translations/kiran-calculator.zh_CN.ts")
@@ -51,14 +51,14 @@ target_include_directories(kiran-calculator PRIVATE
         ${CMAKE_BINARY_DIR}
         ${KIRAN_WIDGETS_QT5_INCLUDE_DIRS}
         ${KLOG_QT5_INCLUDE_DIRS}
-        ${KIRAN_STYLE_HELPER_INCLUDE_DIRS}
+        ${KIRAN_INTEGRATION_THEME_INCLUDE_DIRS}
         )
 target_link_libraries(kiran-calculator PRIVATE
         Qt5::Widgets
         kiranwidgets-qt5
         ${KIRAN_WIDGETS_QT5_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
-        ${KIRAN_STYLE_HELPER_LIBRARIES}
+        ${KIRAN_INTEGRATION_THEME_LIBRARIES}
         )
 
 include(GNUInstallDirs)

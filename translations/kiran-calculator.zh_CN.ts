@@ -348,11 +348,13 @@
     <name>Calculator</name>
     <message>
         <location filename="../src/gui/calculator.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
         <source>Widget</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
         <location filename="../src/gui/calculator.cpp" line="59"/>
         <source>Standard</source>
         <translation>标准</translation>
@@ -1936,17 +1938,17 @@
 <context>
     <name>ModeSelection</name>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="33"/>
+        <location filename="../src/gui/mode-selection.cpp" line="35"/>
         <source>standard</source>
         <translation>标准</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="34"/>
+        <location filename="../src/gui/mode-selection.cpp" line="36"/>
         <source>science</source>
         <translation>科学</translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="35"/>
+        <location filename="../src/gui/mode-selection.cpp" line="37"/>
         <source>programmer</source>
         <translation>程序员</translation>
     </message>
@@ -1955,11 +1957,13 @@
     <name>ProgrammerModePage</name>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="26"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="270"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -1976,11 +1980,13 @@
     <name>ScienceModePage</name>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="222"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -2002,11 +2008,13 @@
     <name>StandardModePage</name>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="275"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>

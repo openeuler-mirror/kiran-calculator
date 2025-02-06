@@ -31,7 +31,8 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QDesktopWidget>
-#include <style-palette.h>
+#include <palette.h>
+#include <style-helper.h>
 
 HistoryRecoder::HistoryRecoder(QWidget *parent) : QListWidget(parent)
 {
@@ -40,7 +41,8 @@ HistoryRecoder::HistoryRecoder(QWidget *parent) : QListWidget(parent)
 
     connect(this, SIGNAL(itemClicked(QListWidgetItem *)),this,
             SLOT(handleItem(QListWidgetItem *)));
-    connect(Kiran::StylePalette::instance(),&Kiran::StylePalette::themeChanged,this,&HistoryRecoder::updateHistory);
+    auto palette = Kiran::Theme::Palette::getDefault();
+    connect(palette, &Kiran::Theme::Palette::baseColorsChanged, this, &HistoryRecoder::updateHistory);
 }
 
 void HistoryRecoder::setSession(Session *session)
@@ -186,8 +188,9 @@ void HistoryRecoder::updateHistory()
                     labelValue->setText(historyWordWrap(Utils::reformatSeparators(NumberFormatter::format(value)), 16));
 
             }
-
-            if(Kiran::StylePalette::instance()->paletteType() == Kiran::PALETTE_DARK)
+            
+            auto style = Kiran::Theme::StyleHelper::getDefault();
+            if(style->paletteType() == Kiran::Theme::PALETTE_DARK)
                 labelValue->setStyleSheet("color:#FFFFFF;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");
             else
                 labelValue->setStyleSheet("color:#222222;font-size:24px;font-family: Noto Sans CJK SC Regular;padding-bottom:14px;");

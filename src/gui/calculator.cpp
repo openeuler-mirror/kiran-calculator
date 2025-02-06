@@ -17,9 +17,13 @@
 * Author:     luoqing <luoqing@kylinos.com.cn>
 */
 
+#include <QMessageBox>
+#include <qt5-log-i.h>
+#include <style-helper.h>
+#include <palette.h>
+
 #include "calculator.h"
 #include "./ui_calculator.h"
-
 #include "history-recoder.h"
 #include "standard-mode-page/standard-keys-page.h"
 #include "standard-mode-page/standard-expr-calculator.h"
@@ -28,8 +32,6 @@
 #include "core/evaluator.h"
 #include "core/settings.h"
 #include "general-enum.h"
-#include <QMessageBox>
-#include <qt5-log-i.h>
 
 Calculator::Calculator(QWidget *parent)
     : QWidget(parent), ui(new Ui::Calculator)
@@ -41,8 +43,10 @@ Calculator::Calculator(QWidget *parent)
 
     ui->stackedWidget->setCurrentIndex(Calculation_Mode_Standard);
 
-    loadStylesheet(Kiran::StylePalette::instance()->paletteType());
-    QObject::connect(Kiran::StylePalette::instance(), &Kiran::StylePalette::themeChanged, this,&Calculator::loadStylesheet);
+    auto palette = Kiran::Theme::Palette::getDefault();
+    QObject::connect(palette, &Kiran::Theme::Palette::baseColorsChanged, this, &Calculator::loadStylesheet);
+
+    // loadStylesheet();
 }
 
 Calculator::~Calculator()
@@ -70,15 +74,17 @@ void Calculator::switchKeyborad(int mode)
     }
 }
 
-void Calculator::loadStylesheet(Kiran::PaletteType paletteType)
+void Calculator::loadStylesheet()
 {
+    auto style = Kiran::Theme::StyleHelper::getDefault();
+    auto paletteType = style->paletteType();
     QString qssPath;
     switch (paletteType)
     {
-    case Kiran::PALETTE_LIGHT:
+    case Kiran::Theme::PALETTE_LIGHT:
         qssPath= ":/kiran-calculator-themes/light_theme.qss";
         break ;
-    case Kiran::PALETTE_DARK:
+    case Kiran::Theme::PALETTE_DARK:
         qssPath= ":/kiran-calculator-themes/black_theme.qss";
         break ;
     default:
