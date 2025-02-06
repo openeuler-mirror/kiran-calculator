@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Book</name>
     <message>
@@ -84,7 +86,7 @@
     <message>
         <location filename="../src/core/book.cpp" line="98"/>
         <location filename="../src/core/book.cpp" line="137"/>
-        <source>Ohm's Law</source>
+        <source>Ohm&apos;s Law</source>
         <translation type="unfinished">欧姆定律། </translation>
     </message>
     <message>
@@ -281,12 +283,12 @@
     </message>
     <message>
         <location filename="../src/core/book.cpp" line="348"/>
-        <source>outer conductor's inner diameter</source>
+        <source>outer conductor&apos;s inner diameter</source>
         <translation type="unfinished">ཕྱི་འི་འདྲེན་གཟུགས་ཚངས་ཐིག་ནང་མ། </translation>
     </message>
     <message>
         <location filename="../src/core/book.cpp" line="349"/>
-        <source>inner conductor's outer diameter</source>
+        <source>inner conductor&apos;s outer diameter</source>
         <translation type="unfinished">ནང་དངོས་གཟུགས་ཕུད་ཞེང་ཁ། </translation>
     </message>
     <message>
@@ -346,11 +348,13 @@
     <name>Calculator</name>
     <message>
         <location filename="../src/gui/calculator.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="155"/>
         <source>Widget</source>
         <translation type="unfinished">ཚོད་འཛིན་བྱ་བ། </translation>
     </message>
     <message>
         <location filename="../src/gui/calculator.ui" line="116"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_calculator.h" line="156"/>
         <location filename="../src/gui/calculator.cpp" line="59"/>
         <source>Standard</source>
         <translation>ཚད་གཞི། </translation>
@@ -375,12 +379,12 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="562"/>
-        <source>Archimedes' constant Pi</source>
+        <source>Archimedes&apos; constant Pi</source>
         <translation type="unfinished">阿基米德རྒྱུན་གྲངས་སྒོར་མཐའི་གྲངས་ཚད། </translation>
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="563"/>
-        <source>Euler's number</source>
+        <source>Euler&apos;s number</source>
         <translation type="unfinished">ཡོ་རོབ་དང་ལྷ་གྲངས། </translation>
     </message>
     <message>
@@ -400,7 +404,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="570"/>
-        <source>Dirac's Constant</source>
+        <source>Dirac&apos;s Constant</source>
         <translation type="unfinished">狄拉克རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -420,7 +424,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="574"/>
-        <source>Planck's Constant</source>
+        <source>Planck&apos;s Constant</source>
         <translation type="unfinished">普朗克རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -450,7 +454,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="584"/>
-        <source>Coulomb's Constant</source>
+        <source>Coulomb&apos;s Constant</source>
         <translation type="unfinished">ཁུ་ལུམ་རྒྱུན་གྲངས། </translation>
     </message>
     <message>
@@ -560,7 +564,7 @@
     </message>
     <message>
         <location filename="../src/core/constants.cpp" line="612"/>
-        <source>Avogadro's Number</source>
+        <source>Avogadro&apos;s Number</source>
         <translation type="unfinished">阿伏伽德罗འི་ཁ་པར་ཨང་གྲངས། </translation>
     </message>
     <message>
@@ -1224,13 +1228,13 @@
     <message>
         <location filename="../src/core/evaluator.cpp" line="90"/>
         <location filename="../src/core/evaluator.cpp" line="154"/>
-        <source>underflow - tiny result is out of SpeedCrunch's number range</source>
+        <source>underflow - tiny result is out of SpeedCrunch&apos;s number range</source>
         <translation type="unfinished">འོག་ཏུ་མཐོང། - ཕྲ་མོ་འི་འབྲས་བུ་ལས་བརྒལ་བ་འི། SpeedCrunchཨང་ཀི་འི་ཁྱབ་ཁོངས། </translation>
     </message>
     <message>
         <location filename="../src/core/evaluator.cpp" line="94"/>
         <location filename="../src/core/evaluator.cpp" line="150"/>
-        <source>overflow - huge result is out of SpeedCrunch's number range</source>
+        <source>overflow - huge result is out of SpeedCrunch&apos;s number range</source>
         <translation type="unfinished">འཕྱུར་བ། - འབྲས་བུ་ཧ་ཅང་ཆེན་པོ་ལས་བརྒལ་བ་SpeedCrunchཨང་ཀི་འི་ཁྱབ་ཁོངས། </translation>
     </message>
     <message>
@@ -1934,17 +1938,17 @@
 <context>
     <name>ModeSelection</name>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="33"/>
+        <location filename="../src/gui/mode-selection.cpp" line="35"/>
         <source>standard</source>
         <translation>ཚད་གཞི། </translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="34"/>
+        <location filename="../src/gui/mode-selection.cpp" line="36"/>
         <source>science</source>
         <translation>ཚན་རིག། </translation>
     </message>
     <message>
-        <location filename="../src/gui/mode-selection.cpp" line="35"/>
+        <location filename="../src/gui/mode-selection.cpp" line="37"/>
         <source>programmer</source>
         <translation>程序员། </translation>
     </message>
@@ -1953,11 +1957,13 @@
     <name>ProgrammerModePage</name>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="26"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="158"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/programmer-mode-page/programmer-mode-page.ui" line="270"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_programmer-mode-page.h" line="165"/>
         <source>Clear</source>
         <translation>གསལ་པོ་ར། </translation>
     </message>
@@ -1974,11 +1980,13 @@
     <name>ScienceModePage</name>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="138"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/science-mode-page/science-mode-page.ui" line="222"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_science-mode-page.h" line="140"/>
         <source>Clear</source>
         <translation>གསལ་པོ་ར། </translation>
     </message>
@@ -2000,11 +2008,13 @@
     <name>StandardModePage</name>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="32"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="161"/>
         <source>Form</source>
         <translation type="unfinished">རྣམ་པ། </translation>
     </message>
     <message>
         <location filename="../src/gui/standard-mode-page/standard-mode-page.ui" line="275"/>
+        <location filename="../build/kiran-calculator_autogen/include/ui_standard-mode-page.h" line="164"/>
         <source>Clear</source>
         <translation>གསལ་པོ་ར། </translation>
     </message>

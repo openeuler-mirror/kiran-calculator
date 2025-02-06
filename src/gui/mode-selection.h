@@ -2,7 +2,7 @@
 #define MODESELECTION_H
 #include <QPushButton>
 #include <QActionGroup>
-#include "style-palette.h"
+
 class Calculator;
 class ModeSelection : public QPushButton
 {
@@ -15,7 +15,7 @@ public:
 
     QPoint m_menuPoint;
 public slots:
-    void handleThemeChanged(Kiran::PaletteType paletteType);
+    void handleThemeChanged();
 private:
     QMenu* m_menu;
     QAction* m_standard;

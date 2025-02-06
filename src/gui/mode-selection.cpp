@@ -1,8 +1,11 @@
-#include "mode-selection.h"
 #include <QMenu>
 #include <qt5-log-i.h>
+#include <style-helper.h>
+#include <palette.h>
+
 #include "calculator.h"
 #include "general-enum.h"
+#include "mode-selection.h"
 
 
 ModeSelection::ModeSelection(Calculator* calculator,QWidget *parent) : QPushButton(parent)
@@ -23,7 +26,8 @@ ModeSelection::ModeSelection(Calculator* calculator,QWidget *parent) : QPushButt
     connect(m_programmer,&QAction::triggered,m_calculator,
             [=](){
                 m_calculator->switchKeyborad(Calculation_Mode_Programmer);});
-    connect(Kiran::StylePalette::instance(),&Kiran::StylePalette::themeChanged,this,&ModeSelection::handleThemeChanged);
+    auto palette = Kiran::Theme::Palette::getDefault();
+    connect(palette, &Kiran::Theme::Palette::baseColorsChanged, this, &ModeSelection::handleThemeChanged);
 }
 
 void ModeSelection::initMenu()
@@ -69,7 +73,7 @@ void ModeSelection::setPos(ModeSelection* button)
             );
 }
 
-void ModeSelection::handleThemeChanged(Kiran::PaletteType paletteType)
+void ModeSelection::handleThemeChanged()
 {
     setIcon(iconColorSwitch(":/kiran-calculator-images/kc-mode.svg"));
 }
@@ -78,7 +82,8 @@ QPixmap ModeSelection::iconColorSwitch(const QString& iconPath)
 {
     QIcon icon(iconPath);
     QPixmap pixmap = icon.pixmap(16, 16);
-    if (Kiran::StylePalette::instance()->paletteType() != Kiran::PALETTE_DARK)
+    auto style = Kiran::Theme::StyleHelper::getDefault();
+    if (style->paletteType() != Kiran::Theme::PALETTE_DARK)
     {
         QImage image = pixmap.toImage();
         image.invertPixels(QImage::InvertRgb);

@@ -19,15 +19,14 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
+#include "standard-mode-page/standard-keys-page.h"
+#include "keys-page.h"
+
 #include <QWidget>
 #include <QStackedWidget>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QPushButton>
-
-#include "standard-mode-page/standard-keys-page.h"
-#include "keys-page.h"
-#include <style-palette.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calculator; }
@@ -53,7 +52,7 @@ public:
 
 public slots:
     void switchKeyborad(int mode);
-    void loadStylesheet(Kiran::PaletteType paletteType);
+    void loadStylesheet();
 
 private:
     Ui::Calculator *ui;
